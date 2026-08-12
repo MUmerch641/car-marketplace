@@ -49,7 +49,7 @@ export default async function CarsPage({
           <select
             name="fuel"
             defaultValue={values.fuel}
-            className="rounded-md border border-[#D0D5DD] px-3 py-2 text-sm"
+            className="input-standard"
           >
             <option value="">Fuel type</option>
             <option value="petrol">Petrol</option>
@@ -60,7 +60,7 @@ export default async function CarsPage({
           <select
             name="transmission"
             defaultValue={values.transmission}
-            className="rounded-md border border-[#D0D5DD] px-3 py-2 text-sm"
+            className="input-standard"
           >
             <option value="">Transmission</option>
             <option value="manual">Manual</option>
@@ -70,20 +70,20 @@ export default async function CarsPage({
             name="maxMileage"
             defaultValue={values.maxMileage}
             placeholder="Maximum mileage"
-            className="rounded-md border border-[#D0D5DD] px-3 py-2 text-sm"
+            className="input-standard"
           />
           <select
             name="sort"
             defaultValue={values.sort}
-            className="rounded-md border border-[#D0D5DD] px-3 py-2 text-sm"
+            className="input-standard"
           >
             <option value="newest">Newest</option>
             <option value="price_asc">Price low to high</option>
             <option value="price_desc">Price high to low</option>
             <option value="mileage">Lowest mileage</option>
           </select>
-          <button className="justify-self-start text-sm font-bold text-brand">
-            Apply filters
+          <button type="submit" className="btn-primary h-[52px]">
+            Apply
           </button>
         </form>
 
@@ -107,17 +107,44 @@ export default async function CarsPage({
           </div>
         ) : (
           <AnimatedContent distance={16} duration={0.6}>
-            <div className="mt-5 border border-dashed border-[#D0D5DD] p-10 text-center">
-              <h2 className="text-xl font-bold">No cars found</h2>
+            <div className="mt-8 rounded-2xl border border-[#E4E7EC] bg-[#F9FAFB] p-10 text-center">
+              <h2 className="font-h3 text-ink">No cars found</h2>
               <p className="mt-2 text-[#667085]">
                 Try removing a filter or broadening your search.
               </p>
-              <Link
-                href="/cars"
-                className="mt-4 inline-block font-bold text-brand"
-              >
-                Clear search
-              </Link>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/cars"
+                  className="rounded-md border border-[#E4E7EC] bg-white px-5 py-2.5 text-sm font-bold text-ink hover:bg-[#F9FAFB]"
+                >
+                  Clear filters
+                </Link>
+                <Link
+                  href="/sell-car"
+                  className="rounded-md bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-[#B42318]"
+                >
+                  Sell Your Car
+                </Link>
+              </div>
+              {/* Popular makes below empty state */}
+              <div className="mt-10">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#667085]">
+                  Popular makes
+                </p>
+                <div className="mt-3 flex flex-wrap justify-center gap-2">
+                  {["BMW", "Audi", "Mercedes-Benz", "Volkswagen", "Ford", "Honda", "Toyota"].map(
+                    (make) => (
+                      <Link
+                        key={make}
+                        href={`/cars?make=${make}`}
+                        className="rounded-full border border-[#D0D5DD] bg-white px-3 py-1.5 text-xs font-semibold text-[#344054] hover:border-brand hover:text-brand"
+                      >
+                        {make}
+                      </Link>
+                    )
+                  )}
+                </div>
+              </div>
             </div>
           </AnimatedContent>
         )}

@@ -2,9 +2,8 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { startInspection } from "@/app/verification-actions";
-import AnimatedContent from "@/components/AnimatedContent";
 
-export default async function Page() {
+export default async function InspectorPage() {
   const { user } = await requireRole("inspector");
   const s = await createClient();
   const [{ data: service }, { data: verification }] = await Promise.all([
@@ -23,38 +22,54 @@ export default async function Page() {
   ]);
 
   return (
-    <main className="mx-auto max-w-6xl px-5 py-10">
-      <AnimatedContent distance={16} duration={0.5}>
-        <h1 className="text-3xl font-bold">Field worker workspace</h1>
-      </AnimatedContent>
+    <main className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
+      <h1 className="font-h1 text-ink">Field worker workspace</h1>
 
-      <AnimatedContent distance={14} duration={0.5} delay={0.05} className="mt-8">
-        <h2 className="text-xl font-bold">Mobile service jobs</h2>
-        {service?.map(
-          (a) =>
-            a.service_bookings && (
-              <div className="mt-3 border p-4" key={a.service_bookings.id}>
-                {a.service_bookings.service_types?.name} · {a.service_bookings.car_make}{" "}
-                {a.service_bookings.car_model} · {a.service_bookings.status}
+      {/* Mobile service jobs */}
+      <div className="mt-8">
+        <h2 className="font-h2 text-ink">Mobile service jobs</h2>
+        <div className="mt-4 space-y-3">
+          {service?.map((a) =>
+            a.service_bookings ? (
+              <div key={a.service_bookings.id} className="card-standard p-6">
+                <div className="flex items-center justify-between">
+                  <b className="font-h3 text-ink">{a.service_bookings.service_types?.name}</b>
+                  <span className={`status-${a.service_bookings.status.replace("_", "-")}`}>
+                    {a.service_bookings.status.replace("_", " ")}
+                  </span>
+                </div>
+                <p className="mt-2 text-[#667085]">
+                  {a.service_bookings.car_make} {a.service_bookings.car_model}
+                </p>
               </div>
-            )
-        )}
-      </AnimatedContent>
+            ) : null
+          )}
+        </div>
+      </div>
 
-      <AnimatedContent distance={14} duration={0.5} delay={0.1} className="mt-8">
-        <h2 className="text-xl font-bold">Vehicle inspection jobs</h2>
-        {verification?.length ? (
-          verification.map(
-            (a) =>
-              a.verification_requests && (
-                <article
-                  key={a.verification_requests.id}
-                  className="mt-3 border p-4"
-                >
-                  <b>{a.verification_requests.vehicle_registration}</b>
-                  <p>
-                    {a.verification_requests.city} ·{" "}
-                    {a.verification_requests.scheduled_for ?? "Awaiting schedule"}
+      {/* Vehicle inspection jobs */}
+      <div className="mt-10">
+        <h2 className="font-h2 text-ink">Vehicle inspection jobs</h2>
+        <div className="mt-4 space-y-3">
+          {verification?.length ? (
+            verification.map((a) =>
+              a.verification_requests ? (
+                <article key={a.verification_requests.id} className="card-standard p-6">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <b className="font-h3 text-ink">{a.verification_requests.vehicle_registration}</b>
+                      <p className="mt-2 text-[#667085]">
+                        {a.verification_requests.city}
+                      </p>
+                    </div>
+                    <span className={`status-${a.verification_requests.status.replace("_", "-")}`}>
+                      {a.verification_requests.status.replace("_", " ")}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-[#667085]">
+                    {a.verification_requests.scheduled_for
+                      ? new Date(a.verification_requests.scheduled_for).toLocaleDateString("en-GB")
+                      : "Awaiting schedule"}
                   </p>
                   {a.verification_requests.status === "inspection_scheduled" && (
                     <form
@@ -62,23 +77,29 @@ export default async function Page() {
                         "use server";
                         await startInspection(a.verification_requests!.id);
                       }}
+                      className="mt-4"
                     >
-                      <button className="mt-2 text-brand">Start inspection</button>
+                      <button type="submit" className="btn-primary w-fit">
+                        Start inspection
+                      </button>
                     </form>
                   )}
                   <Link
-                    className="ml-4 text-brand"
                     href={`/inspector/verifications/${a.verification_requests.id}`}
+                    className="btn-tertiary mt-2 block"
                   >
                     Open inspection
                   </Link>
                 </article>
-              )
-          )
-        ) : (
-          <p className="mt-3 text-[#667085]">No inspection jobs assigned.</p>
-        )}
-      </AnimatedContent>
+              ) : null
+            )
+          ) : (
+            <div className="card-standard p-10 text-center">
+              <p className="text-[#667085]">No inspection jobs assigned.</p>
+            </div>
+          )}
+        </div>
+      </div>
     </main>
   );
 }

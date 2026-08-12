@@ -41,7 +41,7 @@ export function HeroSection() {
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#D92D20]" />
                 <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#D0D5DD]">
-                  UK&apos;s Trusted Car Marketplace
+                  UK Car Marketplace
                 </span>
               </div>
             </AnimatedContent>
@@ -61,8 +61,8 @@ export function HeroSection() {
             {/* Supporting copy */}
             <AnimatedContent distance={24} duration={0.65} delay={0.3}>
               <p className="mt-5 max-w-md text-base leading-7 text-[#94A3B8]">
-                Browse thousands of quality used vehicles from verified sellers
-                across the UK — inspected, trusted, and ready to drive away.
+                Browse thousands of quality used vehicles across the UK —
+                inspected and ready to drive away.
               </p>
             </AnimatedContent>
 

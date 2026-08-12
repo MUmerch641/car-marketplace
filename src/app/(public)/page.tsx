@@ -278,7 +278,6 @@ export default async function HomePage() {
                   "Inspection photos",
                   "Inspection report",
                   "Verified vehicle status",
-                  "Peace of mind guarantee",
                 ].map((item, i) => (
                   <SpotlightCard
                     key={item}
@@ -320,7 +319,7 @@ export default async function HomePage() {
             <SectionHeading
               eyebrow="Mobile car services"
               title="We come to you"
-              copy="Book a location and a qualified worker travels to your car. No physical garage visit required."
+              copy="Book a location and a qualified worker travels to your car. No garage visit required."
               link={{ href: "/services", label: "View all services" }}
             />
           </AnimatedContent>
@@ -356,7 +355,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <AnimatedContent distance={28} duration={0.7}>
             <SectionHeading
-              eyebrow="Buying made straightforward"
+              eyebrow="How it works"
               title="How it works"
             />
           </AnimatedContent>
@@ -366,17 +365,27 @@ export default async function HomePage() {
                 [
                   "01",
                   "Find a car",
-                  "Search vehicles by make, model, location and price range that work for you.",
+                  "Search vehicles by make, model, location and price range.",
                 ],
                 [
                   "02",
-                  "Check the details",
-                  "Review mileage, fuel type, transmission and service history before reaching out.",
+                  "Book service",
+                  "Choose your mobile service, date and time.",
                 ],
                 [
                   "03",
-                  "Contact the seller",
-                  "Ask questions and arrange the next step directly with the seller. No middlemen.",
+                  "Get verified",
+                  "Request an inspection before you buy.",
+                ],
+                [
+                  "04",
+                  "Sell with confidence",
+                  "List your car with verified status.",
+                ],
+                [
+                  "05",
+                  "Care at home",
+                  "Maintain your car where it suits you.",
                 ],
               ] as const
             ).map(([number, title, text], i) => (

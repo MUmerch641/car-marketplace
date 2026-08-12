@@ -1,4 +1,28 @@
-import Link from "next/link";
 import { RegisterForm } from "./register-form";
 import { PageHero } from "@/components/shared/page-hero";
-export default function RegisterPage() { return <><PageHero eyebrow="Account" title="Create your Motorway account." copy="One secure account for buying, selling, vehicle verification, and mobile car services." /><div className="mx-auto max-w-md px-5 py-12"><div className="rounded-xl border border-[#E4E7EC] bg-white p-7"><h2 className="text-xl font-bold text-ink">Create account</h2><div className="mt-5"><RegisterForm /></div><p className="mt-5 text-center text-sm text-[#667085]">Already have an account? <Link href="/login" className="font-bold text-brand">Log in</Link></p></div></div></>; }
+
+export default function RegisterPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Create account"
+        title="Join Fengxing today"
+        copy="Create an account to list your car, book services, and request verifications."
+      />
+      <section className="mx-auto max-w-md px-5 py-10 lg:px-8">
+        <div className="card-standard p-8">
+          <h2 className="font-h2 text-ink">Create your account</h2>
+          <p className="mt-2 text-[#667085]">
+            Already have an account?{" "}
+            <a href="/login" className="font-semibold text-brand hover:underline">
+              Log in
+            </a>
+          </p>
+          <div className="mt-6">
+            <RegisterForm />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

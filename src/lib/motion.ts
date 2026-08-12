@@ -1,5 +1,5 @@
 /**
- * Centralised motion tokens for the Motorway animation system.
+ * Centralised motion tokens for the Fengxing animation system.
  *
  * Keep all animation timings sourced from here — never invent ad-hoc values
  * in individual components.

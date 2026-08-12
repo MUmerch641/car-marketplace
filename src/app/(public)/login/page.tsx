@@ -1,4 +1,31 @@
-import Link from "next/link";
 import { LoginForm } from "./login-form";
 import { PageHero } from "@/components/shared/page-hero";
-export default async function LoginPage({ searchParams }: PageProps<"/login">) { const { error, next } = await searchParams; const safeNext = typeof next === "string" && (next.startsWith("/cars/") || next.startsWith("/services/")) && !next.startsWith("//") ? next : undefined; const message = error === "invalid_confirmation" ? "That confirmation link is invalid or incomplete." : error === "confirmation_failed" ? "That confirmation link has expired or was already used. Please log in or request a new link." : null; return <><PageHero eyebrow="Account" title="Welcome back." copy="Log in to manage your account and future marketplace activity." /><div className="mx-auto max-w-md px-5 py-12"><div className="rounded-xl border border-[#E4E7EC] bg-white p-7"><h2 className="text-xl font-bold text-ink">Log in</h2>{message && <p role="alert" className="mt-4 rounded-md bg-[#FEF3F2] p-3 text-sm font-medium text-[#B42318]">{message}</p>}<div className="mt-5"><LoginForm next={safeNext} /></div><p className="mt-5 text-center text-sm text-[#667085]">New to Motorway? <Link href="/register" className="font-bold text-brand">Create an account</Link></p></div></div></>; }
+
+export default function LoginPage({ searchParams }: { searchParams?: Promise<{ next?: string }> }) {
+  const params = searchParams ?? {};
+  const next = (params as { next?: string }).next ?? "";
+  
+  return (
+    <>
+      <PageHero
+        eyebrow="Log in"
+        title="Welcome back"
+        copy="Log in to manage your cars, bookings, and verifications."
+      />
+      <section className="mx-auto max-w-md px-5 py-10 lg:px-8">
+        <div className="card-standard p-8">
+          <h2 className="font-h2 text-ink">Log in to Fengxing</h2>
+          <p className="mt-2 text-[#667085]">
+            Don’t have an account?{" "}
+            <a href="/register" className="font-semibold text-brand hover:underline">
+              Create an account
+            </a>
+          </p>
+          <div className="mt-6">
+            <LoginForm next={next} />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
