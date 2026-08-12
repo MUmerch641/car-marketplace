@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import BlurText from "@/components/BlurText";
 import AnimatedContent from "@/components/AnimatedContent";
+import FadeContent from "@/components/FadeContent";
 import { HeroSearchPanel } from "./HeroSearchPanel";
 
 const trustLinks = [
@@ -28,6 +29,9 @@ export function HeroSection() {
               "repeating-linear-gradient(135deg, #fff 0px, #fff 1px, transparent 1px, transparent 40px)",
           }}
         />
+
+        {/* Sentinel div — NavbarClient IntersectionObserver watches this */}
+        <div id="hero-sentinel" className="absolute bottom-0 left-0 h-px w-px" aria-hidden="true" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-0 px-5 lg:grid-cols-[1fr_1px_1.05fr] lg:px-8">
           {/* ── Left: Content ─────────────────────────────────── */}
@@ -55,7 +59,7 @@ export function HeroSection() {
             </div>
 
             {/* Supporting copy */}
-            <AnimatedContent distance={24} duration={0.6} delay={0.25}>
+            <AnimatedContent distance={24} duration={0.65} delay={0.3}>
               <p className="mt-5 max-w-md text-base leading-7 text-[#94A3B8]">
                 Browse thousands of quality used vehicles from verified sellers
                 across the UK — inspected, trusted, and ready to drive away.
@@ -63,7 +67,7 @@ export function HeroSection() {
             </AnimatedContent>
 
             {/* Trust / quick links */}
-            <AnimatedContent distance={16} duration={0.6} delay={0.4}>
+            <AnimatedContent distance={16} duration={0.6} delay={0.45}>
               <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
                 {trustLinks.map((link, i) => (
                   <Link
@@ -81,7 +85,7 @@ export function HeroSection() {
             </AnimatedContent>
 
             {/* Popular searches */}
-            <AnimatedContent distance={16} duration={0.6} delay={0.5}>
+            <AnimatedContent distance={16} duration={0.6} delay={0.55}>
               <div className="mt-7 flex flex-wrap items-center gap-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">
                   Popular:
@@ -102,8 +106,18 @@ export function HeroSection() {
           {/* Vertical divider (desktop only) */}
           <div className="hidden h-full w-px bg-white/5 lg:block" />
 
-          {/* ── Right: Vehicle Image ───────────────────────────── */}
-          <div className="relative hidden overflow-hidden lg:block" style={{ height: "520px" }}>
+          {/* ── Right: Vehicle Image — slides in from right ───────────── */}
+          <AnimatedContent
+            direction="horizontal"
+            reverse
+            distance={45}
+            duration={0.85}
+            delay={0.2}
+            ease="power2.out"
+            animateOpacity
+            className="relative hidden overflow-hidden lg:block"
+            style={{ height: "520px" }}
+          >
             {/* Left-side fade blending into navy */}
             <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#0B1F33] to-transparent" />
             {/* Bottom fade */}
@@ -117,11 +131,11 @@ export function HeroSection() {
               sizes="50vw"
               className="object-cover object-center"
             />
-          </div>
+          </AnimatedContent>
         </div>
 
-        {/* Mobile image — below text, above search */}
-        <div className="relative mx-5 mb-0 aspect-[16/9] overflow-hidden rounded-t-2xl lg:hidden">
+        {/* Mobile image — subtle fade, no directional movement */}
+        <FadeContent delay={400} duration={700} className="relative mx-5 mb-0 aspect-[16/9] overflow-hidden rounded-t-2xl lg:hidden">
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-[#0B1F33] to-transparent" />
           <Image
             src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=85"
@@ -131,15 +145,22 @@ export function HeroSection() {
             sizes="100vw"
             className="object-cover object-center"
           />
-        </div>
+        </FadeContent>
       </section>
 
-      {/* ── Floating Search Panel — overlaps hero bottom ─────────────── */}
-      <div className="relative z-20 -mt-8 px-5 pb-2 lg:px-8">
+      {/* ── Floating Search Panel — premium entrance ─────────────────────── */}
+      <AnimatedContent
+        distance={24}
+        scale={0.98}
+        duration={0.7}
+        delay={0.15}
+        ease="power2.out"
+        className="relative z-20 -mt-8 px-5 pb-2 lg:px-8"
+      >
         <div className="mx-auto max-w-5xl">
           <HeroSearchPanel />
         </div>
-      </div>
+      </AnimatedContent>
     </>
   );
 }

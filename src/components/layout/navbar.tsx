@@ -1,6 +1,12 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { getCurrentProfile } from "@/lib/auth/server";
-import { logoutAction } from "@/app/auth/actions";
-const navItems = [{ href: "/cars", label: "Buy Cars" }, { href: "/sell-car", label: "Sell My Car" }, { href: "/verification", label: "Car Verification" }, { href: "/services", label: "Mobile Services" }, { href: "/about", label: "About" }];
-export async function Navbar() { const profile = await getCurrentProfile(); return <header className="border-b border-[#203A52] bg-ink text-white"><div className="mx-auto flex h-17 max-w-7xl items-center justify-between px-5 lg:px-8"><Link href="/" className="text-xl font-black tracking-tight">motor<span className="text-[#F97066]">way</span></Link><nav className="hidden items-center gap-6 xl:flex">{navItems.map((item) => <Link key={item.href} href={item.href} className="text-sm font-semibold text-[#D0D5DD] hover:text-white">{item.label}</Link>)}</nav><div className="flex items-center gap-4">{profile ? <><Link href={profile.role === "admin" ? "/admin" : profile.role === "inspector" ? "/inspector" : "/dashboard"} className="hidden text-sm font-bold text-white sm:block">Account</Link><form action={logoutAction}><button className="text-sm font-bold text-[#D0D5DD] hover:text-white">Logout</button></form></> : <Link href="/login" className="hidden text-sm font-bold text-white sm:block">Login</Link>}<Button href="/sell-car" className="px-4 py-2.5">Post Your Car</Button></div></div></header>; }
+import { NavbarClient } from "./NavbarClient";
+
+/**
+ * Navbar — thin server wrapper.
+ * Fetches the profile server-side and passes it as a prop to NavbarClient,
+ * which handles all scroll-aware interactivity and mobile menu state.
+ */
+export async function Navbar() {
+  const profile = await getCurrentProfile();
+  return <NavbarClient profile={profile} />;
+}

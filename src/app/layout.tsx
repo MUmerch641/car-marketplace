@@ -5,9 +5,10 @@ import "./globals.css";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
-  title: { default: "Motorway | Cars & Car Care", template: "%s | Motorway" },
+  title: { default: "Fengxing | Cars & Car Care", template: "%s | Fengxing" },
   description: "A trusted way to find cars, sell with confidence, and book car care at home.",
 };
+
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return <html lang="en" className={geist.variable}><body>{children}</body></html>;

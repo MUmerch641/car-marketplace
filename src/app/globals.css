@@ -56,6 +56,110 @@ html { scroll-behavior: smooth; }
 body { background: #fff; color: #101828; }
 a { text-decoration: none; }
 
+/* ─── Motion token system ─────────────────────────────────────────────────── */
+:root {
+  --dur-micro:   150ms;
+  --dur-fast:    250ms;
+  --dur-normal:  350ms;
+  --dur-section: 700ms;
+  --dur-hero:    850ms;
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --stagger-card:    60ms;
+  --stagger-chip:    35ms;
+  --stagger-benefit: 55ms;
+  --stagger-step:   110ms;
+}
+
+/* ─── Scroll-reveal keyframes ─────────────────────────────────────────────── */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes reveal-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes reveal-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Reveal utility classes ──────────────────────────────────────────────── */
+.animate-reveal {
+  animation: reveal-up var(--dur-section) var(--ease-out) both;
+}
+
+.animate-reveal-left {
+  animation: reveal-left var(--dur-section) var(--ease-out) both;
+}
+
+.animate-reveal-right {
+  animation: reveal-right var(--dur-section) var(--ease-out) both;
+}
+
+.animate-reveal-fade {
+  animation: reveal-fade var(--dur-section) var(--ease-smooth) both;
+}
+
+/* ─── Reduced motion — all non-essential animations off ──────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal,
+  .animate-reveal-left,
+  .animate-reveal-right,
+  .animate-reveal-fade {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Ensure GSAP/AnimatedContent elements don't hide content */
+  .invisible {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ─── Fengxing Logo — wheel rotation ─────────────────────────────────────── */
+@keyframes wheel-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.fengxing-wheel-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* The SVG itself rotates around its centre */
+.fengxing-wheel-wrapper .fengxing-wheel {
+  animation: wheel-spin 12s linear infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Respect reduced motion — stop the wheel */
+@media (prefers-reduced-motion: reduce) {
+  .fengxing-wheel-wrapper .fengxing-wheel {
+    animation: none !important;
+  }
+}
+
+/* Logo hover — subtly speeds up the wheel */
+.fengxing-logo:hover .fengxing-wheel-wrapper .fengxing-wheel {
+  animation-duration: 4s;
+}
+
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

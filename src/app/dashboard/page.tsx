@@ -1,1 +1,138 @@
-import Link from"next/link";import{requireUser}from"@/lib/auth/server";import{getMyCars}from"@/lib/marketplace/cars";import{createClient}from"@/lib/supabase/server";export default async function Page(){const u=await requireUser();const s=await createClient();const[cars,b,v]=await Promise.all([getMyCars(),s.from("service_bookings").select("id,car_make,car_model,status,preferred_date,service_types(name)").eq("customer_id",u.id).order("created_at",{ascending:false}).limit(5),s.from("verification_requests").select("id,car_id,vehicle_registration,external_make,external_model,status,preferred_date,scheduled_for,created_at,cars(year,make,model)").eq("requested_by",u.id).order("created_at",{ascending:false}).limit(5)]);return <main className="mx-auto max-w-7xl px-5 py-10"><h1 className="text-3xl font-bold">My cars</h1><Link href="/sell-car" className="mt-3 inline-block bg-brand px-4 py-2 font-bold text-white">Create listing</Link><div className="mt-6 space-y-3">{cars.length?cars.map(c=><div key={c.id} className="border p-4"><b>{c.title}</b><span className="ml-3 capitalize">{c.status}</span></div>):<p className="border border-dashed p-6">No listings yet.</p>}</div><Section title="My bookings" href="/services">{(b.data??[]).length?(b.data??[]).map(x=><div key={x.id} className="border p-4">{x.service_types?.name} · {x.car_make} {x.car_model} · {x.status}</div>):<p className="border border-dashed p-6">No mobile service bookings yet.</p>}</Section><Section title="My Verifications" href="/verification">{(v.data??[]).length?(v.data??[]).map(x=>{const car=x.cars;const vehicle=car?`${car.year} ${car.make} ${car.model}`:`${x.external_make??"External vehicle"} ${x.external_model??""} · ${x.vehicle_registration}`;return <div key={x.id} className="flex justify-between border p-4"><Link href={`/dashboard/verifications/${x.id}`}><b>{vehicle}</b><p className="text-sm capitalize text-[#667085]">{x.status.replaceAll("_"," ")} · {x.scheduled_for?new Date(x.scheduled_for).toLocaleDateString("en-GB"):x.preferred_date}</p></Link>{x.status==="completed"&&<Link className="font-bold text-brand" href={`/dashboard/verifications/${x.id}/report`}>View Report</Link>}</div>}):<div className="border border-dashed p-6"><b>No vehicle inspections yet</b><p className="mt-1 text-[#667085]">Get extra confidence before buying a used car.</p><Link className="mt-3 inline-block font-bold text-brand" href="/verification">Request Vehicle Inspection</Link></div>}</Section></main>}function Section({title,href,children}:{title:string;href:string;children:React.ReactNode}){return <section className="mt-10 border-t pt-6"><div className="flex justify-between"><h2 className="text-2xl font-bold">{title}</h2><Link className="font-bold text-brand" href={href}>{title==="My Verifications"?"View all verifications":"View all"}</Link></div><div className="mt-4 space-y-3">{children}</div></section>}
+import Link from "next/link";
+import { requireUser } from "@/lib/auth/server";
+import { getMyCars } from "@/lib/marketplace/cars";
+import { createClient } from "@/lib/supabase/server";
+import AnimatedContent from "@/components/AnimatedContent";
+
+export default async function Page() {
+  const u = await requireUser();
+  const s = await createClient();
+  const [cars, b, v] = await Promise.all([
+    getMyCars(),
+    s
+      .from("service_bookings")
+      .select("id,car_make,car_model,status,preferred_date,service_types(name)")
+      .eq("customer_id", u.id)
+      .order("created_at", { ascending: false })
+      .limit(5),
+    s
+      .from("verification_requests")
+      .select(
+        "id,car_id,vehicle_registration,external_make,external_model,status,preferred_date,scheduled_for,created_at,cars(year,make,model)"
+      )
+      .eq("requested_by", u.id)
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ]);
+
+  return (
+    <main className="mx-auto max-w-7xl px-5 py-10">
+      <AnimatedContent distance={16} duration={0.5}>
+        <h1 className="text-3xl font-bold">My cars</h1>
+        <Link
+          href="/sell-car"
+          className="mt-3 inline-block bg-brand px-4 py-2 font-bold text-white"
+        >
+          Create listing
+        </Link>
+        <div className="mt-6 space-y-3">
+          {cars.length ? (
+            cars.map((c) => (
+              <div key={c.id} className="border p-4">
+                <b>{c.title}</b>
+                <span className="ml-3 capitalize">{c.status}</span>
+              </div>
+            ))
+          ) : (
+            <p className="border border-dashed p-6">No listings yet.</p>
+          )}
+        </div>
+      </AnimatedContent>
+
+      <AnimatedContent distance={14} duration={0.5} delay={0.08} className="mt-10 border-t pt-6">
+        <Section title="My bookings" href="/services">
+          {(b.data ?? []).length ? (
+            (b.data ?? []).map((x) => (
+              <div key={x.id} className="border p-4">
+                {x.service_types?.name} · {x.car_make} {x.car_model} · {x.status}
+              </div>
+            ))
+          ) : (
+            <p className="border border-dashed p-6">
+              No mobile service bookings yet.
+            </p>
+          )}
+        </Section>
+      </AnimatedContent>
+
+      <AnimatedContent distance={14} duration={0.5} delay={0.12} className="mt-10 border-t pt-6">
+        <Section title="My Verifications" href="/verification">
+          {(v.data ?? []).length ? (
+            (v.data ?? []).map((x) => {
+              const car = x.cars;
+              const vehicle = car
+                ? `${car.year} ${car.make} ${car.model}`
+                : `${x.external_make ?? "External vehicle"} ${x.external_model ?? ""} · ${x.vehicle_registration}`;
+              return (
+                <div key={x.id} className="flex justify-between border p-4">
+                  <Link href={`/dashboard/verifications/${x.id}`}>
+                    <b>{vehicle}</b>
+                    <p className="text-sm capitalize text-[#667085]">
+                      {x.status.replaceAll("_", " ")} ·{" "}
+                      {x.scheduled_for
+                        ? new Date(x.scheduled_for).toLocaleDateString("en-GB")
+                        : x.preferred_date}
+                    </p>
+                  </Link>
+                  {x.status === "completed" && (
+                    <Link
+                      className="font-bold text-brand"
+                      href={`/dashboard/verifications/${x.id}/report`}
+                    >
+                      View Report
+                    </Link>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <div className="border border-dashed p-6">
+              <b>No vehicle inspections yet</b>
+              <p className="mt-1 text-[#667085]">
+                Get extra confidence before buying a used car.
+              </p>
+              <Link
+                className="mt-3 inline-block font-bold text-brand"
+                href="/verification"
+              >
+                Request Vehicle Inspection
+              </Link>
+            </div>
+          )}
+        </Section>
+      </AnimatedContent>
+    </main>
+  );
+}
+
+function Section({
+  title,
+  href,
+  children,
+}: {
+  title: string;
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <div className="flex justify-between">
+        <h2 className="text-2xl font-bold">{title}</h2>
+        <Link className="font-bold text-brand" href={href}>
+          {title === "My Verifications" ? "View all verifications" : "View all"}
+        </Link>
+      </div>
+      <div className="mt-4 space-y-3">{children}</div>
+    </section>
+  );
+}
