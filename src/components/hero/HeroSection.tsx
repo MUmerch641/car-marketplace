@@ -61,8 +61,8 @@ export function HeroSection() {
             {/* Supporting copy */}
             <AnimatedContent distance={24} duration={0.65} delay={0.3}>
               <p className="mt-5 max-w-md text-base leading-7 text-[#94A3B8]">
-                Browse thousands of quality used vehicles across the UK —
-                inspected and ready to drive away.
+                Browse thousands of quality used vehicles across the UK.
+                Vehicle inspections are available before you buy.
               </p>
             </AnimatedContent>
 

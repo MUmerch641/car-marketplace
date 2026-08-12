@@ -175,7 +175,7 @@ export default async function HomePage() {
               </h2>
               <p className="mt-3 max-w-md text-base leading-7 text-[#94A3B8]">
                 List your vehicle in minutes. Connect directly with buyers across
-                the UK — no hidden fees, no middlemen.
+                the UK.
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-6 text-sm text-[#64748B]">
                 {["Free to list", "Direct buyer contact", "Control your price"].map(
@@ -380,7 +380,7 @@ export default async function HomePage() {
                 [
                   "04",
                   "Sell with confidence",
-                  "List your car with verified status.",
+                  "Request an inspection before you buy.",
                 ],
                 [
                   "05",

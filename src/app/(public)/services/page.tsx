@@ -37,8 +37,8 @@ export default async function ServicesPage() {
                 text: "Your car is ready. Pay securely through the platform.",
               },
               {
-                title: "Verified quality",
-                text: "All our workers are vetted and experienced in their field.",
+                title: "We come to you",
+                text: "Our mobile team comes to your chosen location to carry out the booked service.",
               },
             ].map((step, i) => (
               <AnimatedContent

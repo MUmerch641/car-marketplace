@@ -14,7 +14,7 @@ export const brand = {
 /* ── Contact ──────────────────────────────────────────────────────────────── */
 
 export const contact = {
-  email: "hello@fengxing.com",
+  email: "contact@fengxing.uk",
   phone: "0800 FENGXING",
 };
 
