@@ -1,16 +1,7 @@
 "use client";
-
-import { useActionState } from "react";
-import { loginAction, type AuthFormState } from "@/app/auth/actions";
-
+import { useActionState, useState, useTransition } from "react";
+import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
+import { loginAction, resendConfirmationAction, type AuthFormState } from "@/app/auth/actions";
 const initialState: AuthFormState = {};
-
-export function LoginForm({ next }: { next?: string }) {
-  const [state, action, pending] = useActionState(loginAction, initialState);
-  return <form action={action} className="space-y-4" noValidate>{next && <input type="hidden" name="next" value={next} />}
-    <div><label htmlFor="email" className="mb-1.5 block text-sm font-bold text-[#344054]">Email address</label><input id="email" name="email" type="email" autoComplete="email" required className="w-full rounded-md border border-[#D0D5DD] px-4 py-3 outline-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-[#FEE4E2]" /></div>
-    <div><label htmlFor="password" className="mb-1.5 block text-sm font-bold text-[#344054]">Password</label><input id="password" name="password" type="password" autoComplete="current-password" required className="w-full rounded-md border border-[#D0D5DD] px-4 py-3 outline-none focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-[#FEE4E2]" /></div>
-    {state.error && <p role="alert" className="rounded-md bg-[#FEF3F2] p-3 text-sm font-medium text-[#B42318]">{state.error}</p>}
-    <button disabled={pending} className="w-full rounded-md bg-brand px-5 py-3 text-sm font-bold text-white hover:bg-[#B42318] disabled:cursor-not-allowed disabled:opacity-60">{pending ? "Logging in…" : "Log in"}</button>
-  </form>;
-}
+export function LoginForm({ next }: { next?: string }) { const [state, action, pending] = useActionState(loginAction, initialState); const [visible, setVisible] = useState(false); const [resend, setResend] = useState<AuthFormState>({}); const [isResending, startResend] = useTransition(); return <form action={action} className="space-y-5" noValidate>{next && <input type="hidden" name="next" value={next} />}<Field label="Email address" icon={<Mail size={17} />}><input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" className="auth-input" /></Field><Field label="Password" icon={<LockKeyhole size={17} />}><input id="password" name="password" type={visible ? "text" : "password"} autoComplete="current-password" required placeholder="Enter your password" className="auth-input pr-12" /><button type="button" onClick={() => setVisible(!visible)} aria-label={visible ? "Hide password" : "Show password"} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">{visible ? <EyeOff size={18} /> : <Eye size={18} />}</button></Field>{state.error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">{state.error}</p>}{state.confirmationEmail && <button type="button" disabled={isResending} onClick={() => startResend(async () => setResend(await resendConfirmationAction(state.confirmationEmail!)))} className="text-sm font-bold text-[#d92d20] hover:text-[#b42318] disabled:opacity-60">{isResending ? "Sending confirmation…" : "Resend confirmation email"}</button>}{resend.error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">{resend.error}</p>}{resend.success && <p role="status" className="rounded-xl bg-emerald-50 p-3 text-sm font-medium text-emerald-700">{resend.success}</p>}<button disabled={pending} className="w-full rounded-xl bg-[#d92d20] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#b42318] disabled:cursor-not-allowed disabled:opacity-60">{pending ? "Logging in…" : "Log in securely"}</button></form>; }
+function Field({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) { return <div><label className="mb-2 block text-sm font-bold text-slate-700">{label}</label><div className="relative"><span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{icon}</span>{children}</div></div>; }

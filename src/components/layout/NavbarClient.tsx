@@ -14,7 +14,7 @@ interface NavbarClientProps {
 const navItems = [
   { href: "/cars", label: "Buy Cars" },
   { href: "/sell-car", label: "Sell My Car" },
-  { href: "/verification", label: "Car Verification" },
+  { href: "/verification", label: "Vehicle Inspection" },
   { href: "/services", label: "Mobile Services" },
   { href: "/about", label: "About" },
 ];

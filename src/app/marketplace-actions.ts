@@ -35,7 +35,7 @@ export async function createListingAction(form: FormData) {
   }
 
   revalidatePath("/dashboard");
-  redirect(`/dashboard/cars/${carId}/edit`);
+  redirect(`/dashboard/cars/${carId}/edit?step=photos&created=1`);
 }
 export async function updateListingAction(carId: string, form: FormData) { await requireUser(); try { const supabase = await createClient(); const { error } = await supabase.from("cars").update(listingValues(form)).eq("id", carId); if (error) return { error: "We could not update this listing." }; revalidatePath(`/dashboard/cars/${carId}/edit`); revalidatePath("/dashboard"); return { success: "Listing details saved." }; } catch (error) { return { error: error instanceof Error ? error.message : "Unable to save listing." }; } }
 export async function submitListingAction(carId: string) { await requireUser(); const supabase = await createClient(); const { error } = await supabase.rpc("submit_car_for_review", { p_car_id: carId }); if (error) return { error: "Add all required details and at least one image before submitting." }; revalidatePath("/dashboard"); redirect("/dashboard"); }

@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { routeForRole } from "@/lib/auth/server";
 
-export type AuthFormState = { error?: string; success?: string };
+export type AuthFormState = { error?: string; success?: string; confirmationEmail?: string };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ukPhonePattern = /^(?:\+44\s?|0)(?:\d\s?){9,10}$/;
 
@@ -33,9 +33,34 @@ export async function registerAction(_: AuthFormState, formData: FormData): Prom
     password,
     options: { data: { full_name: fullName, phone }, emailRedirectTo: origin ? `${origin}/auth/callback?next=/dashboard` : undefined },
   });
-  if (error) return { error: error.message };
+  if (error) {
+    if (/rate limit|too many|frequency/i.test(error.message)) {
+      return { error: "We’ve sent too many confirmation emails recently. Please wait a little while, then try again." };
+    }
+    return { error: "We could not create your account. Please try again shortly." };
+  }
   if (data.session) redirect("/dashboard");
-  return { success: "Check your email to confirm your account before logging in." };
+  return {
+    success: "Check your email to confirm your account before signing in.",
+    confirmationEmail: email,
+  };
+}
+
+export async function resendConfirmationAction(email: string): Promise<AuthFormState> {
+  const normalisedEmail = email.trim().toLowerCase();
+  if (!emailPattern.test(normalisedEmail)) return { error: "Enter a valid email address to resend confirmation." };
+  const supabase = await createClient();
+  const origin = (await headers()).get("origin");
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: normalisedEmail,
+    options: { emailRedirectTo: origin ? `${origin}/auth/callback?next=/dashboard` : undefined },
+  });
+  if (error) {
+    if (/rate limit|too many|frequency/i.test(error.message)) return { error: "Please wait a minute before requesting another confirmation email." };
+    return { error: "We could not resend the confirmation email. Please try again shortly." };
+  }
+  return { success: "A new confirmation email has been sent. Check your inbox and spam folder.", confirmationEmail: normalisedEmail };
 }
 
 export async function loginAction(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -44,7 +69,12 @@ export async function loginAction(_: AuthFormState, formData: FormData): Promise
   if (!emailPattern.test(email) || !password) return { error: "Enter your email address and password." };
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error || !data.user) return { error: "Invalid email or password. Please try again." };
+  if (error || !data.user) {
+    if (error?.code === "email_not_confirmed" || /email not confirmed/i.test(error?.message ?? "")) {
+      return { error: "Please confirm your email before signing in.", confirmationEmail: email };
+    }
+    return { error: "Invalid email or password. Please try again." };
+  }
   const { data: profile, error: profileError } = await supabase.from("profiles").select("role").eq("id", data.user.id).single();
   if (profileError || !profile) {
     await supabase.auth.signOut();

@@ -354,10 +354,7 @@ export default async function HomePage() {
       <section className="border-t border-[#E4E7EC] bg-[#F5F6F7] py-14">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <AnimatedContent distance={28} duration={0.7}>
-            <SectionHeading
-              eyebrow="How it works"
-              title="How it works"
-            />
+            <SectionHeading title="How it works" />
           </AnimatedContent>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {(

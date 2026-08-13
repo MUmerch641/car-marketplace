@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { routeForRole } from "@/lib/auth/server";
 
 function safeNext(value: string | null) {
-  return value?.startsWith("/") && !value.startsWith("//") ? value : null;
+  if (!value?.startsWith("/") || value.startsWith("//")) return null;
+  return value === "/dashboard" || value.startsWith("/cars/") || value.startsWith("/services/") || value === "/verification" ? value : null;
 }
 
 export async function GET(request: NextRequest) {

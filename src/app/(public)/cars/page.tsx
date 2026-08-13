@@ -94,7 +94,7 @@ export default async function CarsPage({
         </div>
 
         {result.cars.length ? (
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {result.cars.map((car, i) => (
               <div
                 key={car.id}

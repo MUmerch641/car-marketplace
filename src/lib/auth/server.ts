@@ -15,7 +15,7 @@ export async function getCurrentProfile() {
   const user = await getCurrentUser();
   if (!user) return null;
   const supabase = await createClient();
-  const { data, error } = await supabase.from("profiles").select("id, full_name, phone, avatar_url, role").eq("id", user.id).maybeSingle();
+  const { data, error } = await supabase.from("profiles").select("id, full_name, phone, avatar_url, role, staff_status").eq("id", user.id).maybeSingle();
   if (error) throw new Error("Unable to load the current profile.");
   return data;
 }
@@ -29,7 +29,7 @@ export async function requireUser() {
 export async function requireRole(role: ProfileRole) {
   const user = await requireUser();
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== role) redirect("/dashboard");
+  if (!profile || profile.role !== role || (role === "inspector" && profile.staff_status !== "active")) redirect("/dashboard");
   return { user, profile };
 }
 

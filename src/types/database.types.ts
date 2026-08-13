@@ -537,28 +537,34 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          employee_id: string | null
           full_name: string | null
           id: string
           phone: string | null
           role: Database["public"]["Enums"]["profile_role"]
+          staff_status: Database["public"]["Enums"]["staff_status"]
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          employee_id?: string | null
           full_name?: string | null
           id: string
           phone?: string | null
           role?: Database["public"]["Enums"]["profile_role"]
+          staff_status?: Database["public"]["Enums"]["staff_status"]
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          employee_id?: string | null
           full_name?: string | null
           id?: string
           phone?: string | null
           role?: Database["public"]["Enums"]["profile_role"]
+          staff_status?: Database["public"]["Enums"]["staff_status"]
           updated_at?: string
         }
         Relationships: []
@@ -710,6 +716,7 @@ export type Database = {
           id: string
           inspection_address: string
           inspection_started_at: string | null
+          inspection_type: Database["public"]["Enums"]["inspection_type"]
           notes: string | null
           postcode: string
           preferred_date: string | null
@@ -737,6 +744,7 @@ export type Database = {
           id?: string
           inspection_address: string
           inspection_started_at?: string | null
+          inspection_type?: Database["public"]["Enums"]["inspection_type"]
           notes?: string | null
           postcode: string
           preferred_date?: string | null
@@ -764,6 +772,7 @@ export type Database = {
           id?: string
           inspection_address?: string
           inspection_started_at?: string | null
+          inspection_type?: Database["public"]["Enums"]["inspection_type"]
           notes?: string | null
           postcode?: string
           preferred_date?: string | null
@@ -864,6 +873,7 @@ export type Database = {
           p_registration: string
           p_seller_name: string
           p_seller_phone: string
+          p_inspection_type: Database["public"]["Enums"]["inspection_type"]
           p_year: number
         }
         Returns: string
@@ -874,6 +884,34 @@ export type Database = {
         Returns: {
           full_name: string
           phone: string
+        }[]
+      }
+      get_public_listing_inspection_state: {
+        Args: { p_car_id: string }
+        Returns: {
+          inspected_at: string | null
+          seller_inspection_status: Database["public"]["Enums"]["verification_request_status"]
+        }[]
+      }
+      get_public_listing_inspection_availability: {
+        Args: { p_car_id: string }
+        Returns: {
+          has_active_inspection: boolean
+          has_completed_seller_inspection: boolean
+        }[]
+      }
+      get_admin_staff_directory: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          assignment_count: number
+          email: string | null
+          employee_id: string | null
+          full_name: string | null
+          has_active_assignments: boolean
+          id: string
+          phone: string | null
+          role: Database["public"]["Enums"]["profile_role"]
+          staff_status: Database["public"]["Enums"]["staff_status"]
         }[]
       }
       mark_car_sold: { Args: { p_car_id: string }; Returns: undefined }
@@ -959,6 +997,7 @@ export type Database = {
         | "passed_with_advisories"
         | "attention_required"
         | "not_suitable"
+      inspection_type: "seller_pre_inspection" | "buyer_inspection"
       listing_status:
         | "draft"
         | "pending_review"
@@ -982,6 +1021,7 @@ export type Database = {
         | "refunded"
         | "cancelled"
       profile_role: "customer" | "inspector" | "admin"
+      staff_status: "active" | "inactive"
       service_booking_status:
         | "pending"
         | "confirmed"

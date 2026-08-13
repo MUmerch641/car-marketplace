@@ -15,7 +15,7 @@ export default async function InspectorPage() {
       .in("status", ["assigned", "in_progress"]),
     s
       .from("employee_assignments")
-      .select("verification_requests(id,vehicle_registration,city,status,scheduled_for)")
+      .select("verification_requests(id,vehicle_registration,city,status,scheduled_for,inspection_type)")
       .eq("employee_id", user.id)
       .not("verification_request_id", "is", null)
       .in("status", ["assigned", "in_progress"]),
@@ -61,6 +61,7 @@ export default async function InspectorPage() {
                       <p className="mt-2 text-[#667085]">
                         {a.verification_requests.city}
                       </p>
+                      <p className="mt-1 text-xs font-semibold text-[#667085]">{a.verification_requests.inspection_type === "seller_pre_inspection" ? "Seller pre-inspection" : "Buyer inspection"}</p>
                     </div>
                     <span className={`status-${a.verification_requests.status.replace("_", "-")}`}>
                       {a.verification_requests.status.replace("_", " ")}

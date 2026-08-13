@@ -1,75 +1,31 @@
+import Image from "next/image";
+import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/server";
-import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import { VerificationForm } from "@/components/verification/form";
 
+function returnPath(car?: string) { return `/verification${car ? `?car=${encodeURIComponent(car)}` : ""}`; }
+function dateLabel(value: string) { return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(new Date(value)); }
+function statusLabel(value: string) { return value === "completed" ? "Inspected by Fengxing" : "Seller inspection in progress"; }
+
 export default async function VerificationPage({ searchParams }: { searchParams: Promise<{ car?: string }> }) {
-  const { car } = await searchParams;
+  const { car: requestedCarId } = await searchParams;
   const user = await getCurrentUser();
-  
-  // Redirect if not logged in
-  if (!user) {
-    redirect(`/login?next=${encodeURIComponent(`/verification${car ? `?car=${car}` : ""}`)}`);
-  }
-  
-  // Public info before auth (shown only to non-logged-in users)
-  return (
-    <main className="mx-auto max-w-5xl px-5 py-10 lg:px-8">
-      {/* Public intro */}
-      <div className="rounded-2xl border border-[#E4E7EC] bg-[#F9FAFB] p-8">
-        <p className="font-h4 text-ink">Vehicle inspection</p>
-        <h1 className="mt-2 font-h1 text-ink">Get confidence before you buy</h1>
-        <p className="mt-3 text-[#667085]">
-          An inspector visits the vehicle in person and produces a clear report. 
-          This is not DVLA, MOT, or ownership certification.
-        </p>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          {[
-            "Physical vehicle inspection",
-            "Condition assessment",
-            "Photo evidence",
-            "Detailed report",
-            "Verified status",
-            "Peace of mind",
-          ].map((item, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span className="mt-1 h-5 w-5 flex-shrink-0 rounded-full border border-[#16A34A] bg-[#F0FDF4] flex items-center justify-center">
-                <svg className="h-3 w-3 text-[#16A34A]" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </span>
-              <span className="text-sm text-[#101828]">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+  const supabase = await createClient();
+  const { data: linkedCar } = requestedCarId ? await supabase.from("cars").select("id,seller_id,year,make,model,variant,registration,mileage,fuel_type,transmission,city,postcode,car_images(storage_path,is_primary)").eq("id", requestedCarId).eq("status", "active").maybeSingle() : { data: null };
+  const { data: publicInspection } = linkedCar ? await supabase.rpc("get_public_listing_inspection_state", { p_car_id: linkedCar.id }) : { data: [] };
+  const { data: availability } = linkedCar ? await supabase.rpc("get_public_listing_inspection_availability", { p_car_id: linkedCar.id }) : { data: [] };
+  const sellerInspection = publicInspection?.[0] ?? null;
+  const activeInspection = availability?.[0]?.has_active_inspection ?? false;
+  const ownListing = Boolean(user && linkedCar?.seller_id === user.id);
+  const { data: ownRequest } = user && linkedCar ? await supabase.from("verification_requests").select("id,inspection_type,status").eq("car_id", linkedCar.id).eq("requested_by", user.id).in("status", ["pending", "confirmed", "assigned", "inspection_scheduled", "inspection_in_progress", "report_submitted", "completed"]).order("created_at", { ascending: false }).limit(1).maybeSingle() : { data: null };
+  const primary = linkedCar?.car_images?.find((image) => image.is_primary)?.storage_path ?? linkedCar?.car_images?.[0]?.storage_path;
+  const { data: imageUrl } = primary ? await supabase.storage.from("car-images").createSignedUrl(primary, 600) : { data: null };
+  const selectedVehicle = linkedCar && <div className="mt-5 flex flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:flex-row"><div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-slate-200 sm:h-20 sm:w-28 sm:shrink-0">{imageUrl?.signedUrl && <Image src={imageUrl.signedUrl} alt="Selected vehicle" fill unoptimized className="object-cover" />}</div><div className="min-w-0 flex-1"><p className="text-xs font-bold uppercase tracking-[.12em] text-[#d92d20]">Vehicle to inspect</p><p className="mt-1 font-semibold text-[#0b1f33]">{linkedCar.year} {linkedCar.make} {linkedCar.model}{linkedCar.variant ? ` ${linkedCar.variant}` : ""}</p><p className="mt-1 text-sm text-slate-600">{linkedCar.registration || "Registration not listed"} <span className="px-1 text-slate-300">·</span> {linkedCar.mileage.toLocaleString("en-GB")} miles <span className="px-1 text-slate-300">·</span> {linkedCar.city}, {linkedCar.postcode}</p></div><Link href="/cars" className="self-start text-sm font-semibold text-[#d92d20] hover:text-[#b42318]">Change vehicle</Link></div>;
 
-      {/* Login prompt */}
-      <div className="mt-8 rounded-2xl border border-[#E4E7EC] bg-white p-8 text-center">
-        <h2 className="font-h3 text-ink">Request an inspection</h2>
-        <p className="mt-2 text-[#667085]">
-          Please log in to schedule an inspection for your vehicle.
-        </p>
-        <button
-          onClick={async () => {
-            "use server";
-            await redirect(`/login?next=${encodeURIComponent(`/verification${car ? `?car=${car}` : ""}`)}`);
-          }}
-          className="mt-4 rounded-md bg-brand px-6 py-2.5 text-sm font-bold text-white hover:bg-[#B42318]"
-        >
-          Log in to request inspection
-        </button>
-        <p className="mt-4 text-sm text-[#667085]">
-          Don’t have an account?{" "}
-          <a href="/register" className="font-semibold text-brand hover:underline">
-            Create an account
-          </a>
-        </p>
-      </div>
-
-      {/* Form - only shown when logged in */}
-      <div className="mt-8 border border-[#E4E7EC] bg-white p-6">
-        <VerificationForm carId={car} />
-      </div>
-    </main>
-  );
+  return <main className="mx-auto max-w-5xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
+    <section className="border-b border-slate-200 pb-7"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#d92d20]">Vehicle inspection</p><h1 className="mt-2 text-3xl font-bold tracking-tight text-[#0b1f33] sm:text-4xl">Request a physical vehicle inspection</h1><p className="mt-3 max-w-3xl text-[15px] leading-7 text-slate-600">An inspector visits the vehicle in person and produces a condition report. This is not DVLA certification, MOT certification, or ownership certification.</p><div className="mt-5 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">{["Physical vehicle inspection", "Condition assessment", "Photo evidence", "Detailed inspection report"].map((item) => <p key={item} className="flex items-center gap-2"><CheckCircle2 size={17} className="text-emerald-600" />{item}</p>)}</div></section>
+    {!user ? <section className="mt-7 rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8"><h2 className="text-xl font-bold text-[#0b1f33]">Log in to request an inspection</h2><p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-600">Sign in to choose an inspection location and preferred visit time.</p><div className="mt-5 flex flex-wrap justify-center gap-3"><Link href={`/login?next=${encodeURIComponent(returnPath(requestedCarId))}`} className="rounded-lg bg-[#d92d20] px-5 py-3 text-sm font-semibold text-white hover:bg-[#b42318]">Log in to request inspection</Link><Link href="/register" className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-semibold text-[#0b1f33] hover:border-slate-400">Create an account</Link></div></section> : ownRequest ? <section className="mt-7 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">{selectedVehicle}<h2 className="mt-5 text-xl font-bold text-[#0b1f33]">{ownRequest.status === "completed" ? "Inspected by Fengxing" : "Inspection in progress"}</h2><p className="mt-2 text-sm text-slate-600">Open your inspection request to see its latest status and appointment details.</p><Link href={`/dashboard/verifications/${ownRequest.id}`} className="mt-4 inline-block text-sm font-semibold text-[#d92d20]">View inspection request</Link></section> : linkedCar && sellerInspection ? <section className="mt-7 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">{selectedVehicle}<h2 className="mt-5 text-xl font-bold text-[#0b1f33]">{statusLabel(sellerInspection.seller_inspection_status)}</h2><p className="mt-2 text-sm leading-6 text-slate-600">{sellerInspection.seller_inspection_status === "completed" ? `This listing was inspected by our team${sellerInspection.inspected_at ? ` on ${dateLabel(sellerInspection.inspected_at)}` : ""}.` : "An inspection is already in progress for this vehicle."}</p></section> : linkedCar && activeInspection ? <section className="mt-7 rounded-xl border border-amber-200 bg-amber-50 p-5 text-amber-950">{selectedVehicle}<h2 className="mt-5 text-xl font-bold">Inspection in progress</h2><p className="mt-2 text-sm">An inspection is already in progress for this vehicle.</p></section> : <section className="mt-7 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><div className="border-b border-slate-200 pb-5"><h2 className="text-xl font-bold text-[#0b1f33]">{ownListing ? "Request Fengxing Inspection" : "Request an inspection"}</h2><p className="mt-1 text-sm text-slate-600">{ownListing ? "Choose the inspection address and your preferred visit time for your listing." : "Choose the inspection address and your preferred visit time."}</p></div>{selectedVehicle}{requestedCarId && !linkedCar && <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">That marketplace listing is no longer available. You can still request an inspection for an external vehicle below.</div>}<div className="mt-6"><VerificationForm carId={linkedCar?.id} inspectionType={ownListing ? "seller_pre_inspection" : "buyer_inspection"} /></div></section>}
+  </main>;
 }

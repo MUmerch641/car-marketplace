@@ -1,23 +1,5 @@
+import { CheckCircle2, ShieldCheck } from "lucide-react";
 import { requireUser } from "@/lib/auth/server";
 import { ListingForm } from "@/components/cars/listing-form";
 import { createListingAction } from "@/app/marketplace-actions";
-import { PageHero } from "@/components/shared/page-hero";
-
-export default async function SellCarPage() {
-  await requireUser();
-
-  return (
-    <>
-      <PageHero
-        eyebrow="Sell your car"
-        title="Create your car listing"
-        copy="Save a draft first, upload clear photos, then submit it for a quick review."
-      />
-      <section className="mx-auto max-w-5xl px-5 py-10 lg:px-8">
-        <div className="card-standard">
-          <ListingForm action={createListingAction} />
-        </div>
-      </section>
-    </>
-  );
-}
+export default async function SellCarPage() { await requireUser(); return <main className="bg-[#f6f8fb] py-8 sm:py-12"><div className="mx-auto max-w-6xl px-5 lg:px-8"><header className="rounded-3xl bg-[#0b1f33] px-6 py-8 text-white sm:px-9 sm:py-10"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#fda29b]">Sell your car</p><h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Create a standout listing</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Start with the essentials. You can add photos and submit your car for review after saving the draft.</p><div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-slate-200"><span className="flex items-center gap-2"><CheckCircle2 size={17} className="text-[#7fdbca]" />Free to list</span><span className="flex items-center gap-2"><CheckCircle2 size={17} className="text-[#7fdbca]" />Save and continue later</span><span className="flex items-center gap-2"><ShieldCheck size={17} className="text-[#7fdbca]" />Reviewed before publishing</span></div></header><section className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 px-6 py-5 sm:px-8"><div className="flex flex-wrap items-center gap-3"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#d92d20] text-sm font-bold text-white">1</span><div><h2 className="font-bold text-[#0b1f33]">Vehicle information</h2><p className="text-sm text-slate-500">Tell buyers exactly what you’re selling.</p></div></div></div><div className="p-6 sm:p-8"><ListingForm action={createListingAction} /></div></section></div></main>; }
