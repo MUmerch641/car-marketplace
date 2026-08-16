@@ -1,10 +1,18 @@
 "use client";
 
-import { useActionState } from "react";
+import { useEffect, useActionState } from "react";
 import { createServiceBookingAction } from "@/app/service-actions";
+import { SubmitButton } from "@/components/ui/submit-button";
+import { toast } from "@/components/ui/toast";
 
 export function BookingForm({ service }: { service: { id: string; name: string; basePrice: number } }) {
   const [state, action, pending] = useActionState(createServiceBookingAction, {});
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+  }, [state?.error]);
 
   return (
     <form action={action} className="space-y-6">
@@ -66,13 +74,14 @@ export function BookingForm({ service }: { service: { id: string; name: string; 
       {state.error && <p className="input-error" role="alert">{state.error}</p>}
 
       {/* Submit button */}
-      <button
-        type="submit"
-        disabled={pending}
-        className="btn-primary w-full py-3"
+      <SubmitButton
+        variant="primary"
+        size="lg"
+        loadingText="Submitting booking..."
+        className="w-full py-3 text.base"
       >
-        {pending ? "Submitting…" : "Request booking"}
-      </button>
+        Request booking
+      </SubmitButton>
     </form>
   );
 }

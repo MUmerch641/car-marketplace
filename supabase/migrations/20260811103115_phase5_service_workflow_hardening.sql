@@ -5,7 +5,7 @@ begin
  if auth.uid() is null or p_preferred_date < current_date or trim(p_car_make) = '' or trim(p_car_model) = '' or trim(p_address_line_1) = '' or trim(p_city) = '' or trim(p_postcode) !~* '^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$' then raise exception 'Invalid booking request'; end if;
  select base_price into v_price from public.service_types where id=p_service_type_id and is_active;
  if v_price is null then raise exception 'Service unavailable'; end if;
- insert into public.service_bookings(customer_id,service_type_id,car_make,car_model,car_registration,address_line_1,address_line_2,city,postcode,preferred_date,preferred_time,notes,quoted_price) values(auth.uid(),trim(p_car_make),trim(p_car_model),nullif(trim(p_car_registration),''),trim(p_address_line_1),nullif(trim(p_address_line_2),''),trim(p_city),upper(trim(p_postcode)),p_preferred_date,p_preferred_time,nullif(trim(p_notes),''),v_price) returning id into v_id; return v_id;
+ insert into public.service_bookings(customer_id,service_type_id,car_make,car_model,car_registration,address_line_1,address_line_2,city,postcode,preferred_date,preferred_time,notes,quoted_price) values(auth.uid(),p_service_type_id,trim(p_car_make),trim(p_car_model),nullif(trim(p_car_registration),''),trim(p_address_line_1),nullif(trim(p_address_line_2),''),trim(p_city),upper(trim(p_postcode)),p_preferred_date,p_preferred_time,nullif(trim(p_notes),''),v_price) returning id into v_id; return v_id;
 end; $$;
 
 create or replace function public.assign_service_worker(p_booking_id uuid,p_worker_id uuid) returns void language plpgsql security definer set search_path = '' as $$

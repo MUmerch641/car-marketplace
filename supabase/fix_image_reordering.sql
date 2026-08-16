@@ -1,4 +1,4 @@
-create function public.move_car_image(p_image_id uuid, p_direction text)
+create or replace function public.move_car_image(p_image_id uuid, p_direction text)
 returns void language plpgsql security definer set search_path = '' as $$
 declare v_car_id uuid; v_order integer; v_other_id uuid; v_other_order integer;
 begin
@@ -12,6 +12,3 @@ begin
   update public.car_images set sort_order = v_other_order where id = p_image_id;
 end;
 $$;
-revoke all on function public.move_car_image(uuid, text) from public;
-revoke execute on function public.move_car_image(uuid, text) from anon;
-grant execute on function public.move_car_image(uuid, text) to authenticated;

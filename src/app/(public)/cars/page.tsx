@@ -8,7 +8,9 @@ import { CSS_STAGGER } from "@/lib/motion";
 
 export default async function CarsPage({
   searchParams,
-}: PageProps<"/cars">) {
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const params = await searchParams;
   const result = await browseCars(params);
   const values = Object.fromEntries(

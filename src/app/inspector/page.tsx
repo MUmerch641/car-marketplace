@@ -1,106 +1,201 @@
-import Link from "next/link";
 import { requireRole } from "@/lib/auth/server";
-import { createClient } from "@/lib/supabase/server";
-import { startInspection } from "@/app/verification-actions";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { InspectorWorkspace, type NormalizedJob } from "@/components/inspector/inspector-workspace";
 
 export default async function InspectorPage() {
-  const { user } = await requireRole("inspector");
-  const s = await createClient();
-  const [{ data: service }, { data: verification }] = await Promise.all([
-    s
+  const { user, profile } = await requireRole("inspector");
+  const adminDb = createAdminClient();
+
+  // Fetch active employee assignments using admin client to guarantee complete job data for the authenticated inspector
+  const [{ data: serviceAssignments }, { data: verificationAssignments }] = await Promise.all([
+    adminDb
       .from("employee_assignments")
-      .select("service_bookings(id,car_make,car_model,status,service_types(name))")
+      .select(`
+        id,
+        status,
+        assigned_at,
+        service_booking_id,
+        service_bookings (
+          id,
+          car_make,
+          car_model,
+          car_registration,
+          address_line_1,
+          address_line_2,
+          city,
+          postcode,
+          preferred_date,
+          preferred_time,
+          status,
+          notes,
+          created_at,
+          service_types (
+            name
+          ),
+          profiles:customer_id (
+            full_name,
+            phone
+          )
+        )
+      `)
       .eq("employee_id", user.id)
       .not("service_booking_id", "is", null)
-      .in("status", ["assigned", "in_progress"]),
-    s
+      .in("status", ["assigned", "accepted", "in_progress", "completed"]),
+
+    adminDb
       .from("employee_assignments")
-      .select("verification_requests(id,vehicle_registration,city,status,scheduled_for,inspection_type)")
+      .select(`
+        id,
+        status,
+        assigned_at,
+        verification_request_id,
+        verification_requests (
+          id,
+          car_id,
+          vehicle_registration,
+          external_make,
+          external_model,
+          external_year,
+          seller_name,
+          seller_phone,
+          inspection_address,
+          city,
+          postcode,
+          preferred_date,
+          preferred_time,
+          scheduled_for,
+          inspection_type,
+          status,
+          notes,
+          created_at
+        )
+      `)
       .eq("employee_id", user.id)
       .not("verification_request_id", "is", null)
-      .in("status", ["assigned", "in_progress"]),
+      .in("status", ["assigned", "accepted", "in_progress", "completed"]),
   ]);
 
-  return (
-    <main className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
-      <h1 className="font-h1 text-ink">Field worker workspace</h1>
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const normalizedJobs: NormalizedJob[] = [];
 
-      {/* Mobile service jobs */}
-      <div className="mt-8">
-        <h2 className="font-h2 text-ink">Mobile service jobs</h2>
-        <div className="mt-4 space-y-3">
-          {service?.map((a) =>
-            a.service_bookings ? (
-              <div key={a.service_bookings.id} className="card-standard p-6">
-                <div className="flex items-center justify-between">
-                  <b className="font-h3 text-ink">{a.service_bookings.service_types?.name}</b>
-                  <span className={`status-${a.service_bookings.status.replace("_", "-")}`}>
-                    {a.service_bookings.status.replace("_", " ")}
-                  </span>
-                </div>
-                <p className="mt-2 text-[#667085]">
-                  {a.service_bookings.car_make} {a.service_bookings.car_model}
-                </p>
-              </div>
-            ) : null
-          )}
-        </div>
-      </div>
+  // Process mobile service jobs assigned to this inspector
+  for (const a of serviceAssignments || []) {
+    const sb = (Array.isArray(a.service_bookings) ? a.service_bookings[0] : a.service_bookings) as Record<string, any> | null;
+    if (!sb || a.status === "cancelled") continue;
 
-      {/* Vehicle inspection jobs */}
-      <div className="mt-10">
-        <h2 className="font-h2 text-ink">Vehicle inspection jobs</h2>
-        <div className="mt-4 space-y-3">
-          {verification?.length ? (
-            verification.map((a) =>
-              a.verification_requests ? (
-                <article key={a.verification_requests.id} className="card-standard p-6">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <b className="font-h3 text-ink">{a.verification_requests.vehicle_registration}</b>
-                      <p className="mt-2 text-[#667085]">
-                        {a.verification_requests.city}
-                      </p>
-                      <p className="mt-1 text-xs font-semibold text-[#667085]">{a.verification_requests.inspection_type === "seller_pre_inspection" ? "Seller pre-inspection" : "Buyer inspection"}</p>
-                    </div>
-                    <span className={`status-${a.verification_requests.status.replace("_", "-")}`}>
-                      {a.verification_requests.status.replace("_", " ")}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm text-[#667085]">
-                    {a.verification_requests.scheduled_for
-                      ? new Date(a.verification_requests.scheduled_for).toLocaleDateString("en-GB")
-                      : "Awaiting schedule"}
-                  </p>
-                  {a.verification_requests.status === "inspection_scheduled" && (
-                    <form
-                      action={async () => {
-                        "use server";
-                        await startInspection(a.verification_requests!.id);
-                      }}
-                      className="mt-4"
-                    >
-                      <button type="submit" className="btn-primary w-fit">
-                        Start inspection
-                      </button>
-                    </form>
-                  )}
-                  <Link
-                    href={`/inspector/verifications/${a.verification_requests.id}`}
-                    className="btn-tertiary mt-2 block"
-                  >
-                    Open inspection
-                  </Link>
-                </article>
-              ) : null
-            )
-          ) : (
-            <div className="card-standard p-10 text-center">
-              <p className="text-[#667085]">No inspection jobs assigned.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </main>
-  );
+    const rawStatus = sb.status;
+    const scheduledDate = sb.preferred_date || "";
+    const scheduledTime = sb.preferred_time || "09:00";
+    const carMake = sb.car_make || "Vehicle";
+    const carModel = sb.car_model || "";
+    const carReg = sb.car_registration || "";
+    const addressLine = [sb.address_line_1, sb.address_line_2].filter(Boolean).join(", ");
+    const fullAddress = `${addressLine}, ${sb.city}, ${sb.postcode}`;
+    const isToday = scheduledDate === todayStr || rawStatus === "on_the_way" || rawStatus === "in_progress";
+    const isCompleted = rawStatus === "completed" || rawStatus === "cancelled";
+    const serviceTypeName = Array.isArray(sb.service_types) ? sb.service_types[0]?.name : sb.service_types?.name;
+    const customerName = Array.isArray(sb.profiles) ? sb.profiles[0]?.full_name : sb.profiles?.full_name;
+    const customerPhone = Array.isArray(sb.profiles) ? sb.profiles[0]?.phone : sb.profiles?.phone;
+
+    normalizedJobs.push({
+      id: `sb-${sb.id}`,
+      jobType: "service",
+      jobTypeLabel: "Mobile Service",
+      serviceBookingId: sb.id,
+      title: serviceTypeName || "Mobile Car Service",
+      carMake,
+      carModel,
+      carRegistration: carReg,
+      vehicleDisplay: `${carMake} ${carModel}`.trim(),
+      scheduledDate,
+      scheduledTime,
+      scheduledTimeRaw: `${scheduledDate}T${scheduledTime}`,
+      addressLine,
+      city: sb.city,
+      postcode: sb.postcode,
+      locationDisplay: `${sb.city} ${sb.postcode}`,
+      fullAddress,
+      customerName: customerName || "Customer",
+      customerPhone: customerPhone || "",
+      status: rawStatus,
+      statusLabel: formatStatusLabel(rawStatus),
+      notes: sb.notes,
+      assignedAt: a.assigned_at,
+      isToday,
+      isUpcoming: !isCompleted,
+      isCompleted,
+    });
+  }
+
+  // Process vehicle inspection jobs assigned to this inspector
+  for (const a of verificationAssignments || []) {
+    const vr = (Array.isArray(a.verification_requests) ? a.verification_requests[0] : a.verification_requests) as Record<string, any> | null;
+    if (!vr || a.status === "cancelled") continue;
+
+    const rawStatus = vr.status;
+    const scheduledDate = vr.scheduled_for ? vr.scheduled_for.slice(0, 10) : vr.preferred_date || "";
+    const scheduledTime = vr.scheduled_for
+      ? new Date(vr.scheduled_for).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
+      : vr.preferred_time || "TBD";
+    const carMake = vr.external_make || "Vehicle";
+    const carModel = vr.external_model || "";
+    const carReg = vr.vehicle_registration || "";
+    const fullAddress = `${vr.inspection_address}, ${vr.city}, ${vr.postcode}`;
+    const isToday = scheduledDate === todayStr || rawStatus === "inspection_in_progress";
+    const isCompleted = rawStatus === "completed" || rawStatus === "report_submitted" || rawStatus === "cancelled";
+
+    normalizedJobs.push({
+      id: `vr-${vr.id}`,
+      jobType: "inspection",
+      jobTypeLabel: vr.inspection_type === "seller_pre_inspection" ? "Seller Pre-Inspection" : "Vehicle Inspection",
+      verificationRequestId: vr.id,
+      title: vr.inspection_type === "seller_pre_inspection" ? "Seller Pre-Inspection" : "Buyer Pre-purchase Inspection",
+      carMake,
+      carModel,
+      carRegistration: carReg,
+      vehicleDisplay: `${carMake} ${carModel}`.trim() || carReg || "Inspection Vehicle",
+      scheduledDate,
+      scheduledTime,
+      scheduledTimeRaw: vr.scheduled_for || `${scheduledDate}T${scheduledTime}`,
+      addressLine: vr.inspection_address,
+      city: vr.city,
+      postcode: vr.postcode,
+      locationDisplay: `${vr.city} ${vr.postcode}`,
+      fullAddress,
+      customerName: vr.seller_name || "Seller/Customer",
+      customerPhone: vr.seller_phone || "",
+      status: rawStatus,
+      statusLabel: formatStatusLabel(rawStatus),
+      notes: vr.notes,
+      assignedAt: a.assigned_at,
+      isToday,
+      isUpcoming: !isCompleted,
+      isCompleted,
+    });
+  }
+
+  // Sort chronologically by scheduled time
+  normalizedJobs.sort((a, b) => a.scheduledTimeRaw.localeCompare(b.scheduledTimeRaw));
+
+  const workerName = profile.full_name || user.email?.split("@")[0] || "Field Worker";
+
+  return <InspectorWorkspace jobs={normalizedJobs} workerName={workerName} />;
+}
+
+function formatStatusLabel(status: string): string {
+  switch (status) {
+    case "on_the_way":
+      return "On the way";
+    case "in_progress":
+    case "inspection_in_progress":
+      return "In progress";
+    case "report_submitted":
+      return "Report submitted";
+    case "completed":
+      return "Completed";
+    case "inspection_scheduled":
+      return "Scheduled";
+    default:
+      return status.replace(/_/g, " ");
+  }
 }

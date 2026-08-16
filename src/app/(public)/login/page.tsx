@@ -1,4 +1,28 @@
 import Link from "next/link";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "./login-form";
-export default async function LoginPage({ searchParams }: PageProps<"/login">) { const { next = "" } = await searchParams; return <AuthShell mode="login"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#d92d20]">Welcome back</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0b1f33]">Log in to Fengxing</h2><p className="mt-3 text-sm leading-6 text-slate-500">Enter your details to continue to your account.</p><div className="mt-8"><LoginForm next={typeof next === "string" ? next : ""} /></div><p className="mt-7 text-center text-sm text-slate-500">New to Fengxing? <Link href="/register" className="font-bold text-[#d92d20] hover:text-[#b42318]">Create an account</Link></p></AuthShell>; }
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string | string[] | undefined }>;
+}) {
+  const resolvedParams = await searchParams;
+  const next = typeof resolvedParams?.next === "string" ? resolvedParams.next : "";
+
+  return (
+    <AuthShell mode="login">
+      <p className="text-xs font-bold uppercase tracking-[.14em] text-[#d92d20]">Welcome back</p>
+      <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#0b1f33]">Log in to Fengxing</h2>
+      <p className="mt-3 text-sm leading-6 text-slate-500">Enter your details to continue to your account.</p>
+      <div className="mt-8">
+        <LoginForm next={next} />
+      </div>
+      <p className="mt-7 text-center text-sm text-slate-500">
+        New to Fengxing?{" "}
+        <Link href="/register" className="font-bold text-[#d92d20] hover:text-[#b42318]">
+          Create an account
+        </Link>
+      </p>
+    </AuthShell>
+  );
+}

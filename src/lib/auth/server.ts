@@ -6,9 +6,9 @@ export type ProfileRole = Database["public"]["Enums"]["profile_role"];
 
 export async function getCurrentUser() {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-  if (error || !data?.claims?.sub) return null;
-  return { id: data.claims.sub, email: data.claims.email ?? null };
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) return null;
+  return { id: data.user.id, email: data.user.email ?? null };
 }
 
 export async function getCurrentProfile() {

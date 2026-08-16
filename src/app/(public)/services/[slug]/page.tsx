@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getActiveService } from "@/lib/services/services";
 
-export default async function ServiceDetailsPage({ params }: PageProps<"/services/[slug]">) {
+export default async function ServiceDetailsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params; const service = await getActiveService(slug); if (!service) notFound();
   const duration = service.estimatedDurationMinutes ? `${service.estimatedDurationMinutes} minutes` : "Confirmed with your booking";
   return <div className="mx-auto max-w-6xl px-5 py-10 lg:px-8"><div className="grid gap-8 border border-[#E4E7EC] bg-white p-6 lg:grid-cols-[.8fr_1.2fr] lg:p-9"><div className="bg-ink p-7 text-white"><p className="text-sm font-bold uppercase tracking-[.14em] text-[#F97066]">Mobile car service</p><p className="mt-12 text-4xl font-bold">From £{service.basePrice.toLocaleString("en-GB")}</p><p className="mt-3 text-sm text-[#D0D5DD]">A starting price. Final arrangements are confirmed with you.</p></div><div><h1 className="text-4xl font-bold tracking-tight text-ink">{service.name}</h1><p className="mt-4 text-lg leading-8 text-[#667085]">{service.description}</p><dl className="mt-7 grid grid-cols-2 gap-4"><div className="border border-[#E4E7EC] bg-[#F5F6F7] p-4"><dt className="text-xs font-bold uppercase text-[#667085]">Base price</dt><dd className="mt-1 font-bold text-brand">From £{service.basePrice.toLocaleString("en-GB")}</dd></div><div className="border border-[#E4E7EC] bg-[#F5F6F7] p-4"><dt className="text-xs font-bold uppercase text-[#667085]">Estimated time</dt><dd className="mt-1 font-bold">{duration}</dd></div></dl><Button href={`/services/${service.slug}/book`} className="mt-7">Book this service</Button></div></div><section className="mt-10 border-t border-[#E4E7EC] pt-8"><h2 className="text-2xl font-bold">What to expect</h2><div className="mt-5 grid gap-4 sm:grid-cols-3">{["Choose a preferred date and time.", "Our team confirms the visit and assigns a worker.", "The work is carried out at your selected location."].map((item, index) => <div className="border border-[#E4E7EC] p-5" key={item}><p className="font-bold text-brand">0{index + 1}</p><p className="mt-2 text-sm leading-6 text-[#667085]">{item}</p></div>)}</div></section></div>;

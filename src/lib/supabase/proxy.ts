@@ -22,6 +22,24 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getClaims();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data?.user ?? null;
+  } catch {
+    user = null;
+  }
+
+  const pathname = request.nextUrl.pathname;
+  const protectedRoutes = ["/sell-car", "/dashboard", "/admin", "/inspector"];
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
+  }
+
   return response;
 }
