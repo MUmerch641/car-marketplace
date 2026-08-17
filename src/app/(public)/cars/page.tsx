@@ -34,60 +34,7 @@ export default async function CarsPage({
       <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
         <SearchControls values={values} />
 
-        <form
-          action="/cars"
-          className="mt-5 grid gap-3 border-t border-[#E4E7EC] pt-5 sm:grid-cols-4"
-        >
-          {Object.entries(values)
-            .filter(
-              ([key]) =>
-                !["make", "postcode", "minPrice", "maxPrice", "page"].includes(
-                  key
-                )
-            )
-            .map(([key, value]) => (
-              <input key={key} type="hidden" name={key} value={value} />
-            ))}
-          <select
-            name="fuel"
-            defaultValue={values.fuel}
-            className="input-standard"
-          >
-            <option value="">Fuel type</option>
-            <option value="petrol">Petrol</option>
-            <option value="diesel">Diesel</option>
-            <option value="hybrid">Hybrid</option>
-            <option value="electric">Electric</option>
-          </select>
-          <select
-            name="transmission"
-            defaultValue={values.transmission}
-            className="input-standard"
-          >
-            <option value="">Transmission</option>
-            <option value="manual">Manual</option>
-            <option value="automatic">Automatic</option>
-          </select>
-          <input
-            name="maxMileage"
-            defaultValue={values.maxMileage}
-            placeholder="Maximum mileage"
-            className="input-standard"
-          />
-          <select
-            name="sort"
-            defaultValue={values.sort}
-            className="input-standard"
-          >
-            <option value="newest">Newest</option>
-            <option value="price_asc">Price low to high</option>
-            <option value="price_desc">Price high to low</option>
-            <option value="mileage">Lowest mileage</option>
-          </select>
-          <button type="submit" className="btn-primary h-[52px]">
-            Apply
-          </button>
-        </form>
+
 
         <div className="mt-8 flex items-center justify-between">
           <p className="text-sm font-semibold text-[#667085]">
