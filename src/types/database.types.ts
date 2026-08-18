@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -11,6 +11,31 @@ export type Database = {
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.15"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -302,6 +327,59 @@ export type Database = {
             columns: ["verification_request_id"]
             isOneToOne: false
             referencedRelation: "verification_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      garage_vehicles: {
+        Row: {
+          colour: string
+          created_at: string
+          customer_id: string
+          engine_capacity_cc: number | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          id: string
+          make: string
+          model: string
+          mot_expiry: string | null
+          registration: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          colour: string
+          created_at?: string
+          customer_id: string
+          engine_capacity_cc?: number | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          id?: string
+          make: string
+          model: string
+          mot_expiry?: string | null
+          registration: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          colour?: string
+          created_at?: string
+          customer_id?: string
+          engine_capacity_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"]
+          id?: string
+          make?: string
+          model?: string
+          mot_expiry?: string | null
+          registration?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "garage_vehicles_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -864,6 +942,7 @@ export type Database = {
           p_address: string
           p_car_id: string
           p_city: string
+          p_inspection_type: Database["public"]["Enums"]["inspection_type"]
           p_make: string
           p_model: string
           p_notes?: string
@@ -873,24 +952,30 @@ export type Database = {
           p_registration: string
           p_seller_name: string
           p_seller_phone: string
-          p_inspection_type: Database["public"]["Enums"]["inspection_type"]
           p_year: number
         }
         Returns: string
       }
       finalise_verification: { Args: { p_id: string }; Returns: undefined }
+      get_admin_staff_directory: {
+        Args: never
+        Returns: {
+          assignment_count: number
+          email: string
+          employee_id: string
+          full_name: string
+          has_active_assignments: boolean
+          id: string
+          phone: string
+          role: Database["public"]["Enums"]["profile_role"]
+          staff_status: Database["public"]["Enums"]["staff_status"]
+        }[]
+      }
       get_assigned_service_customer_contact: {
         Args: { p_booking_id: string }
         Returns: {
           full_name: string
           phone: string
-        }[]
-      }
-      get_public_listing_inspection_state: {
-        Args: { p_car_id: string }
-        Returns: {
-          inspected_at: string | null
-          seller_inspection_status: Database["public"]["Enums"]["verification_request_status"]
         }[]
       }
       get_public_listing_inspection_availability: {
@@ -900,18 +985,11 @@ export type Database = {
           has_completed_seller_inspection: boolean
         }[]
       }
-      get_admin_staff_directory: {
-        Args: Record<PropertyKey, never>
+      get_public_listing_inspection_state: {
+        Args: { p_car_id: string }
         Returns: {
-          assignment_count: number
-          email: string | null
-          employee_id: string | null
-          full_name: string | null
-          has_active_assignments: boolean
-          id: string
-          phone: string | null
-          role: Database["public"]["Enums"]["profile_role"]
-          staff_status: Database["public"]["Enums"]["staff_status"]
+          inspected_at: string
+          seller_inspection_status: Database["public"]["Enums"]["verification_request_status"]
         }[]
       }
       mark_car_sold: { Args: { p_car_id: string }; Returns: undefined }
@@ -1021,7 +1099,6 @@ export type Database = {
         | "refunded"
         | "cancelled"
       profile_role: "customer" | "inspector" | "admin"
-      staff_status: "active" | "inactive"
       service_booking_status:
         | "pending"
         | "confirmed"
@@ -1030,6 +1107,7 @@ export type Database = {
         | "in_progress"
         | "completed"
         | "cancelled"
+      staff_status: "active" | "inactive"
       transmission_type: "manual" | "automatic" | "semi_automatic" | "other"
       verification_request_status:
         | "pending"
@@ -1165,6 +1243,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       assignment_status: [
@@ -1190,6 +1271,7 @@ export const Constants = {
         "attention_required",
         "not_suitable",
       ],
+      inspection_type: ["seller_pre_inspection", "buyer_inspection"],
       listing_status: [
         "draft",
         "pending_review",
@@ -1225,6 +1307,7 @@ export const Constants = {
         "completed",
         "cancelled",
       ],
+      staff_status: ["active", "inactive"],
       transmission_type: ["manual", "automatic", "semi_automatic", "other"],
       verification_request_status: [
         "pending",

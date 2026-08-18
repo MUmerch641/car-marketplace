@@ -11,6 +11,8 @@ import {
 import { getCurrentProfile, requireUser } from "@/lib/auth/server";
 import { getMyCars } from "@/lib/marketplace/cars";
 import { createClient } from "@/lib/supabase/server";
+import { markSoldAction } from "@/app/marketplace-actions";
+import { RemoveVehicleButton } from "@/components/dashboard/remove-vehicle-button";
 
 const bookingStatusStyles: Record<string, string> = {
   pending: "bg-amber-50 text-amber-800 ring-amber-200",
@@ -85,7 +87,7 @@ function EmptyState({
 export default async function DashboardPage() {
   const user = await requireUser();
   const supabase = await createClient();
-  const [profile, cars, bookingsResponse, verificationsResponse, sellerInspectionResponse] = await Promise.all([
+  const [profile, cars, bookingsResponse, verificationsResponse, sellerInspectionResponse, garageVehiclesResponse] = await Promise.all([
     getCurrentProfile(),
     getMyCars(),
     supabase
@@ -106,11 +108,17 @@ export default async function DashboardPage() {
       .eq("requested_by", user.id)
       .eq("inspection_type", "seller_pre_inspection")
       .order("created_at", { ascending: false }),
+    supabase
+      .from("garage_vehicles")
+      .select("*")
+      .eq("customer_id", user.id)
+      .order("created_at", { ascending: false }),
   ]);
 
   const bookings = bookingsResponse.data ?? [];
   const verifications = verificationsResponse.data ?? [];
   const sellerInspections = sellerInspectionResponse.data ?? [];
+  const garageVehicles = garageVehiclesResponse.data ?? [];
   const firstName = profile?.full_name?.trim().split(" ")[0];
 
   return (
@@ -125,14 +133,12 @@ export default async function DashboardPage() {
             <p className="mt-2 text-[15px] text-slate-600">Manage your vehicles, bookings and listings.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              disabled
-              title="Vehicle registration lookup is coming soon"
-              className="inline-flex cursor-not-allowed items-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-400"
+            <Link
+              href="/dashboard/garage"
+              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
             >
-              Add vehicle <span className="ml-1.5 text-xs font-medium">Coming soon</span>
-            </button>
+              Add vehicle
+            </Link>
             <Link href="/sell-car" className="inline-flex items-center rounded-lg bg-[#d92d20] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#b42318]">
               Sell a car <ArrowRight size={16} className="ml-2" />
             </Link>
@@ -161,14 +167,49 @@ export default async function DashboardPage() {
               <h2 className="mt-1 text-xl font-bold text-[#0b1f33]">My Garage</h2>
               <p className="mt-1 text-sm leading-6 text-slate-600">Keep your vehicles in one place for faster parts, services and inspections.</p>
             </div>
-            <button type="button" disabled title="Vehicle registration lookup is coming soon" className="w-fit cursor-not-allowed rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-400">
-              Add vehicle <span className="ml-1 text-xs font-medium">Coming soon</span>
-            </button>
+            <Link href="/dashboard/garage" className="w-fit rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+              Add vehicle
+            </Link>
           </div>
-          <div className="mt-5 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-4">
-            <p className="text-sm font-semibold text-[#0b1f33]">Vehicle registration lookup is not available yet</p>
-            <p className="mt-1 text-sm text-slate-600">Your active and draft listings are shown below. Garage vehicles will be added here when the feature is ready.</p>
-          </div>
+          
+          {garageVehicles.length > 0 ? (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {garageVehicles.map((vehicle) => (
+                <div key={vehicle.id} className="relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div>
+                    <div className="inline-block rounded border border-yellow-500 bg-yellow-400 px-2 py-0.5 text-sm font-bold uppercase tracking-widest text-black mb-3">
+                      {vehicle.registration}
+                    </div>
+                    <h3 className="font-bold text-[#0b1f33] truncate">
+                      {vehicle.year} {vehicle.make} {vehicle.model}
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {vehicle.fuel_type} <span className="px-1 text-slate-300">·</span> {vehicle.colour}
+                      {vehicle.mot_expiry && (
+                        <>
+                          <span className="px-1 text-slate-300">·</span> MOT: {new Date(vehicle.mot_expiry).toLocaleDateString("en-GB")}
+                        </>
+                      )}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                    <RemoveVehicleButton vehicleId={vehicle.id} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-5 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+                <CarFront size={20} className="text-slate-400" />
+              </div>
+              <p className="mt-3 text-sm font-semibold text-[#0b1f33]">No vehicles in your garage</p>
+              <p className="mt-1 text-sm text-slate-600">Add a vehicle using its registration number.</p>
+              <Link href="/dashboard/garage" className="mt-4 inline-flex text-sm font-semibold text-[#d92d20] hover:text-[#b42318]">
+                Add vehicle
+              </Link>
+            </div>
+          )}
         </section>
 
         <section id="listings" className="mt-7 border-t border-slate-200 pt-5">
@@ -196,6 +237,11 @@ export default async function DashboardPage() {
                     <Status status={car.status ?? "draft"} styles={{ active: "bg-emerald-50 text-emerald-800 ring-emerald-200", pending: "bg-amber-50 text-amber-800 ring-amber-200", draft: "bg-slate-100 text-slate-700 ring-slate-200", rejected: "bg-red-50 text-red-700 ring-red-200", sold: "bg-blue-50 text-blue-800 ring-blue-200", archived: "bg-slate-100 text-slate-600 ring-slate-200" }} />
                     <div className="flex items-center gap-3 text-sm font-semibold">
                       {car.status === "active" && <Link href={`/cars/${car.id}`} className="text-slate-700 hover:text-[#0b1f33]">View</Link>}
+                      {car.status === "active" && (
+                        <form action={async () => { "use server"; await markSoldAction(car.id); }}>
+                          <button type="submit" className="text-[#039855] hover:text-[#027A48]">Mark Sold</button>
+                        </form>
+                      )}
                       {car.status === "active" && (inspection ? <Link href={`/dashboard/verifications/${inspection.id}`} className="text-[#d92d20] hover:text-[#b42318]">{inspection.status === "completed" ? "Inspected by Fengxing" : "View inspection"}</Link> : <Link href={`/verification?car=${car.id}`} className="text-[#d92d20] hover:text-[#b42318]">Request Fengxing Inspection</Link>)}
                       <Link href={`/dashboard/cars/${car.id}/edit?step=details`} className="text-[#d92d20] hover:text-[#b42318]">Edit</Link>
                     </div>

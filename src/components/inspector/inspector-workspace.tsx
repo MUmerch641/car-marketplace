@@ -141,7 +141,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 sm:space-y-8">
       {/* Action Error Alert */}
       {actionError && (
         <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs font-semibold text-red-800 sm:text-sm">
@@ -156,76 +156,58 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
       )}
 
       {/* Main Navigation Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-2.5 shadow-sm sm:rounded-2xl sm:px-6">
-        <nav className="flex items-center gap-1 sm:gap-2">
+      <div className="sticky top-4 z-40 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2 shadow-sm sm:px-6">
+        <nav className="flex items-center gap-4 sm:gap-6">
           <button
             onClick={() => setActiveTab("today")}
-            className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition-all sm:px-4 sm:text-sm ${
+            className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "today"
-                ? "bg-[#0b1f33] text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
-            <Clock size={16} />
             <span>Today</span>
-            {todayJobs.length > 0 && (
-              <span
-                className={`ml-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
-                  activeTab === "today" ? "bg-[#d92d20] text-white" : "bg-slate-200 text-slate-800"
-                }`}
-              >
-                {todayJobs.length}
-              </span>
-            )}
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{todayJobs.length}</span>
           </button>
-
+          
           <button
             onClick={() => setActiveTab("jobs")}
-            className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition-all sm:px-4 sm:text-sm ${
+            className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "jobs"
-                ? "bg-[#0b1f33] text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
-            <Calendar size={16} />
             <span>Jobs</span>
-            <span
-              className={`ml-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
-                activeTab === "jobs" ? "bg-[#d92d20] text-white" : "bg-slate-200 text-slate-800"
-              }`}
-            >
-              {jobs.length}
-            </span>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{jobs.length}</span>
           </button>
-
+          
           <button
             onClick={() => setActiveTab("map")}
-            className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition-all sm:px-4 sm:text-sm ${
+            className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "map"
-                ? "bg-[#0b1f33] text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
-            <Navigation size={16} />
             <span>Map</span>
           </button>
-
+          
           <button
             onClick={() => setActiveTab("history")}
-            className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition-all sm:px-4 sm:text-sm ${
+            className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "history"
-                ? "bg-[#0b1f33] text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
-            <CheckCircle2 size={16} />
             <span>History</span>
           </button>
         </nav>
 
         <div className="hidden items-center gap-2 text-xs font-semibold text-slate-500 md:flex">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span>Field operational status: Ready</span>
+          <span>Operational: Ready</span>
         </div>
       </div>
 
@@ -487,8 +469,8 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
 
       {/* JOB DETAIL SLIDE-OVER MODAL */}
       {selectedJob && (
-        <div className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/60 backdrop-blur-xs p-0 sm:p-4">
-          <div className="relative flex h-full w-full max-w-xl flex-col bg-white shadow-2xl sm:h-auto sm:max-h-[90vh] sm:rounded-3xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/60 p-0 sm:p-4">
+          <div className="relative flex h-full w-full max-w-xl flex-col bg-white shadow-2xl sm:h-auto sm:max-h-[90vh] sm:rounded-2xl overflow-hidden border border-slate-200">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
               <div className="flex items-center gap-2">
@@ -716,13 +698,13 @@ function JobCard({
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(job.fullAddress)}`;
 
   return (
-    <div className="group flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs transition-all hover:border-slate-300 hover:shadow-md sm:flex-row sm:items-center">
+    <div className="flex flex-col justify-between gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-slate-300 sm:flex-row sm:items-center">
       {/* Left Column: Time & Main Details */}
-      <div className="flex items-start gap-3 sm:items-center">
-        {/* Time Pill */}
-        <div className="flex flex-col items-center justify-center rounded-xl bg-[#0b1f33] px-3 py-2 text-white min-w-[64px]">
-          <span className="text-xs font-extrabold tracking-tight">{job.scheduledTime}</span>
-          <span className="text-[9px] font-semibold text-slate-300 uppercase">{job.isToday ? "Today" : job.scheduledDate.slice(0, 6)}</span>
+      <div className="flex items-start gap-4 sm:items-center">
+        {/* Time Box */}
+        <div className="flex min-w-[60px] flex-col items-center justify-center rounded bg-slate-50 border border-slate-100 px-3 py-2 text-[#0b1f33]">
+          <span className="text-sm font-bold tracking-tight">{job.scheduledTime}</span>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase">{job.isToday ? "Today" : job.scheduledDate.slice(0, 6)}</span>
         </div>
 
         {/* Content */}
@@ -739,7 +721,7 @@ function JobCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-bold text-[#0b1f33] group-hover:text-[#d92d20] transition-colors">{job.vehicleDisplay}</h3>
+            <h3 className="text-sm font-bold text-[#0b1f33]">{job.vehicleDisplay}</h3>
             {job.carRegistration && (
               <span className="rounded-md bg-amber-300/80 px-1.5 py-0.5 font-mono text-[11px] font-extrabold text-black">
                 {job.carRegistration}

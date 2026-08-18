@@ -94,17 +94,24 @@ export function NavbarClient({ profile }: NavbarClientProps) {
         <div className="flex items-center gap-4">
           {profile ? (
             <>
+            <div className="hidden sm:block relative group">
               <Link
                 href={dashboardHref}
-                className="hidden text-sm font-bold text-white sm:block transition-opacity hover:opacity-80"
+                className="flex items-center gap-1.5 text-sm font-bold text-white transition-opacity hover:opacity-80 py-2"
               >
-                Account
+                Account <span className="text-[10px] opacity-70">▼</span>
               </Link>
-              <form action={logoutAction}>
-                <button className="hidden text-sm font-bold text-[#D0D5DD] transition-colors hover:text-white sm:block">
-                  Logout
-                </button>
-              </form>
+              <div className="absolute right-0 top-full w-48 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5">
+                  <Link href={dashboardHref} className="px-4 py-3 text-sm font-semibold text-[#0b1f33] hover:bg-slate-50">Dashboard</Link>
+                  <Link href="/dashboard/garage" className="px-4 py-3 text-sm font-semibold text-[#0b1f33] hover:bg-slate-50">My Garage</Link>
+                  <Link href="/dashboard/bookings" className="px-4 py-3 text-sm font-semibold text-[#0b1f33] border-b border-slate-100 hover:bg-slate-50">Bookings</Link>
+                  <form action={logoutAction} className="block w-full">
+                    <button type="submit" className="w-full px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors">Logout</button>
+                  </form>
+                </div>
+              </div>
+            </div>
             </>
           ) : (
             <Link

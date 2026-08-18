@@ -16,7 +16,7 @@ export default function ContactPage() {
             <div className="text-center">
               <h2 className="text-3xl font-extrabold tracking-tight text-[#0B1F33]">Get in touch</h2>
               <p className="mt-4 text-lg text-[#667085]">
-                Our team is ready to assist you. Reach out through any of the channels below and we'll get back to you within 24 hours.
+                Our team is ready to assist you. Reach out through any of the channels below and we&apos;ll get back to you within 24 hours.
               </p>
             </div>
 

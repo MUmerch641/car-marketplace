@@ -49,9 +49,16 @@ export default function AboutPage() {
       <section className="bg-[#F8F9FA] py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <AnimatedContent distance={30} duration={0.6}>
-            <div className="text-center">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#D92D20]">Our Core Values</h2>
-              <p className="mt-2 text-3xl font-bold tracking-tight text-[#0B1F33] sm:text-4xl">What drives us forward</p>
+            <div className="flex flex-col justify-center max-w-xl">
+              <p className="text-sm font-bold uppercase tracking-[.12em] text-[#D92D20] mb-2">Our Mission</p>
+              <h2 className="text-3xl font-extrabold tracking-tight text-[#0B1F33] sm:text-4xl mb-6">
+                Redefining the car buying experience.
+              </h2>
+              <div className="space-y-4 text-lg text-[#667085]">
+                <p>
+                  At Fengxing, we believe buying or selling a car shouldn&apos;t be a stressful ordeal filled with uncertainty. We&apos;ve built a platform that puts transparency and trust at the forefront.
+                </p>
+              </div>
             </div>
           </AnimatedContent>
 
