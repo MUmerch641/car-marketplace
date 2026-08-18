@@ -2,6 +2,7 @@ import { requireUser } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { AddVehicleSection } from "./add-vehicle-form";
 import { RemoveVehicleButton } from "@/components/dashboard/remove-vehicle-button";
+import { ActionMenu } from "@/components/ui/action-menu";
 import { CarFront } from "lucide-react";
 import Link from "next/link";
 
@@ -39,61 +40,45 @@ export default async function GaragePage() {
           )}
           
           {vehicles.length > 0 ? (
-             <div className="flex flex-col gap-6">
+             <div className="flex flex-col gap-4">
                {vehicles.map((vehicle) => (
-                 <div key={vehicle.id} className="flex flex-col md:flex-row w-full bg-white rounded-2xl border border-slate-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)] overflow-hidden transition-all hover:border-slate-300 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.06)]">
+                 <div key={vehicle.id} className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:p-5">
                    {/* Visual Area */}
-                   <div className="w-full md:w-[220px] bg-slate-50 flex items-center justify-center shrink-0 border-b md:border-b-0 md:border-r border-slate-100 p-10 md:p-0 min-h-[160px]">
-                     <CarFront size={72} className="text-slate-300" strokeWidth={1} />
+                   <div className="h-16 w-full shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:w-24 relative flex items-center justify-center">
+                     <CarFront size={22} className="text-slate-400" strokeWidth={2} />
                    </div>
 
                    {/* Content Area */}
-                   <div className="flex flex-1 flex-col justify-between p-6 sm:p-8">
-                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
-                       <div>
-                         <h3 className="text-[22px] sm:text-[26px] font-black text-[#0b1f33] leading-none uppercase tracking-tight">
-                           {vehicle.make}
-                         </h3>
-                         <p className="text-[15px] sm:text-[17px] font-bold text-slate-500 mt-2 uppercase tracking-wide">
-                           {vehicle.model}
-                         </p>
-                         
-                         <div className="mt-4 flex items-center gap-2.5 text-[14px] sm:text-[15px] font-medium text-slate-500">
-                           <span>{vehicle.year}</span>
-                           <span className="h-1 w-1 rounded-full bg-slate-300"></span>
-                           <span>{formatWord(vehicle.fuel_type)}</span>
-                           <span className="h-1 w-1 rounded-full bg-slate-300"></span>
-                           <span>{formatWord(vehicle.colour)}</span>
+                   <div className="min-w-0 flex-1">
+                     <div className="flex items-center gap-3">
+                       <h3 className="truncate text-sm font-semibold text-[#0b1f33]">
+                         {vehicle.year} {vehicle.make} {vehicle.model}
+                       </h3>
+                       {vehicle.registration && (
+                         <div className="inline-block shrink-0 rounded border border-yellow-500 bg-[#FACC15] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-900">
+                           <span className="mr-1 text-[8px] font-black text-[#003399]">UK</span>{vehicle.registration}
                          </div>
-                       </div>
-                       
-                       {/* Registration */}
-                       <div className="shrink-0">
-                         <div className="inline-flex items-center overflow-hidden rounded-md border-2 border-slate-900 bg-[#FACC15] shadow-sm h-[38px] sm:h-[42px]">
-                           <div className="flex h-full w-7 sm:w-8 shrink-0 flex-col items-center justify-end bg-[#003399] pb-1">
-                             <span className="text-[8px] font-bold leading-none tracking-tighter text-white">UK</span>
-                           </div>
-                           <div className="px-3.5 text-[16px] sm:text-[18px] font-bold uppercase tracking-widest text-slate-900">
-                             {vehicle.registration}
-                           </div>
-                         </div>
-                       </div>
+                       )}
                      </div>
+                     <p className="mt-1 text-sm text-slate-500">
+                       {formatWord(vehicle.fuel_type)}
+                       <span className="px-1 text-slate-300">|</span>
+                       {formatWord(vehicle.colour)}
+                     </p>
+                   </div>
 
-                     {/* Actions */}
-                     <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-6">
-                       <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                         <Link href="/services" className="w-full sm:w-auto rounded-xl bg-[#0b1f33] px-6 py-2.5 text-center text-[14px] font-bold text-white transition-colors hover:bg-slate-800">
-                           Book Service
-                         </Link>
-                         <button type="button" className="w-full sm:w-auto rounded-xl bg-slate-100 px-6 py-2.5 text-center text-[14px] font-bold text-[#0b1f33] transition-colors hover:bg-slate-200">
-                           Vehicle Details
-                         </button>
-                       </div>
-                       
-                       <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+                   {/* Actions Area */}
+                   <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end border-t border-slate-100 sm:border-0 pt-4 sm:pt-0">
+                     <div className="flex items-center gap-3 text-sm font-semibold">
+                       <Link href="/services" className="text-slate-700 hover:text-[#0b1f33]">
+                         Book Service
+                       </Link>
+                       <Link href={`/parts?vehicleId=${vehicle.id}`} className="text-[#d92d20] hover:text-[#b42318]">
+                         Compatible Parts
+                       </Link>
+                       <ActionMenu>
                          <RemoveVehicleButton vehicleId={vehicle.id} />
-                       </div>
+                       </ActionMenu>
                      </div>
                    </div>
                  </div>

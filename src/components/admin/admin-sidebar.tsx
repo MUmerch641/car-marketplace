@@ -11,6 +11,7 @@ const navigation = [
   { label: "Service bookings", href: "/admin/bookings", icon: ClipboardCheck },
   { label: "Verifications", href: "/admin/verifications", icon: ShieldCheck },
   { label: "Service catalogue", href: "/admin/services", icon: Wrench },
+  { label: "Parts catalogue", href: "/admin/parts", icon: Wrench },
   { label: "People", href: "/admin/users", icon: UsersRound },
   { label: "Staff access", href: "/admin/staff", icon: Settings2 },
 ];

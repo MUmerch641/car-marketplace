@@ -3,6 +3,7 @@ import {
   ArrowRight,
   CalendarDays,
   CarFront,
+  CheckCircle2,
   MapPin,
   Search,
   ShieldCheck,
@@ -13,6 +14,7 @@ import { getMyCars } from "@/lib/marketplace/cars";
 import { createClient } from "@/lib/supabase/server";
 import { markSoldAction } from "@/app/marketplace-actions";
 import { RemoveVehicleButton } from "@/components/dashboard/remove-vehicle-button";
+import { ActionMenu } from "@/components/ui/action-menu";
 
 const bookingStatusStyles: Record<string, string> = {
   pending: "bg-amber-50 text-amber-800 ring-amber-200",
@@ -221,7 +223,7 @@ export default async function DashboardPage() {
             <Link href="/sell-car" className="hidden items-center gap-1 text-sm font-semibold text-[#d92d20] hover:text-[#b42318] sm:inline-flex">Sell a car <ArrowRight size={15} /></Link>
           </div>
           {cars.length ? (
-            <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <div className="mt-4 rounded-xl border border-slate-200 bg-white">
               {cars.slice(0, 4).map((car) => {
                 const inspection = sellerInspections.find((request) => request.car_id === car.id);
                 return (
@@ -236,14 +238,24 @@ export default async function DashboardPage() {
                   <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end">
                     <Status status={car.status ?? "draft"} styles={{ active: "bg-emerald-50 text-emerald-800 ring-emerald-200", pending: "bg-amber-50 text-amber-800 ring-amber-200", draft: "bg-slate-100 text-slate-700 ring-slate-200", rejected: "bg-red-50 text-red-700 ring-red-200", sold: "bg-blue-50 text-blue-800 ring-blue-200", archived: "bg-slate-100 text-slate-600 ring-slate-200" }} />
                     <div className="flex items-center gap-3 text-sm font-semibold">
+                      {car.status === "active" && (inspection && inspection.status === "completed" ? (
+                        <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 mr-2">
+                          <CheckCircle2 size={14} /> Inspected by Fengxing
+                        </span>
+                      ) : (
+                        <Link href={`/verification?car=${car.id}`} className="text-slate-500 hover:text-[#0b1f33] mr-2">
+                          Request Inspection
+                        </Link>
+                      ))}
                       {car.status === "active" && <Link href={`/cars/${car.id}`} className="text-slate-700 hover:text-[#0b1f33]">View</Link>}
-                      {car.status === "active" && (
-                        <form action={async () => { "use server"; await markSoldAction(car.id); }}>
-                          <button type="submit" className="text-[#039855] hover:text-[#027A48]">Mark Sold</button>
-                        </form>
-                      )}
-                      {car.status === "active" && (inspection ? <Link href={`/dashboard/verifications/${inspection.id}`} className="text-[#d92d20] hover:text-[#b42318]">{inspection.status === "completed" ? "Inspected by Fengxing" : "View inspection"}</Link> : <Link href={`/verification?car=${car.id}`} className="text-[#d92d20] hover:text-[#b42318]">Request Fengxing Inspection</Link>)}
                       <Link href={`/dashboard/cars/${car.id}/edit?step=details`} className="text-[#d92d20] hover:text-[#b42318]">Edit</Link>
+                      {car.status === "active" && (
+                        <ActionMenu>
+                          <form action={async () => { "use server"; await markSoldAction(car.id); }} className="w-full">
+                            <button type="submit" className="block w-full px-4 py-2.5 text-left text-[14px] font-semibold text-[#039855] transition-colors hover:bg-emerald-50">Mark Sold</button>
+                          </form>
+                        </ActionMenu>
+                      )}
                     </div>
                   </div>
                 </div>

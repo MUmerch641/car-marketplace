@@ -19,7 +19,7 @@ export function RemoveVehicleButton({ vehicleId }: { vehicleId: string }) {
       type="button" 
       onClick={handleRemove}
       disabled={isPending}
-      className="inline-flex h-8 items-center justify-center text-[13px] font-bold text-slate-400 transition-colors hover:text-red-600 disabled:pointer-events-none disabled:opacity-50"
+      className="block w-full px-4 py-2.5 text-left text-[14px] font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:pointer-events-none disabled:opacity-50"
     >
       {isPending ? "Removing..." : "Remove vehicle"}
     </button>

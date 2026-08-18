@@ -38,6 +38,35 @@ export async function createListingAction(form: FormData) {
   redirect(`/dashboard/cars/${carId}/edit?step=photos&created=1`);
 }
 export async function updateListingAction(carId: string, form: FormData) { await requireUser(); try { const supabase = await createClient(); const { error } = await supabase.from("cars").update(listingValues(form)).eq("id", carId); if (error) return { error: "We could not update this listing." }; revalidatePath(`/dashboard/cars/${carId}/edit`); revalidatePath("/dashboard"); return { success: "Listing details saved." }; } catch (error) { return { error: error instanceof Error ? error.message : "Unable to save listing." }; } }
+export async function updateActiveListingAction(carId: string, form: FormData) {
+  await requireUser();
+  try {
+    const supabase = await createClient();
+    let ulez_compliant = null;
+    if (form.get("ulezCompliant") === "yes") ulez_compliant = true;
+    else if (form.get("ulezCompliant") === "no") ulez_compliant = false;
+    
+    // @ts-expect-error RPC not in types yet
+    const { error } = await supabase.rpc("update_active_car_listing", {
+      p_car_id: carId,
+      p_price: number(form, "price"),
+      p_mileage: number(form, "mileage"),
+      p_city: text(form, "city"),
+      p_postcode: text(form, "postcode"),
+      p_description: text(form, "description"),
+      p_mot_expiry: text(form, "motExpiry") || null,
+      p_service_history: text(form, "serviceHistory") || null,
+      p_ulez_compliant: ulez_compliant
+    });
+    if (error) return { error: "We could not update this active listing." };
+    revalidatePath(`/dashboard/cars/${carId}/edit`);
+    revalidatePath("/dashboard");
+    revalidatePath(`/cars/${carId}`);
+    return { success: "Listing details saved." };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Unable to save listing." };
+  }
+}
 export async function submitListingAction(carId: string) { await requireUser(); const supabase = await createClient(); const { error } = await supabase.rpc("submit_car_for_review", { p_car_id: carId }); if (error) return { error: "Add all required details and at least one image before submitting." }; revalidatePath("/dashboard"); redirect("/dashboard"); }
 export async function markSoldAction(carId: string) { await requireUser(); const supabase = await createClient(); const { error } = await supabase.rpc("mark_car_sold", { p_car_id: carId }); if (error) return { error: "We could not mark this listing sold." }; revalidatePath("/dashboard"); revalidatePath(`/cars/${carId}`); return { success: "Listing marked as sold." }; }
 export async function deleteCarAction(carId: string) { await requireUser(); const supabase = await createClient(); const { data: images, error: readError } = await supabase.from("car_images").select("storage_path").eq("car_id", carId); if (readError) return { error: "Unable to prepare image cleanup." }; if (images?.length) { const { error: storageError } = await supabase.storage.from("car-images").remove(images.map((image) => image.storage_path)); if (storageError) return { error: "Image cleanup failed. Please retry; the listing was not deleted." }; } const { error } = await supabase.from("cars").delete().eq("id", carId); if (error) return { error: "Unable to delete this listing." }; revalidatePath("/dashboard"); redirect("/dashboard"); }
