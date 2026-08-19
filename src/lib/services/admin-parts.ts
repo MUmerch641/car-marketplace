@@ -22,6 +22,9 @@ export async function adminUpsertPartCategory(payload: {
       details: error.details,
       hint: error.hint,
     });
+    if (error.code === "23505") {
+      throw new Error("A category with this slug already exists. Please choose a different slug.");
+    }
     throw new Error(error.message || "An error occurred during the operation.");
   }
   return data;
