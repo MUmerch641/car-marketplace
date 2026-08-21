@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CarFront, CheckCircle2 } from "lucide-react";
 import { getMyCars } from "@/lib/marketplace/cars";
-import { markSoldAction } from "@/app/marketplace-actions";
+import { MarkSoldButton } from "@/components/cars/mark-sold-button";
 import { ActionMenu } from "@/components/ui/action-menu";
 
 export const metadata = {
@@ -99,11 +99,7 @@ export default async function MyCarsPage() {
 
                       {car.status === "active" && (
                         <ActionMenu>
-                          <form action={async () => { "use server"; await markSoldAction(car.id); }} className="w-full">
-                            <button type="submit" className="block w-full px-4 py-2.5 text-left text-[14px] font-semibold text-[#039855] transition-colors hover:bg-emerald-50">
-                              Mark Sold
-                            </button>
-                          </form>
+                          <MarkSoldButton carId={car.id} />
                         </ActionMenu>
                       )}
                     </div>

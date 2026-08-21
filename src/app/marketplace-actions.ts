@@ -68,6 +68,73 @@ export async function updateActiveListingAction(carId: string, form: FormData) {
   }
 }
 export async function submitListingAction(carId: string) { await requireUser(); const supabase = await createClient(); const { error } = await supabase.rpc("submit_car_for_review", { p_car_id: carId }); if (error) return { error: "Add all required details and at least one image before submitting." }; revalidatePath("/dashboard"); redirect("/dashboard"); }
-export async function markSoldAction(carId: string) { await requireUser(); const supabase = await createClient(); const { error } = await supabase.rpc("mark_car_sold", { p_car_id: carId }); if (error) return { error: "We could not mark this listing sold." }; revalidatePath("/dashboard"); revalidatePath(`/cars/${carId}`); return { success: "Listing marked as sold." }; }
+export async function markSoldAction(carId: string) {
+  const user = await requireUser();
+  const supabase = await createClient();
+  
+  // Debug check
+  const { data: carData } = await supabase.from("cars").select("id, seller_id, status").eq("id", carId).single();
+  console.log("MARK SOLD DEBUG - Target Car:", carId);
+  console.log("MARK SOLD DEBUG - User ID:", user.id);
+  console.log("MARK SOLD DEBUG - DB Car:", carData);
+
+  const { error } = await supabase.rpc("mark_car_sold", { p_car_id: carId }); 
+  if (error) { 
+    console.error("MARK SOLD ERROR:", error); 
+    return { error: `Debug: ${error.message} - ${error.details}. Car in DB: ${JSON.stringify(carData)} | UID: ${user.id}` }; 
+  } 
+  revalidatePath("/dashboard"); 
+  revalidatePath(`/cars/${carId}`); 
+  return { success: "Listing marked as sold." }; 
+}
 export async function deleteCarAction(carId: string) { await requireUser(); const supabase = await createClient(); const { data: images, error: readError } = await supabase.from("car_images").select("storage_path").eq("car_id", carId); if (readError) return { error: "Unable to prepare image cleanup." }; if (images?.length) { const { error: storageError } = await supabase.storage.from("car-images").remove(images.map((image) => image.storage_path)); if (storageError) return { error: "Image cleanup failed. Please retry; the listing was not deleted." }; } const { error } = await supabase.from("cars").delete().eq("id", carId); if (error) return { error: "Unable to delete this listing." }; revalidatePath("/dashboard"); redirect("/dashboard"); }
-export async function moderateCarAction(carId: string, approved: boolean, rejectionReason?: string) { await requireRole("admin"); const supabase = await createClient(); const { error } = await supabase.rpc("moderate_car", { p_car_id: carId, p_approved: approved, p_rejection_reason: rejectionReason }); if (error) return { error: "Unable to moderate this listing." }; revalidatePath("/admin/cars"); revalidatePath("/"); revalidatePath(`/cars/${carId}`); return { success: approved ? "Listing approved." : "Listing rejected." }; }
+import {
+  sendListingApprovedNotification,
+  sendListingRejectedNotification,
+} from "@/lib/email";
+
+export async function moderateCarAction(carId: string, approved: boolean, rejectionReason?: string) {
+  await requireRole("admin");
+  const supabase = await createClient();
+  
+  // Fetch car details before or along with moderation so we have seller_id, title, price
+  const { data: car } = await supabase
+    .from("cars")
+    .select("seller_id, year, make, model, variant, price")
+    .eq("id", carId)
+    .maybeSingle();
+
+  const { error } = await supabase.rpc("moderate_car", {
+    p_car_id: carId,
+    p_approved: approved,
+    p_rejection_reason: rejectionReason,
+  });
+
+  if (error) return { error: "Unable to moderate this listing." };
+
+  if (car) {
+    const carTitle = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+    const priceFormatted = `£${Number(car.price).toLocaleString("en-GB")}`;
+
+    if (approved) {
+      sendListingApprovedNotification({
+        sellerId: car.seller_id,
+        carId,
+        carTitle,
+        price: priceFormatted,
+      }).catch((err) => console.error("Listing approval email error:", err));
+    } else {
+      sendListingRejectedNotification({
+        sellerId: car.seller_id,
+        carId,
+        carTitle,
+        rejectionReason: rejectionReason || "Please review vehicle details and resubmit.",
+      }).catch((err) => console.error("Listing rejection email error:", err));
+    }
+  }
+
+  revalidatePath("/admin/cars");
+  revalidatePath("/");
+  revalidatePath(`/cars/${carId}`);
+  return { success: approved ? "Listing approved." : "Listing rejected." };
+}

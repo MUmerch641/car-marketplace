@@ -49,7 +49,10 @@ export function ActionMenu({ children }: ActionMenuProps) {
           role="menu"
           aria-orientation="vertical"
           tabIndex={-1}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            // Give form submissions time to register before unmounting
+            setTimeout(() => setOpen(false), 150);
+          }}
         >
           <div className="flex flex-col py-1" role="none">
             {children}

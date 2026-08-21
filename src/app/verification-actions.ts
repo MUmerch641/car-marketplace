@@ -79,8 +79,118 @@ export async function cancelVerificationRequest(id: string): Promise<ActionState
   return {};
 }
 
-export async function verificationAdmin(id: string, action: "confirm" | "finalise") { await requireRole("admin"); const s = await createClient(); const r = action === "confirm" ? await s.rpc("confirm_verification_request", { p_id: id }) : await s.rpc("finalise_verification", { p_id: id }); if (r.error) return { error: "Unable to update this request." }; revalidatePath("/admin/verifications"); revalidatePath("/cars"); }
-export async function assignVerification(id: string, form: FormData) { await requireRole("admin"); const s = await createClient(); const inspector = field(form, "inspector"); if (!inspector) return { error: "Choose an available inspector before assigning this request." }; const { error } = await s.rpc("assign_verification_inspector", { p_id: id, p_inspector: inspector }); if (error) return { error: "Unable to assign this inspector." }; revalidatePath("/admin/verifications"); revalidatePath("/inspector"); }
-export async function scheduleVerification(id: string, form: FormData) { await requireRole("admin"); const s = await createClient(); await s.rpc("schedule_verification_inspection", { p_id: id, p_scheduled_for: field(form, "scheduledFor") }); revalidatePath("/admin/verifications"); revalidatePath("/inspector"); }
+import {
+  sendInspectorAssignedNotification,
+  sendInspectionScheduledNotification,
+  sendReportReadyNotification,
+} from "@/lib/email";
+
+export async function verificationAdmin(id: string, action: "confirm" | "finalise") {
+  await requireRole("admin");
+  const s = await createClient();
+  const r = action === "confirm"
+    ? await s.rpc("confirm_verification_request", { p_id: id })
+    : await s.rpc("finalise_verification", { p_id: id });
+
+  if (r.error) return { error: "Unable to update this request." };
+
+  if (action === "finalise") {
+    // Send report ready notification to customer
+    const { data: request } = await s
+      .from("verification_requests")
+      .select("requested_by, vehicle_registration, external_make, external_model, inspection_reports(overall_result, summary)")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (request?.requested_by) {
+      const rep = Array.isArray(request.inspection_reports) ? request.inspection_reports[0] : (request.inspection_reports as any);
+      sendReportReadyNotification({
+        customerId: request.requested_by,
+        requestId: id,
+        vehicleRegistration: request.vehicle_registration,
+        vehicleMakeModel: `${request.external_make || "Vehicle"} ${request.external_model || ""}`.trim(),
+        overallResult: rep?.overall_result || "passed",
+        summaryPreview: rep?.summary || undefined,
+      }).catch((err) => console.error("Report ready email error:", err));
+    }
+  }
+
+  revalidatePath("/admin/verifications");
+  revalidatePath("/cars");
+}
+
+export async function assignVerification(id: string, form: FormData) {
+  await requireRole("admin");
+  const s = await createClient();
+  const inspector = field(form, "inspector");
+  if (!inspector) return { error: "Choose an available inspector before assigning this request." };
+
+  const { data: request } = await s
+    .from("verification_requests")
+    .select("vehicle_registration, external_make, external_model, seller_name, seller_phone, inspection_address, city, postcode, preferred_date, preferred_time")
+    .eq("id", id)
+    .maybeSingle();
+
+  const { error } = await s.rpc("assign_verification_inspector", { p_id: id, p_inspector: inspector });
+  if (error) return { error: "Unable to assign this inspector." };
+
+  if (request) {
+    const address = [request.inspection_address, request.city, request.postcode].filter(Boolean).join(", ");
+    sendInspectorAssignedNotification({
+      inspectorId: inspector,
+      requestId: id,
+      registration: request.vehicle_registration,
+      vehicle: `${request.external_make || "Vehicle"} ${request.external_model || ""}`.trim(),
+      sellerName: request.seller_name || "Customer",
+      sellerPhone: request.seller_phone || "N/A",
+      address,
+      preferredSchedule: `${request.preferred_date || "Date TBD"} ${request.preferred_time || ""}`.trim(),
+    }).catch((err) => console.error("Inspector assignment email error:", err));
+  }
+
+  revalidatePath("/admin/verifications");
+  revalidatePath("/inspector");
+}
+
+export async function scheduleVerification(id: string, form: FormData) {
+  await requireRole("admin");
+  const s = await createClient();
+  const scheduledFor = field(form, "scheduledFor");
+  const { error } = await s.rpc("schedule_verification_inspection", { p_id: id, p_scheduled_for: scheduledFor });
+  if (error) return { error: "Unable to schedule this inspection." };
+
+  const { data: request } = await s
+    .from("verification_requests")
+    .select("requested_by, vehicle_registration, external_make, external_model, inspection_address, city, postcode")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (request?.requested_by) {
+    const address = [request.inspection_address, request.city, request.postcode].filter(Boolean).join(", ");
+    const formattedDate = scheduledFor
+      ? new Date(scheduledFor).toLocaleString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      : "Confirmed Schedule";
+
+    sendInspectionScheduledNotification({
+      customerId: request.requested_by,
+      requestId: id,
+      vehicleRegistration: request.vehicle_registration,
+      vehicleMakeModel: `${request.external_make || "Vehicle"} ${request.external_model || ""}`.trim(),
+      scheduledDate: formattedDate,
+      address,
+    }).catch((err) => console.error("Inspection scheduled email error:", err));
+  }
+
+  revalidatePath("/admin/verifications");
+  revalidatePath("/inspector");
+}
+
 export async function startInspection(id: string) { await requireRole("inspector"); const s = await createClient(); await s.rpc("start_verification_inspection", { p_id: id }); revalidatePath("/inspector"); revalidatePath(`/inspector/verifications/${id}`); }
 export async function saveReport(id: string, form: FormData) { await requireRole("inspector"); const s = await createClient(); const q = (key: string) => field(form, key) as never; const result = await s.rpc("save_inspection_report", { p_request_id: id, p_result: q("result"), p_summary: field(form, "summary"), p_notes: field(form, "notes"), p_body: q("body"), p_tyres: q("tyres"), p_interior: q("interior"), p_engine: q("engine"), p_brakes: q("brakes"), p_mileage_checked: form.get("mileage") === "on", p_registration_checked: form.get("registrationChecked") === "on" }); if (result.error) return { error: "Unable to save the report." }; if (form.get("submit") === "yes") await s.rpc("submit_inspection_report", { p_request_id: id }); revalidatePath("/inspector"); revalidatePath(`/inspector/verifications/${id}`); return { success: "Report saved." }; }
+
