@@ -12,11 +12,10 @@ interface NavbarClientProps {
 }
 
 const navItems = [
-  { href: "/cars", label: "Buy Cars" },
-  { href: "/parts", label: "Parts" },
-  { href: "/sell-car", label: "Sell My Car" },
-  { href: "/verification", label: "Vehicle Inspection" },
   { href: "/services", label: "Mobile Services" },
+  { href: "/verification", label: "Vehicle Inspection" },
+  { href: "/cars", label: "Buy & Sell Cars" },
+  { href: "/parts", label: "Parts" },
   { href: "/about", label: "About" },
 ];
 
@@ -67,7 +66,7 @@ export function NavbarClient({ profile }: NavbarClientProps) {
           href="/"
           className="flex items-center"
           onClick={closeMobile}
-          aria-label="Fengxing — Go to homepage"
+          aria-label="Shaz — Go to homepage"
         >
           <Logo variant="dark" size="sm" />
         </Link>
@@ -123,8 +122,8 @@ export function NavbarClient({ profile }: NavbarClientProps) {
               Login
             </Link>
           )}
-          <Button href="/sell-car" className="px-4 py-2.5">
-            Post Your Car
+          <Button href="/services" className="px-4 py-2.5">
+            Book a Service
           </Button>
 
           {/* Mobile hamburger */}

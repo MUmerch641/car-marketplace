@@ -77,7 +77,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const message =
     request.status === "pending"
-      ? ["We've received your inspection request.", "Fengxing will review the requested time and confirm the appointment."]
+      ? ["We've received your inspection request.", "Shaz will review the requested time and confirm the appointment."]
       : request.status === "confirmed"
       ? ["Your inspection request has been confirmed.", "We will assign an inspector and confirm the visit details shortly."]
       : request.status === "assigned"

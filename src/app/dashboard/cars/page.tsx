@@ -5,7 +5,7 @@ import { MarkSoldButton } from "@/components/cars/mark-sold-button";
 import { ActionMenu } from "@/components/ui/action-menu";
 
 export const metadata = {
-  title: "My Cars | Fengxing",
+  title: "My Cars | Shaz",
 };
 
 function Status({ status }: { status: string }) {
@@ -36,7 +36,7 @@ export default async function MyCarsPage() {
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-[#0b1f33]">My Cars</h1>
-            <p className="mt-2 text-[15px] text-slate-600">Manage the vehicles you have listed on Fengxing.</p>
+            <p className="mt-2 text-[15px] text-slate-600">Manage the vehicles you have listed on Shaz.</p>
           </div>
           <Link href="/sell-car" className="inline-flex w-fit items-center rounded-lg bg-[#d92d20] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#b42318]">
             Sell another car <ArrowRight size={16} className="ml-2" />
@@ -77,7 +77,7 @@ export default async function MyCarsPage() {
                           <>
                             <span className="text-slate-300">|</span>
                             <span className="inline-flex items-center gap-1 font-semibold text-emerald-700">
-                              <CheckCircle2 size={14} /> Fengxing Verified
+                              <CheckCircle2 size={14} /> Shaz Verified
                             </span>
                           </>
                         )}

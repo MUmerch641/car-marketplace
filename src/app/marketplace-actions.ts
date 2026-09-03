@@ -45,7 +45,7 @@ export async function updateActiveListingAction(carId: string, form: FormData) {
     let ulez_compliant = null;
     if (form.get("ulezCompliant") === "yes") ulez_compliant = true;
     else if (form.get("ulezCompliant") === "no") ulez_compliant = false;
-    
+
     // @ts-expect-error RPC not in types yet
     const { error } = await supabase.rpc("update_active_car_listing", {
       p_car_id: carId,
@@ -71,23 +71,60 @@ export async function submitListingAction(carId: string) { await requireUser(); 
 export async function markSoldAction(carId: string) {
   const user = await requireUser();
   const supabase = await createClient();
-  
+
   // Debug check
   const { data: carData } = await supabase.from("cars").select("id, seller_id, status").eq("id", carId).single();
   console.log("MARK SOLD DEBUG - Target Car:", carId);
   console.log("MARK SOLD DEBUG - User ID:", user.id);
   console.log("MARK SOLD DEBUG - DB Car:", carData);
 
-  const { error } = await supabase.rpc("mark_car_sold", { p_car_id: carId }); 
-  if (error) { 
-    console.error("MARK SOLD ERROR:", error); 
-    return { error: `Debug: ${error.message} - ${error.details}. Car in DB: ${JSON.stringify(carData)} | UID: ${user.id}` }; 
-  } 
-  revalidatePath("/dashboard"); 
-  revalidatePath(`/cars/${carId}`); 
-  return { success: "Listing marked as sold." }; 
+  const { error } = await supabase.rpc("mark_car_sold", { p_car_id: carId });
+  if (error) {
+    console.error("MARK SOLD ERROR:", error);
+    return { error: `Debug: ${error.message} - ${error.details}. Car in DB: ${JSON.stringify(carData)} | UID: ${user.id}` };
+  }
+  revalidatePath("/dashboard");
+  revalidatePath(`/cars/${carId}`);
+  return { success: "Listing marked as sold." };
 }
-export async function deleteCarAction(carId: string) { await requireUser(); const supabase = await createClient(); const { data: images, error: readError } = await supabase.from("car_images").select("storage_path").eq("car_id", carId); if (readError) return { error: "Unable to prepare image cleanup." }; if (images?.length) { const { error: storageError } = await supabase.storage.from("car-images").remove(images.map((image) => image.storage_path)); if (storageError) return { error: "Image cleanup failed. Please retry; the listing was not deleted." }; } const { error } = await supabase.from("cars").delete().eq("id", carId); if (error) return { error: "Unable to delete this listing." }; revalidatePath("/dashboard"); redirect("/dashboard"); }
+export async function deleteCarAction(carId: string, redirectPath: string = "/dashboard") {
+  await requireUser();
+  const supabase = await createClient();
+  const { data: images, error: readError } = await supabase.from("car_images").select("storage_path").eq("car_id", carId);
+  if (readError) return { error: "Unable to prepare image cleanup." };
+  if (images?.length) {
+    const { error: storageError } = await supabase.storage.from("car-images").remove(images.map((image) => image.storage_path));
+    if (storageError) return { error: "Image cleanup failed. Please retry; the listing was not deleted." };
+  }
+  const { error } = await supabase.from("cars").delete().eq("id", carId);
+  if (error) return { error: "Unable to delete this listing." };
+  revalidatePath("/dashboard");
+  revalidatePath("/admin/cars");
+  redirect(redirectPath);
+}
+
+export async function toggleFeaturedAction(carId: string, currentState: boolean) {
+  await requireRole("admin");
+  const supabase = await createClient();
+  const { error } = await supabase.from("cars").update({ is_featured: !currentState }).eq("id", carId);
+  if (error) return { error: "Unable to update featured state." };
+  revalidatePath("/admin/cars");
+  revalidatePath("/");
+  revalidatePath(`/cars/${carId}`);
+  return { success: `Listing ${!currentState ? "featured" : "unfeatured"}.` };
+}
+
+export async function toggleVerifiedAction(carId: string, currentState: boolean) {
+  await requireRole("admin");
+  const supabase = await createClient();
+  const { error } = await supabase.from("cars").update({ is_verified: !currentState }).eq("id", carId);
+  if (error) return { error: "Unable to update verified state." };
+  revalidatePath("/admin/cars");
+  revalidatePath("/");
+  revalidatePath(`/cars/${carId}`);
+  return { success: `Listing ${!currentState ? "verified" : "unverified"}.` };
+}
+
 import {
   sendListingApprovedNotification,
   sendListingRejectedNotification,
@@ -96,7 +133,7 @@ import {
 export async function moderateCarAction(carId: string, approved: boolean, rejectionReason?: string) {
   await requireRole("admin");
   const supabase = await createClient();
-  
+
   // Fetch car details before or along with moderation so we have seller_id, title, price
   const { data: car } = await supabase
     .from("cars")

@@ -20,7 +20,7 @@ export default async function InspectorLayout({ children }: { children: React.Re
               <span className="hidden h-5 w-[1px] bg-white/20 sm:block" />
               <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#fda29b] sm:text-sm">
                 <Navigation size={15} className="text-[#fda29b]" />
-                Fengxing Field
+                Shaz Field
               </span>
             </Link>
           </div>

@@ -28,8 +28,8 @@ export default function ContactPage() {
                 <div>
                   <h3 className="text-lg font-bold text-[#101828]">Email us</h3>
                   <p className="mt-1 text-[#667085]">For general inquiries and support.</p>
-                  <a href="mailto:support@fengxing.co.uk" className="mt-2 block font-semibold text-[#D92D20] hover:underline">
-                    support@fengxing.co.uk
+                  <a href="mailto:support@shaz.co.uk" className="mt-2 block font-semibold text-[#D92D20] hover:underline">
+                    support@shaz.co.uk
                   </a>
                 </div>
               </div>

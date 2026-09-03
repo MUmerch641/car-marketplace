@@ -22,7 +22,7 @@ export function AdminSidebar() {
   return (
     <aside className="flex min-h-full w-full flex-col bg-[#071a2d] text-slate-300 md:fixed md:inset-y-0 md:left-0 md:z-30 md:h-screen md:w-64">
       <div className="flex h-[76px] items-center border-b border-white/10 px-5">
-        <Link href="/admin" aria-label="Fengxing operations home"><Logo size="sm" /></Link>
+        <Link href="/admin" aria-label="Shaz operations home"><Logo size="sm" /></Link>
       </div>
       <div className="border-b border-white/10 px-5 py-4"><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">Control centre</p><p className="mt-1 text-sm font-semibold text-white">Operations workspace</p></div>
       <nav className="flex gap-1 overflow-x-auto p-3 md:flex-1 md:flex-col md:gap-1 md:space-y-0 md:overflow-x-hidden md:overflow-y-auto md:p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

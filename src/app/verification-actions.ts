@@ -35,7 +35,7 @@ export async function createVerificationAction(_: ActionState, form: FormData): 
     }
 
     if (inspectionType === "seller_pre_inspection" && existing?.some((request) => request.inspection_type === "seller_pre_inspection")) {
-      return { error: "This listing already has a Fengxing inspection request. Open it from your listings to check its progress." };
+      return { error: "This listing already has a Shaz inspection request. Open it from your listings to check its progress." };
     }
     if (inspectionType === "buyer_inspection" && existing?.some((request) => request.inspection_type === "seller_pre_inspection")) {
       return { error: "This listing already has a seller inspection in progress or completed. Use the inspection information on the listing." };

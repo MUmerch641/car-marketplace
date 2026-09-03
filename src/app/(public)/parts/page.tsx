@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { PartWithImage } from "@/types/parts.types";
 
 export const metadata = {
-  title: "Fengxing Parts | UK Automotive Marketplace",
+  title: "Shaz Parts | UK Automotive Marketplace",
 };
 
 export default async function PartsPage({

@@ -139,13 +139,13 @@ a { text-decoration: none; }
   }
 }
 
-/* ─── Fengxing Logo — wheel rotation ─────────────────────────────────────── */
+/* ─── Shaz Logo — wheel rotation ─────────────────────────────────────── */
 @keyframes wheel-spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
 
-.fengxing-wheel-wrapper {
+.shaz-wheel-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -153,7 +153,7 @@ a { text-decoration: none; }
 }
 
 /* The SVG itself rotates around its centre */
-.fengxing-wheel-wrapper .fengxing-wheel {
+.shaz-wheel-wrapper .shaz-wheel {
   animation: wheel-spin 12s linear infinite;
   transform-origin: center center;
   will-change: transform;
@@ -161,13 +161,13 @@ a { text-decoration: none; }
 
 /* Respect reduced motion — stop the wheel */
 @media (prefers-reduced-motion: reduce) {
-  .fengxing-wheel-wrapper .fengxing-wheel {
+  .shaz-wheel-wrapper .shaz-wheel {
     animation: none !important;
   }
 }
 
 /* Logo hover — subtly speeds up the wheel */
-.fengxing-logo:hover .fengxing-wheel-wrapper .fengxing-wheel {
+.shaz-logo:hover .shaz-wheel-wrapper .shaz-wheel {
   animation-duration: 4s;
 }
 

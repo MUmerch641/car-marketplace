@@ -1,5 +1,5 @@
 /**
- * Fengxing Logo Component
+ * Shaz Logo Component
  *
  * SVG-based logo with a rotating 5-spoke alloy wheel icon.
  * - Pure SVG — infinitely scalable, always sharp
@@ -99,7 +99,7 @@ export function LogoIcon({
       viewBox={`0 0 ${size} ${size}`}
       width={size}
       height={size}
-      className={`fengxing-wheel ${className}`}
+      className={`shaz-wheel ${className}`}
       aria-hidden="true"
       style={{ overflow: "visible", flexShrink: 0 }}
     >
@@ -227,7 +227,7 @@ export function Logo({
 
   return (
     <span
-      className={`fengxing-logo ${className}`}
+      className={`shaz-logo ${className}`}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -238,14 +238,14 @@ export function Logo({
       }}
     >
       {/* Rotating wheel wrapper */}
-      <span className="fengxing-wheel-wrapper" aria-hidden="true">
+      <span className="shaz-wheel-wrapper" aria-hidden="true">
         <LogoIcon size={wheel} color={wheelColor} accent={accentColor} />
       </span>
 
       {/* Wordmark */}
       {!iconOnly && (
         <span
-          className="fengxing-wordmark"
+          className="shaz-wordmark"
           style={{
             display: "inline-flex",
             flexDirection: "column",
@@ -262,8 +262,8 @@ export function Logo({
               lineHeight: 1,
             }}
           >
-            feng
-            <span style={{ color: accentColor }}>xing</span>
+            Sh
+            <span style={{ color: accentColor }}>az</span>
           </span>
           {/* Sub-label — only when explicitly requested on md/lg */}
           {showSubLabel && size !== "xs" && size !== "sm" && (

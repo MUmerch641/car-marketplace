@@ -2,13 +2,14 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { moderateCarAction } from "@/app/marketplace-actions";
+import { AdminCarControls } from "./admin-car-controls";
 
 export default async function AdminCarsPage() {
   await requireRole("admin");
   const supabase = await createClient();
   const { data: cars } = await supabase
     .from("cars")
-    .select("id,make,model,variant,year,price,city,status,created_at")
+    .select("id,make,model,variant,year,price,city,status,created_at,is_featured,is_verified")
     .order("created_at", { ascending: false });
 
   return (
@@ -36,14 +37,29 @@ export default async function AdminCarsPage() {
                     }`}>
                       {String(car.status).replace('_', ' ').toUpperCase()}
                     </span>
+                    {car.is_featured && (
+                      <span className="inline-flex items-center rounded-full bg-[#FFF4ED] px-2.5 py-0.5 text-xs font-bold text-[#B93815]">
+                        FEATURED
+                      </span>
+                    )}
+                    {car.is_verified && (
+                      <span className="inline-flex items-center rounded-full bg-[#EFF8FF] px-2.5 py-0.5 text-xs font-bold text-[#175CD3]">
+                        VERIFIED
+                      </span>
+                    )}
                   </div>
                   <p className="mt-1 font-semibold text-[#667085]">
                     £{car.price.toLocaleString("en-GB")} · {car.city}
                   </p>
                 </div>
-                <Link href={`/cars/${car.id}`} className="font-bold text-[#D92D20] hover:underline">
-                  View listing
-                </Link>
+                <div className="flex items-center gap-3">
+                  <Link href={`/admin/cars/${car.id}`} className="font-bold text-[#D92D20] hover:underline">
+                    View listing
+                  </Link>
+                  {car.status !== "pending_review" && (
+                    <AdminCarControls carId={car.id} isFeatured={!!car.is_featured} isVerified={!!car.is_verified} />
+                  )}
+                </div>
               </div>
 
               {car.status === "pending_review" && (

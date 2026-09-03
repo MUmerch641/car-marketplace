@@ -7,7 +7,7 @@ import { CarFront } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "My Garage | Fengxing",
+  title: "My Garage | Shaz",
 };
 
 // Helper for formatting casing

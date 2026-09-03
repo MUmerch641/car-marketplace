@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { SectionHeading } from "@/components/ui/section-heading";
 
-const statusLabels: Record<string, string> = { pending: "Inspection pending", confirmed: "Confirmed", assigned: "Inspector assigned", inspection_scheduled: "Scheduled", inspection_in_progress: "Inspection in progress", report_submitted: "Report ready", completed: "Inspected by Fengxing", cancelled: "Cancelled" };
+const statusLabels: Record<string, string> = { pending: "Inspection pending", confirmed: "Confirmed", assigned: "Inspector assigned", inspection_scheduled: "Scheduled", inspection_in_progress: "Inspection in progress", report_submitted: "Report ready", completed: "Inspected by Shaz", cancelled: "Cancelled" };
 const statusColors: Record<string, string> = { pending: "bg-[#FEF3C7] text-[#B45309]", confirmed: "bg-[#DCFCE7] text-[#15803D]", assigned: "bg-[#DBEAFE] text-[#1E40AF]", inspection_scheduled: "bg-[#DBEAFE] text-[#1E40AF]", inspection_in_progress: "bg-[#DBEAFE] text-[#1E40AF]", report_submitted: "bg-[#DBEAFE] text-[#1E40AF]", completed: "bg-[#DCFCE7] text-[#15803D]", cancelled: "bg-[#F3F4F6] text-[#6B7280]" };
 const dateLabel = (value: string | null) => value ? new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(value)) : "Date to be confirmed";
 

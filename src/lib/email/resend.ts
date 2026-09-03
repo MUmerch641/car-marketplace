@@ -4,7 +4,7 @@ const apiKey = process.env.RESEND_API_KEY;
 export const resend = apiKey ? new Resend(apiKey) : null;
 
 export const DEFAULT_FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || "Fengxing <onboarding@resend.dev>";
+  process.env.RESEND_FROM_EMAIL || "Shaz <onboarding@resend.dev>";
 
 export function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) {

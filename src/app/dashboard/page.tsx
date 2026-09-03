@@ -128,7 +128,7 @@ export default async function DashboardPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-slate-500">Your Fengxing account</p>
+            <p className="text-sm font-medium text-slate-500">Your Shaz account</p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight text-[#0b1f33] sm:text-[34px]">
               Welcome back{firstName ? `, ${firstName}` : ""}
             </h1>
@@ -218,7 +218,7 @@ export default async function DashboardPage() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-[#0b1f33]">My listings</h2>
-              <p className="mt-1 text-sm text-slate-600">Cars you have listed on Fengxing.</p>
+              <p className="mt-1 text-sm text-slate-600">Cars you have listed on Shaz.</p>
             </div>
             <Link href="/sell-car" className="hidden items-center gap-1 text-sm font-semibold text-[#d92d20] hover:text-[#b42318] sm:inline-flex">Sell a car <ArrowRight size={15} /></Link>
           </div>
@@ -240,7 +240,7 @@ export default async function DashboardPage() {
                     <div className="flex items-center gap-3 text-sm font-semibold">
                       {car.status === "active" && (inspection && inspection.status === "completed" ? (
                         <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 mr-2">
-                          <CheckCircle2 size={14} /> Inspected by Fengxing
+                          <CheckCircle2 size={14} /> Inspected by Shaz
                         </span>
                       ) : (
                         <Link href={`/verification?car=${car.id}`} className="text-slate-500 hover:text-[#0b1f33] mr-2">

@@ -7,7 +7,7 @@ export function emailLayout(content: string, title?: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title || "Fengxing Notification"}</title>
+  <title>${title || "Shaz Notification"}</title>
   <style>
     body {
       margin: 0;
@@ -153,13 +153,13 @@ export function emailLayout(content: string, title?: string): string {
 <body>
   <div class="wrapper">
     <div class="header">
-      <a href="${baseUrl}" class="logo-text">FENGXING<span class="logo-accent">.</span></a>
+      <a href="${baseUrl}" class="logo-text">SHAZ<span class="logo-accent">.</span></a>
     </div>
     <div class="content">
       ${content}
     </div>
     <div class="footer">
-      <p style="margin:0 0 6px 0;">Fengxing — Automotive Marketplace, Mobile Servicing & Vehicle Inspections</p>
+      <p style="margin:0 0 6px 0;">Shaz — Automotive Marketplace, Mobile Servicing & Vehicle Inspections</p>
       <p style="margin:0;"><a href="${baseUrl}">Visit Marketplace</a> · <a href="${baseUrl}/dashboard">My Account</a> · <a href="${baseUrl}/contact">Support</a></p>
     </div>
   </div>
@@ -274,7 +274,7 @@ export function renderInspectionScheduledEmail(params: {
   const content = `
     <h1>Vehicle Inspection Scheduled 🚗</h1>
     <p>Hi ${params.customerName || "there"},</p>
-    <p>Your vehicle verification visit has been confirmed and scheduled with an official Fengxing inspector.</p>
+    <p>Your vehicle verification visit has been confirmed and scheduled with an official Shaz inspector.</p>
 
     <div class="details-box">
       <div style="margin-bottom:8px;"><span class="reg-plate">${params.vehicleRegistration}</span></div>
@@ -395,7 +395,7 @@ export function renderReportReadyEmail(params: {
       <a href="${baseUrl}/dashboard/verifications/${params.requestId}/report" class="btn">View Full Inspection Report</a>
     </div>
   `;
-  return emailLayout(content, "Your Fengxing Inspection Report is Ready");
+  return emailLayout(content, "Your Shaz Inspection Report is Ready");
 }
 
 // 6. Car Listing Approved (To Seller)
@@ -409,7 +409,7 @@ export function renderListingApprovedEmail(params: {
   const content = `
     <h1>Your Listing is Now Live! 🎉</h1>
     <p>Hi ${params.sellerName || "there"},</p>
-    <p>Great news! Your car listing has been reviewed and approved by our moderation team. It is now live and searchable on the Fengxing marketplace.</p>
+    <p>Great news! Your car listing has been reviewed and approved by our moderation team. It is now live and searchable on the Shaz marketplace.</p>
 
     <div class="details-box">
       <div class="details-row">
@@ -430,7 +430,7 @@ export function renderListingApprovedEmail(params: {
       <a href="${baseUrl}/cars/${params.carId}" class="btn">View Your Live Listing</a>
     </div>
   `;
-  return emailLayout(content, "Your Car Listing is Now Live on Fengxing");
+  return emailLayout(content, "Your Car Listing is Now Live on Shaz");
 }
 
 // 7. Car Listing Rejected / Changes Requested (To Seller)

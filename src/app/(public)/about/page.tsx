@@ -8,9 +8,9 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="About Fengxing"
+        eyebrow="About Shaz"
         title="Making car ownership feel less complicated."
-        copy="Fengxing brings car discovery, verification, and at-home care into one practical experience."
+        copy="Shaz brings car discovery, verification, and at-home care into one practical experience."
       />
 
       {/* Mission Section */}
@@ -56,7 +56,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-lg text-[#667085]">
                 <p>
-                  At Fengxing, we believe buying or selling a car shouldn&apos;t be a stressful ordeal filled with uncertainty. We&apos;ve built a platform that puts transparency and trust at the forefront.
+                  At Shaz, we believe buying or selling a car shouldn&apos;t be a stressful ordeal filled with uncertainty. We&apos;ve built a platform that puts transparency and trust at the forefront.
                 </p>
               </div>
             </div>
