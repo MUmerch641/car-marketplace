@@ -70,7 +70,7 @@ export default async function CarsPage({
                 </Link>
                 <Link
                   href="/sell-car"
-                  className="rounded-md bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-[#B42318]"
+                  className="rounded-md bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-[#C73830]"
                 >
                   Sell Your Car
                 </Link>

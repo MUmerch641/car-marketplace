@@ -8,7 +8,7 @@
 
 export const brand = {
   name: "Shaz",
-  tagline: "Go to homepage",
+  tagline: "Cars and car care, made clear.",
 };
 
 /* ── Contact ──────────────────────────────────────────────────────────────── */

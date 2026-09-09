@@ -19,7 +19,7 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <AnimatedContent direction="horizontal" distance={40} duration={0.8} ease="power2.out">
               <div>
-                <h2 className="text-3xl font-extrabold tracking-tight text-[#0B1F33] sm:text-4xl">
+                <h2 className="text-3xl font-extrabold tracking-tight text-[#082A30] sm:text-4xl">
                   A marketplace built on transparency and trust.
                 </h2>
                 <p className="mt-5 text-lg leading-8 text-[#667085]">
@@ -50,8 +50,8 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <AnimatedContent distance={30} duration={0.6}>
             <div className="flex flex-col justify-center max-w-xl">
-              <p className="text-sm font-bold uppercase tracking-[.12em] text-[#D92D20] mb-2">Our Mission</p>
-              <h2 className="text-3xl font-extrabold tracking-tight text-[#0B1F33] sm:text-4xl mb-6">
+              <p className="text-sm font-bold uppercase tracking-[.12em] text-[#E94A3F] mb-2">Our Mission</p>
+              <h2 className="text-3xl font-extrabold tracking-tight text-[#082A30] sm:text-4xl mb-6">
                 Redefining the car buying experience.
               </h2>
               <div className="space-y-4 text-lg text-[#667085]">
@@ -66,7 +66,7 @@ export default function AboutPage() {
             <AnimatedContent distance={30} duration={0.6} delay={0.1}>
               <SpotlightCard className="h-full rounded-2xl bg-white p-8">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FEE4E2]">
-                  <ShieldCheck className="h-6 w-6 text-[#D92D20]" />
+                  <ShieldCheck className="h-6 w-6 text-[#E94A3F]" />
                 </div>
                 <h3 className="mt-6 text-xl font-bold text-[#101828]">Radical Transparency</h3>
                 <p className="mt-3 text-[#667085]">We provide all the information you need to make informed decisions without hidden fees or surprises.</p>
@@ -76,7 +76,7 @@ export default function AboutPage() {
             <AnimatedContent distance={30} duration={0.6} delay={0.2}>
               <SpotlightCard className="h-full rounded-2xl bg-white p-8">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FEE4E2]">
-                  <HeartHandshake className="h-6 w-6 text-[#D92D20]" />
+                  <HeartHandshake className="h-6 w-6 text-[#E94A3F]" />
                 </div>
                 <h3 className="mt-6 text-xl font-bold text-[#101828]">Customer First</h3>
                 <p className="mt-3 text-[#667085]">Your peace of mind is our priority. From verification checks to mobile servicing, we design around your convenience.</p>
@@ -86,7 +86,7 @@ export default function AboutPage() {
             <AnimatedContent distance={30} duration={0.6} delay={0.3}>
               <SpotlightCard className="h-full rounded-2xl bg-white p-8">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FEE4E2]">
-                  <Zap className="h-6 w-6 text-[#D92D20]" />
+                  <Zap className="h-6 w-6 text-[#E94A3F]" />
                 </div>
                 <h3 className="mt-6 text-xl font-bold text-[#101828]">Effortless Speed</h3>
                 <p className="mt-3 text-[#667085]">We value your time. Our seamless platform allows you to buy, sell, or book services in just a few clicks.</p>

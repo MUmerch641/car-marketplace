@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { Toaster } from "@/components/ui/toast";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   title: { default: "Shaz | Cars & Car Care", template: "%s | Shaz" },
-  description: "A trusted way to find cars, sell with confidence, and book car care at home.",
+  description: "Book mobile oil changes, arrange vehicle inspections, and buy or sell cars with confidence.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={geist.variable}>
-      <body>
-        <NextTopLoader color="#dc2626" showSpinner={false} />
+    <html lang="en" className={manrope.variable}>
+      <body className="shaz-motion">
+        <NextTopLoader color="#E94A3F" showSpinner={false} />
         {children}
         <Toaster />
       </body>

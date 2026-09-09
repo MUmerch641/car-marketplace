@@ -99,7 +99,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6">
           <div>
             <p className="text-sm font-medium text-slate-500">Vehicle inspection</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-[#0b1f33]">Vehicle inspection</h1>
+            <h1 className="mt-1 text-3xl font-bold tracking-tight text-[#082a30]">Vehicle inspection</h1>
           </div>
           <span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-800 ring-1 ring-inset ring-amber-200">
             {labels[request.status] ?? request.status}
@@ -107,16 +107,16 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </header>
 
         <section className="mt-6 border border-slate-200 bg-white p-5 sm:p-6 rounded-2xl shadow-sm">
-          <p className="text-sm font-semibold text-[#0b1f33]">
+          <p className="text-sm font-semibold text-[#082a30]">
             {request.inspection_type === "seller_pre_inspection" ? "Seller pre-inspection" : "Buyer inspection"}
           </p>
-          <h2 className="mt-3 text-xl font-bold text-[#0b1f33]">{message[0]}</h2>
+          <h2 className="mt-3 text-xl font-bold text-[#082a30]">{message[0]}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">{message[1]}</p>
 
           {hasReport && (
             <div className="mt-5">
               <Link
-                className="inline-flex items-center gap-2 rounded-xl bg-[#d92d20] px-5 py-3 text-xs font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:bg-red-700"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#e94a3f] px-5 py-3 text-xs font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:bg-red-700"
                 href={`/dashboard/verifications/${id}/report`}
               >
                 <FileText size={16} />
@@ -127,14 +127,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </section>
 
         <section className="mt-6 border border-slate-200 bg-white p-5 sm:p-6 rounded-2xl shadow-sm">
-          <h2 className="text-lg font-bold text-[#0b1f33]">Vehicle</h2>
+          <h2 className="text-lg font-bold text-[#082a30]">Vehicle</h2>
           {car ? (
             <div className="mt-4 flex flex-col gap-4 sm:flex-row">
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100 sm:h-24 sm:w-36 sm:shrink-0">
                 {signed?.signedUrl && <Image src={signed.signedUrl} alt="Vehicle" fill unoptimized className="object-cover" />}
               </div>
               <div>
-                <p className="font-semibold text-[#0b1f33]">
+                <p className="font-semibold text-[#082a30]">
                   {car.year} {car.make} {car.model}
                   {car.variant ? ` ${car.variant}` : ""}
                 </p>
@@ -145,7 +145,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <p className="mt-1 text-sm text-slate-600">
                   {car.city}, {car.postcode}
                 </p>
-                <Link href={`/cars/${car.id}`} className="mt-3 inline-block text-sm font-semibold text-[#d92d20]">
+                <Link href={`/cars/${car.id}`} className="mt-3 inline-block text-sm font-semibold text-[#e94a3f]">
                   View listing
                 </Link>
               </div>
@@ -156,7 +156,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </section>
 
         <section className="mt-6 border border-slate-200 bg-white p-5 sm:p-6 rounded-2xl shadow-sm">
-          <h2 className="text-lg font-bold text-[#0b1f33]">Inspection progress</h2>
+          <h2 className="text-lg font-bold text-[#082a30]">Inspection progress</h2>
           <ol className="mt-5 space-y-4">
             {stages.map((stage, index) => (
               <li key={stage} className="flex items-center gap-3 text-sm">
@@ -176,7 +176,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <span
                   className={
                     index === currentStage
-                      ? "font-semibold text-[#0b1f33]"
+                      ? "font-semibold text-[#082a30]"
                       : index < currentStage
                       ? "text-slate-700"
                       : "text-slate-400"
@@ -190,21 +190,21 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </section>
 
         <section className="mt-6 border border-slate-200 bg-white p-5 sm:p-6 rounded-2xl shadow-sm">
-          <h2 className="text-lg font-bold text-[#0b1f33]">
+          <h2 className="text-lg font-bold text-[#082a30]">
             {request.scheduled_for ? "Inspection appointment" : "Appointment request"}
           </h2>
           <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-3">
             <div>
               <dt className="text-slate-500">{request.scheduled_for ? "Inspection date" : "Preferred date"}</dt>
-              <dd className="mt-1 font-semibold text-[#0b1f33]">{requestedAppointment.date}</dd>
+              <dd className="mt-1 font-semibold text-[#082a30]">{requestedAppointment.date}</dd>
             </div>
             <div>
               <dt className="text-slate-500">{request.scheduled_for ? "Time" : "Preferred time"}</dt>
-              <dd className="mt-1 font-semibold text-[#0b1f33]">{requestedAppointment.time}</dd>
+              <dd className="mt-1 font-semibold text-[#082a30]">{requestedAppointment.time}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Location</dt>
-              <dd className="mt-1 font-semibold text-[#0b1f33]">
+              <dd className="mt-1 font-semibold text-[#082a30]">
                 {request.inspection_address}, {request.city}, {request.postcode}
               </dd>
             </div>

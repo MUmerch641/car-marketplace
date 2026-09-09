@@ -7,14 +7,14 @@ export default async function AdminCategoriesPage() {
   return (
     <div className="p-5 lg:p-8 max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#0b1f33] sm:text-3xl">Part Categories</h1>
+        <h1 className="text-2xl font-bold text-[#082a30] sm:text-3xl">Part Categories</h1>
         <p className="mt-1 text-sm text-slate-500">Manage product categories for the marketplace.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-             <h2 className="font-bold text-[#0b1f33] mb-4">Add new category</h2>
+             <h2 className="font-bold text-[#082a30] mb-4">Add new category</h2>
              <CategoryForm />
            </div>
         </div>
@@ -33,7 +33,7 @@ export default async function AdminCategoriesPage() {
                <tbody className="divide-y divide-slate-100">
                  {categories.map((cat) => (
                    <tr key={cat.id} className="hover:bg-slate-50">
-                     <td className="px-5 py-3 font-semibold text-[#0b1f33]">{cat.name}</td>
+                     <td className="px-5 py-3 font-semibold text-[#082a30]">{cat.name}</td>
                      <td className="px-5 py-3 font-mono text-xs">{cat.slug}</td>
                      <td className="px-5 py-3">{cat.sort_order}</td>
                      <td className="px-5 py-3">

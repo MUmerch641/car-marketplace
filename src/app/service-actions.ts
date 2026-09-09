@@ -4,8 +4,16 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole, requireUser } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
+import { lookupUkVehicle, type VehicleLookupResult } from "@/lib/services/vehicle-lookup";
+import { getOilRecommendations, type OilRecommendation } from "@/lib/services/oils";
 
 type ActionState = { error?: string; success?: string };
+export type OilFinderState = {
+  error?: string;
+  registration?: string;
+  vehicle?: VehicleLookupResult;
+  recommendations?: OilRecommendation[];
+};
 const field = (form: FormData, key: string) => String(form.get(key) ?? "").trim();
 const postcode = /^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i;
 
@@ -17,10 +25,31 @@ import {
 export async function createServiceBookingAction(_: ActionState, form: FormData): Promise<ActionState> {
   const user = await requireUser();
   const serviceId = field(form, "serviceId"); const preferredDate = field(form, "preferredDate"); const preferredTime = field(form, "preferredTime");
-  if (!serviceId || !field(form, "carMake") || !field(form, "carModel") || !field(form, "addressLine1") || !field(form, "city") || !postcode.test(field(form, "postcode")) || !preferredDate || !preferredTime) return { error: "Complete the required vehicle, location and preferred schedule details." };
+  const registration = field(form, "carRegistration");
+  if (!serviceId || !registration || !field(form, "addressLine1") || !field(form, "city") || !postcode.test(field(form, "postcode")) || !preferredDate || !preferredTime) return { error: "Complete the required vehicle, location and preferred schedule details." };
   if (preferredDate < new Date().toISOString().slice(0, 10)) return { error: "Choose a preferred date that is not in the past." };
+
+  const vehicleResult = await lookupUkVehicle(registration);
+  if (!vehicleResult.data) return { error: vehicleResult.error ?? "We could not verify this vehicle registration." };
+  const vehicle = vehicleResult.data;
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("create_service_booking", { p_service_type_id: serviceId, p_car_make: field(form, "carMake"), p_car_model: field(form, "carModel"), p_car_registration: field(form, "carRegistration"), p_address_line_1: field(form, "addressLine1"), p_address_line_2: field(form, "addressLine2"), p_city: field(form, "city"), p_postcode: field(form, "postcode").toUpperCase(), p_preferred_date: preferredDate, p_preferred_time: preferredTime, p_notes: field(form, "notes") || undefined });
+  const { data, error } = await supabase.rpc("create_oil_change_booking", {
+    p_service_type_id: serviceId,
+    p_car_make: vehicle.make,
+    p_car_model: vehicle.model,
+    p_car_registration: vehicle.registration,
+    p_vehicle_year: (vehicle.year || null) as unknown as number,
+    p_fuel_type: vehicle.fuel_type,
+    p_engine_capacity_cc: (vehicle.engine_capacity_cc ?? null) as unknown as number,
+    p_oil_product_id: (field(form, "oilProductId") || null) as unknown as string,
+    p_address_line_1: field(form, "addressLine1"),
+    p_address_line_2: field(form, "addressLine2"),
+    p_city: field(form, "city"),
+    p_postcode: field(form, "postcode").toUpperCase(),
+    p_preferred_date: preferredDate,
+    p_preferred_time: preferredTime,
+    p_notes: field(form, "notes") || undefined,
+  });
   if (error || !data) return { error: "We could not submit your booking. Please try again." };
 
   // Fetch service type name for email confirmation
@@ -34,13 +63,24 @@ export async function createServiceBookingAction(_: ActionState, form: FormData)
     customerId: user.id,
     bookingId: data,
     serviceName: serviceType?.name || "Mobile Car Service",
-    carDetails: `${field(form, "carMake")} ${field(form, "carModel")}${field(form, "carRegistration") ? ` (${field(form, "carRegistration")})` : ""}`,
+    carDetails: `${vehicle.make} ${vehicle.model} (${vehicle.registration})`,
     preferredDate,
     preferredTime,
     address: `${field(form, "addressLine1")}, ${field(form, "city")}, ${field(form, "postcode").toUpperCase()}`,
   }).catch((err) => console.error("Booking confirmation email error:", err));
 
   redirect(`/dashboard/bookings/${data}`);
+}
+
+export async function findOilForVehicleAction(_: OilFinderState, form: FormData): Promise<OilFinderState> {
+  const registration = field(form, "registration").toUpperCase();
+  if (!registration) return { error: "Enter your vehicle registration." };
+
+  const result = await lookupUkVehicle(registration);
+  if (!result.data) return { registration, error: result.error ?? "We could not find that vehicle." };
+
+  const recommendations = await getOilRecommendations(result.data);
+  return { registration: result.data.registration, vehicle: result.data, recommendations };
 }
 
 export async function cancelBookingAction(bookingId: string, form: FormData) {
@@ -68,7 +108,7 @@ export async function assignWorkerAction(bookingId: string, form: FormData) {
   if (error) return { error: "Unable to assign this worker." };
 
   if (booking) {
-    const serviceName = Array.isArray(booking.service_types) ? booking.service_types[0]?.name : (booking.service_types as any)?.name;
+    const serviceName = Array.isArray(booking.service_types) ? booking.service_types[0]?.name : booking.service_types?.name;
     const address = [booking.address_line_1, booking.address_line_2, booking.city, booking.postcode].filter(Boolean).join(", ");
     
     sendServiceWorkerAssignedNotification({

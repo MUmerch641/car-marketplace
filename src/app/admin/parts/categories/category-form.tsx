@@ -74,7 +74,7 @@ export function CategoryForm({ category }: { category?: any }) {
       
       <button 
         disabled={loading}
-        className="mt-2 w-full rounded-lg bg-[#0b1f33] py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-50"
+        className="mt-2 w-full rounded-lg bg-[#082a30] py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-50"
       >
         {loading ? "Saving..." : "Save Category"}
       </button>

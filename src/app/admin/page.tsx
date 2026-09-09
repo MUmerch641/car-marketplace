@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Activity, ArrowRight, CalendarClock, CarFront, ClipboardCheck, ShieldCheck } from "lucide-react";
+import { Activity, ArrowRight, CalendarClock, CarFront, ClipboardCheck, PackageCheck, ShieldCheck, Store } from "lucide-react";
 import { AdminPageHeader, AdminStatus } from "@/components/admin/admin-ui";
 
 export default async function AdminPage() {
@@ -14,6 +14,10 @@ export default async function AdminPage() {
     { data: carActivity },
     { data: bookingActivity },
     { data: verificationActivity },
+    { count: openSupplierOrders },
+    { count: readyCollections },
+    { count: activeSuppliers },
+    { count: manualOilChecks },
   ] = await Promise.all([
     s.from("cars").select("id", { count: "exact", head: true }).eq("status", "active"),
     s.from("cars").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
@@ -23,6 +27,10 @@ export default async function AdminPage() {
     s.from("cars").select("created_at").gte("created_at", sixMonthsAgo()),
     s.from("service_bookings").select("created_at").gte("created_at", sixMonthsAgo()),
     s.from("verification_requests").select("created_at").gte("created_at", sixMonthsAgo()),
+    s.from("supplier_orders").select("id", { count: "exact", head: true }).in("status", ["draft", "sent", "acknowledged", "ready"]),
+    s.from("supplier_orders").select("id", { count: "exact", head: true }).eq("status", "ready"),
+    s.from("suppliers").select("id", { count: "exact", head: true }).eq("status", "active"),
+    s.from("service_bookings").select("id", { count: "exact", head: true }).eq("oil_fitment_status", "manual_confirmation").in("status", ["pending", "confirmed", "assigned"]),
   ]);
 
   const monthlyActivity = makeMonthlyActivity(carActivity ?? [], bookingActivity ?? [], verificationActivity ?? []);
@@ -43,40 +51,42 @@ export default async function AdminPage() {
         {cards.map(({ label, value, icon: Icon, tone }) => (
           <div key={label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-start justify-between"><p className="text-sm font-semibold text-slate-500">{label}</p><span className={`flex h-9 w-9 items-center justify-center rounded-xl ${tone}`}><Icon size={18} /></span></div>
-            <p className="mt-5 text-4xl font-bold tracking-tight text-[#0b1f33]">{value ?? 0}</p>
+            <p className="mt-5 text-4xl font-bold tracking-tight text-[#082a30]">{value ?? 0}</p>
             <p className="mt-1 text-xs text-slate-400">Current operational total</p>
           </div>
         ))}
       </div>
 
       <section className="mt-9 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#d92d20]">Workload trend</p><h2 className="mt-1 text-xl font-bold text-[#0b1f33]">New operational requests</h2><p className="mt-1 text-sm text-slate-500">Last six months across marketplace and service teams.</p></div><AdminStatus>Last 6 months</AdminStatus></div><ActivityChart data={monthlyActivity} /></div>
-        <div className="rounded-2xl border border-slate-200 bg-[#0b1f33] p-5 text-white shadow-sm sm:p-6"><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#fda29b]">Queue health</p><h2 className="mt-1 text-xl font-bold">Work needing a decision</h2><div className="mt-7 space-y-5">{[{ label: "Listings", value: cars ?? 0, total: active ?? 0, color: "bg-[#f97066]" }, { label: "Bookings", value: bookings ?? 0, total: 12, color: "bg-[#7fdbca]" }, { label: "Verifications", value: verification ?? 0, total: 12, color: "bg-[#8ab4f8]" }].map(item => <div key={item.label}><div className="flex justify-between text-sm"><span className="font-semibold">{item.label}</span><span className="text-slate-400">{item.value} open</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10"><div className={`h-full rounded-full ${item.color}`} style={{ width: `${Math.min(100, item.value ? Math.max(12, item.value / Math.max(item.total + item.value, 1) * 100) : 0)}%` }} /></div></div>)}</div><p className="mt-8 text-xs leading-5 text-slate-400">Open queues are shown here so the team can act before requests become overdue.</p></div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e94a3f]">Workload trend</p><h2 className="mt-1 text-xl font-bold text-[#082a30]">New operational requests</h2><p className="mt-1 text-sm text-slate-500">Last six months across marketplace and service teams.</p></div><AdminStatus>Last 6 months</AdminStatus></div><ActivityChart data={monthlyActivity} /></div>
+        <div className="rounded-2xl border border-slate-200 bg-[#082a30] p-5 text-white shadow-sm sm:p-6"><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#fda29b]">Queue health</p><h2 className="mt-1 text-xl font-bold">Work needing a decision</h2><div className="mt-7 space-y-5">{[{ label: "Listings", value: cars ?? 0, total: active ?? 0, color: "bg-[#ff8a73]" }, { label: "Bookings", value: bookings ?? 0, total: 12, color: "bg-[#7fdbca]" }, { label: "Verifications", value: verification ?? 0, total: 12, color: "bg-[#8ab4f8]" }].map(item => <div key={item.label}><div className="flex justify-between text-sm"><span className="font-semibold">{item.label}</span><span className="text-slate-400">{item.value} open</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10"><div className={`h-full rounded-full ${item.color}`} style={{ width: `${Math.min(100, item.value ? Math.max(12, item.value / Math.max(item.total + item.value, 1) * 100) : 0)}%` }} /></div></div>)}</div><p className="mt-8 text-xs leading-5 text-slate-400">Open queues are shown here so the team can act before requests become overdue.</p></div>
       </section>
 
-      <section className="mt-9"><div className="flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#d92d20]">Priority queue</p><h2 className="mt-1 text-2xl font-bold tracking-tight text-[#0b1f33]">Needs your attention</h2></div><Activity className="text-slate-400" size={20} /></div>
+      <section className="mt-9 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e94a3f]">Oil-change readiness</p><h2 className="mt-1 text-2xl font-bold tracking-tight text-[#082a30]">Today’s service operations</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">Manage the customer booking, supplier collection and field-worker handover from the service desk. Live supplier ordering stays off until a trade account is active.</p></div><Link href="/admin/bookings" className="inline-flex shrink-0 items-center gap-1 text-sm font-bold text-[#e94a3f] hover:text-[#c73830]">Open service desk <ArrowRight size={16} /></Link></div><div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><OilMetric label="Open supplier collections" value={openSupplierOrders ?? 0} icon={PackageCheck} tone="bg-red-50 text-[#e94a3f]" /><OilMetric label="Ready to collect" value={readyCollections ?? 0} icon={ClipboardCheck} tone="bg-violet-50 text-violet-700" /><OilMetric label="Active trade suppliers" value={activeSuppliers ?? 0} icon={Store} tone="bg-emerald-50 text-emerald-700" /><OilMetric label="Oil matches to confirm" value={manualOilChecks ?? 0} icon={CalendarClock} tone="bg-amber-50 text-amber-700" /></div></section>
+
+      <section className="mt-9"><div className="flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e94a3f]">Priority queue</p><h2 className="mt-1 text-2xl font-bold tracking-tight text-[#082a30]">Needs your attention</h2></div><Activity className="text-slate-400" size={20} /></div>
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         <Link
           href="/admin/cars"
-          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#d92d20] hover:shadow-md"
+          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#e94a3f] hover:shadow-md"
         >
-          <AdminStatus tone="amber">Moderation</AdminStatus><p className="mt-5 text-3xl font-bold text-[#0b1f33]">{cars ?? 0}</p><p className="mt-1 text-sm text-slate-500">cars awaiting review</p><span className="mt-5 flex items-center gap-1 text-sm font-bold text-[#d92d20]">Open queue <ArrowRight size={15} className="transition group-hover:translate-x-1" /></span>
+          <AdminStatus tone="amber">Moderation</AdminStatus><p className="mt-5 text-3xl font-bold text-[#082a30]">{cars ?? 0}</p><p className="mt-1 text-sm text-slate-500">cars awaiting review</p><span className="mt-5 flex items-center gap-1 text-sm font-bold text-[#e94a3f]">Open queue <ArrowRight size={15} className="transition group-hover:translate-x-1" /></span>
         </Link>
         <Link
           href="/admin/bookings?status=pending"
-          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#d92d20] hover:shadow-md"
+          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#e94a3f] hover:shadow-md"
         >
-          <AdminStatus tone="blue">Service desk</AdminStatus><p className="mt-5 text-3xl font-bold text-[#0b1f33]">{bookings ?? 0}</p><p className="mt-1 text-sm text-slate-500">bookings awaiting confirmation</p><span className="mt-5 flex items-center gap-1 text-sm font-bold text-[#d92d20]">Open queue <ArrowRight size={15} className="transition group-hover:translate-x-1" /></span>
+          <AdminStatus tone="blue">Service desk</AdminStatus><p className="mt-5 text-3xl font-bold text-[#082a30]">{bookings ?? 0}</p><p className="mt-1 text-sm text-slate-500">bookings awaiting confirmation</p><span className="mt-5 flex items-center gap-1 text-sm font-bold text-[#e94a3f]">Open queue <ArrowRight size={15} className="transition group-hover:translate-x-1" /></span>
         </Link>
         <Link
           href="/admin/verifications"
-          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#d92d20] hover:shadow-md"
+          className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#e94a3f] hover:shadow-md"
         >
-          <AdminStatus tone="green">Inspections</AdminStatus><p className="mt-5 text-3xl font-bold text-[#0b1f33]">{verification ?? 0}</p><p className="mt-1 text-sm text-slate-500">verification actions</p><span className="mt-5 flex items-center gap-1 text-sm font-bold text-[#d92d20]">Open queue <ArrowRight size={15} className="transition group-hover:translate-x-1" /></span>
+          <AdminStatus tone="green">Inspections</AdminStatus><p className="mt-5 text-3xl font-bold text-[#082a30]">{verification ?? 0}</p><p className="mt-1 text-sm text-slate-500">verification actions</p><span className="mt-5 flex items-center gap-1 text-sm font-bold text-[#e94a3f]">Open queue <ArrowRight size={15} className="transition group-hover:translate-x-1" /></span>
         </Link>
       </div></section>
 
-      <section className="mt-9"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#d92d20]">Audit trail</p><h2 className="mt-1 text-2xl font-bold tracking-tight text-[#0b1f33]">Recent activity</h2></div>
+      <section className="mt-9"><div><p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e94a3f]">Audit trail</p><h2 className="mt-1 text-2xl font-bold tracking-tight text-[#082a30]">Recent activity</h2></div>
       <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -91,7 +101,7 @@ export default async function AdminPage() {
               {audit?.length ? (
                 audit.map((x, i) => (
                   <tr key={i} className="hover:bg-slate-50">
-                    <td className="px-6 py-4 font-semibold capitalize text-[#0b1f33]">{x.action.replaceAll("_", " ")}</td>
+                    <td className="px-6 py-4 font-semibold capitalize text-[#082a30]">{x.action.replaceAll("_", " ")}</td>
                     <td className="px-6 py-4"><AdminStatus>{x.entity_type}</AdminStatus></td>
                     <td className="px-6 py-4 text-slate-500">
                       {new Date(x.created_at).toLocaleString("en-GB")}
@@ -120,4 +130,5 @@ function makeMonthlyActivity(cars: CreatedRecord[], bookings: CreatedRecord[], v
   const add = (records: CreatedRecord[], field: "cars" | "bookings" | "verifications") => records.forEach(({ created_at }) => { const date = new Date(created_at); const month = months.find((item) => item.key === `${date.getFullYear()}-${date.getMonth()}`); if (month) month[field]++; });
   add(cars, "cars"); add(bookings, "bookings"); add(verifications, "verifications"); return months;
 }
-function ActivityChart({ data }: { data: ReturnType<typeof makeMonthlyActivity> }) { const max = Math.max(1, ...data.map((item) => item.cars + item.bookings + item.verifications)); return <div className="mt-7"><div className="flex h-44 items-end gap-3 border-b border-slate-200 pb-0 sm:gap-5">{data.map((item) => <div key={item.key} className="group flex h-full flex-1 items-end justify-center gap-1"><span title={`${item.cars} cars`} className="w-full max-w-5 rounded-t bg-[#d92d20] transition-opacity group-hover:opacity-75" style={{ height: `${item.cars / max * 100}%` }} /><span title={`${item.bookings} bookings`} className="w-full max-w-5 rounded-t bg-[#0b1f33] transition-opacity group-hover:opacity-75" style={{ height: `${item.bookings / max * 100}%` }} /><span title={`${item.verifications} verifications`} className="w-full max-w-5 rounded-t bg-[#7c9cbe] transition-opacity group-hover:opacity-75" style={{ height: `${item.verifications / max * 100}%` }} /></div>)}</div><div className="mt-2 flex gap-3 sm:gap-5">{data.map((item) => <span key={item.key} className="flex-1 text-center text-xs font-medium text-slate-400">{item.label}</span>)}</div><div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-500"><span><i className="mr-1.5 inline-block h-2 w-2 rounded-sm bg-[#d92d20]" />Listings</span><span><i className="mr-1.5 inline-block h-2 w-2 rounded-sm bg-[#0b1f33]" />Bookings</span><span><i className="mr-1.5 inline-block h-2 w-2 rounded-sm bg-[#7c9cbe]" />Verifications</span></div></div>; }
+function ActivityChart({ data }: { data: ReturnType<typeof makeMonthlyActivity> }) { const max = Math.max(1, ...data.map((item) => item.cars + item.bookings + item.verifications)); return <div className="mt-7"><div className="flex h-44 items-end gap-3 border-b border-slate-200 pb-0 sm:gap-5">{data.map((item) => <div key={item.key} className="group flex h-full flex-1 items-end justify-center gap-1"><span title={`${item.cars} cars`} className="w-full max-w-5 rounded-t bg-[#e94a3f] transition-opacity group-hover:opacity-75" style={{ height: `${item.cars / max * 100}%` }} /><span title={`${item.bookings} bookings`} className="w-full max-w-5 rounded-t bg-[#082a30] transition-opacity group-hover:opacity-75" style={{ height: `${item.bookings / max * 100}%` }} /><span title={`${item.verifications} verifications`} className="w-full max-w-5 rounded-t bg-[#7c9cbe] transition-opacity group-hover:opacity-75" style={{ height: `${item.verifications / max * 100}%` }} /></div>)}</div><div className="mt-2 flex gap-3 sm:gap-5">{data.map((item) => <span key={item.key} className="flex-1 text-center text-xs font-medium text-slate-400">{item.label}</span>)}</div><div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-500"><span><i className="mr-1.5 inline-block h-2 w-2 rounded-sm bg-[#e94a3f]" />Listings</span><span><i className="mr-1.5 inline-block h-2 w-2 rounded-sm bg-[#082a30]" />Bookings</span><span><i className="mr-1.5 inline-block h-2 w-2 rounded-sm bg-[#7c9cbe]" />Verifications</span></div></div>; }
+function OilMetric({ label, value, icon: Icon, tone }: { label: string; value: number; icon: typeof PackageCheck; tone: string }) { return <div className="rounded-xl border border-slate-200 p-4"><div className="flex items-start justify-between"><p className="text-sm font-semibold text-slate-500">{label}</p><span className={`grid h-8 w-8 place-items-center rounded-lg ${tone}`}><Icon size={16} /></span></div><p className="mt-4 text-3xl font-bold tracking-tight text-[#082a30]">{value}</p></div>; }

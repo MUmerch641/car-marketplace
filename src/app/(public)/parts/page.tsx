@@ -50,7 +50,7 @@ export default async function PartsPage({
     <main className="bg-[#f7f8fa] min-h-screen">
       {/* Vehicle Context Banner */}
       {vehicle && (
-        <div className="bg-[#0b1f33] text-white">
+        <div className="bg-[#082a30] text-white">
           <div className="mx-auto flex max-w-[1400px] flex-col sm:flex-row items-center gap-4 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
               <CarFront size={24} className="text-white" />
@@ -62,7 +62,7 @@ export default async function PartsPage({
               </p>
             </div>
             <div className="shrink-0 flex items-center gap-3">
-              <div className="inline-flex items-center overflow-hidden rounded border border-[#0b1f33] bg-[#FACC15] shadow-sm h-[32px]">
+              <div className="inline-flex items-center overflow-hidden rounded border border-[#082a30] bg-[#FACC15] shadow-sm h-[32px]">
                 <div className="flex h-full w-6 shrink-0 flex-col items-center justify-end bg-[#003399] pb-0.5">
                   <span className="text-[7px] font-bold leading-none tracking-tighter text-white">UK</span>
                 </div>
@@ -83,15 +83,15 @@ export default async function PartsPage({
         {!vehicle && (
            <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
              <div className="flex items-center gap-4">
-               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#d92d20]/10">
-                 <AlertCircle size={24} className="text-[#d92d20]" />
+               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e94a3f]/10">
+                 <AlertCircle size={24} className="text-[#e94a3f]" />
                </div>
                <div>
-                 <h2 className="text-[16px] font-bold text-[#0b1f33]">Ensure part fitment</h2>
+                 <h2 className="text-[16px] font-bold text-[#082a30]">Ensure part fitment</h2>
                  <p className="text-[14px] text-slate-500">Select a vehicle from your garage to only see compatible parts.</p>
                </div>
              </div>
-             <Link href="/dashboard/garage" className="shrink-0 rounded-xl bg-[#0b1f33] px-5 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-slate-800">
+             <Link href="/dashboard/garage" className="shrink-0 rounded-xl bg-[#082a30] px-5 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-slate-800">
                Go to My Garage
              </Link>
            </div>

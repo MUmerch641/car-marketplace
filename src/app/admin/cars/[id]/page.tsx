@@ -43,7 +43,7 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
         title={`${car.year} ${car.make} ${car.model}`}
         description="Internal listing inspection and moderation view."
         action={
-          <Link href={`/cars/${car.id}`} target="_blank" className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-[#0b1f33] hover:bg-slate-50">
+          <Link href={`/cars/${car.id}`} target="_blank" className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-[#082a30] hover:bg-slate-50">
             View public page ↗
           </Link>
         }
@@ -53,7 +53,7 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
         <div className="space-y-6">
           {/* Images */}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="text-xl font-bold text-[#0b1f33]">Uploaded Media</h2>
+            <h2 className="text-xl font-bold text-[#082a30]">Uploaded Media</h2>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
               {validImages.length > 0 ? (
                 validImages.map((url, i) => (
@@ -71,37 +71,37 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
 
           {/* Details */}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="text-xl font-bold text-[#0b1f33]">Listing Information</h2>
+            <h2 className="text-xl font-bold text-[#082a30]">Listing Information</h2>
             <div className="mt-4 grid gap-y-4 sm:grid-cols-2">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Price</p>
-                <p className="mt-1 font-semibold text-[#0b1f33]">£{Number(car.price).toLocaleString("en-GB")}</p>
+                <p className="mt-1 font-semibold text-[#082a30]">£{Number(car.price).toLocaleString("en-GB")}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Location</p>
-                <p className="mt-1 font-semibold text-[#0b1f33]">{car.city}, {car.postcode}</p>
+                <p className="mt-1 font-semibold text-[#082a30]">{car.city}, {car.postcode}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Mileage</p>
-                <p className="mt-1 font-semibold text-[#0b1f33]">{Number(car.mileage).toLocaleString("en-GB")} miles</p>
+                <p className="mt-1 font-semibold text-[#082a30]">{Number(car.mileage).toLocaleString("en-GB")} miles</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Transmission</p>
-                <p className="mt-1 font-semibold text-[#0b1f33] capitalize">{car.transmission}</p>
+                <p className="mt-1 font-semibold text-[#082a30] capitalize">{car.transmission}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Fuel type</p>
-                <p className="mt-1 font-semibold text-[#0b1f33] capitalize">{car.fuel_type}</p>
+                <p className="mt-1 font-semibold text-[#082a30] capitalize">{car.fuel_type}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Engine Size</p>
-                <p className="mt-1 font-semibold text-[#0b1f33]">{car.engine_size ? `${car.engine_size}L` : "Unknown"}</p>
+                <p className="mt-1 font-semibold text-[#082a30]">{car.engine_size ? `${car.engine_size}L` : "Unknown"}</p>
               </div>
             </div>
 
             <div className="mt-6 border-t border-slate-100 pt-5">
               <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Description</p>
-              <p className="mt-2 whitespace-pre-line text-sm leading-6 text-[#0b1f33]">{car.description}</p>
+              <p className="mt-2 whitespace-pre-line text-sm leading-6 text-[#082a30]">{car.description}</p>
             </div>
           </section>
         </div>
@@ -110,7 +110,7 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
           {/* Status & Moderation */}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-[#0b1f33]">Status</h2>
+              <h2 className="text-xl font-bold text-[#082a30]">Status</h2>
               <AdminStatus tone={car.status === "active" ? "green" : car.status === "pending_review" ? "amber" : car.status === "rejected" ? "red" : "slate"}>
                 {car.status.replace("_", " ")}
               </AdminStatus>
@@ -118,12 +118,12 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
             <div className="mt-4 space-y-3 text-sm text-slate-600">
               <div className="flex justify-between border-b border-slate-100 pb-2">
                 <span>Created:</span>
-                <span className="font-semibold text-[#0b1f33]">{dateLabel(car.created_at)}</span>
+                <span className="font-semibold text-[#082a30]">{dateLabel(car.created_at)}</span>
               </div>
               {car.published_at && (
                 <div className="flex justify-between border-b border-slate-100 pb-2">
                   <span>Published:</span>
-                  <span className="font-semibold text-[#0b1f33]">{dateLabel(car.published_at)}</span>
+                  <span className="font-semibold text-[#082a30]">{dateLabel(car.published_at)}</span>
                 </div>
               )}
             </div>
@@ -137,8 +137,8 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
                     </button>
                   </form>
                   <form action={async (form: FormData) => { "use server"; await moderateCarAction(car.id, false, String(form.get("reason") ?? "")); }} className="space-y-2">
-                    <input name="reason" required placeholder="Rejection reason..." className="w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 py-3 text-sm font-semibold outline-none focus:border-[#D92D20] focus:ring-4 focus:ring-red-50" />
-                    <button className="w-full rounded-xl border border-[#D92D20] px-4 py-3 text-sm font-bold text-[#D92D20] transition-all hover:bg-red-50">
+                    <input name="reason" required placeholder="Rejection reason..." className="w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 py-3 text-sm font-semibold outline-none focus:border-[#E94A3F] focus:ring-4 focus:ring-red-50" />
+                    <button className="w-full rounded-xl border border-[#E94A3F] px-4 py-3 text-sm font-bold text-[#E94A3F] transition-all hover:bg-red-50">
                       Reject Listing
                     </button>
                   </form>
@@ -151,15 +151,15 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
 
           {/* Seller Details */}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="text-xl font-bold text-[#0b1f33]">Seller Info</h2>
+            <h2 className="text-xl font-bold text-[#082a30]">Seller Info</h2>
             <div className="mt-4 space-y-3 text-sm">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Name</p>
-                <p className="mt-1 font-semibold text-[#0b1f33]">{sellerName}</p>
+                <p className="mt-1 font-semibold text-[#082a30]">{sellerName}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Phone</p>
-                <p className="mt-1 font-semibold text-[#0b1f33]">{sellerPhone}</p>
+                <p className="mt-1 font-semibold text-[#082a30]">{sellerPhone}</p>
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Seller ID</p>

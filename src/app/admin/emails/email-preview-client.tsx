@@ -70,10 +70,10 @@ export function EmailPreviewClient({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0b1f33] text-white">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#082a30] text-white">
                 <Mail size={16} />
               </span>
-              <h2 className="text-xl font-bold text-[#0b1f33]">Transactional Email Studio</h2>
+              <h2 className="text-xl font-bold text-[#082a30]">Transactional Email Studio</h2>
             </div>
             <p className="mt-1 text-xs text-slate-500">
               Preview and verify all responsive HTML email templates across Customer, Inspector, and Seller lifecycles.
@@ -89,13 +89,13 @@ export function EmailPreviewClient({
                 value={testEmail}
                 onChange={(e) => setTestEmail(e.target.value)}
                 placeholder="Recipient email address..."
-                className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-medium text-slate-900 outline-none transition focus:border-[#0b1f33] focus:bg-white"
+                className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-medium text-slate-900 outline-none transition focus:border-[#082a30] focus:bg-white"
               />
             </div>
             <button
               type="submit"
               disabled={sending || !testEmail}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#d92d20] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#e94a3f] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-50"
             >
               <Send size={14} />
               <span>{sending ? "Sending..." : "Send Test"}</span>
@@ -143,7 +143,7 @@ export function EmailPreviewClient({
                   }}
                   className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition ${
                     active
-                      ? "border-[#0b1f33] bg-[#0b1f33] text-white shadow-sm"
+                      ? "border-[#082a30] bg-[#082a30] text-white shadow-sm"
                       : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
                   }`}
                 >
@@ -191,7 +191,7 @@ export function EmailPreviewClient({
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50/80 px-5 py-3">
             <div className="min-w-0">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Subject Line</span>
-              <p className="truncate text-xs font-bold text-[#0b1f33]">{currentTemplate.subject}</p>
+              <p className="truncate text-xs font-bold text-[#082a30]">{currentTemplate.subject}</p>
             </div>
 
             {/* View Mode Buttons */}
@@ -199,7 +199,7 @@ export function EmailPreviewClient({
               <button
                 onClick={() => setViewMode("desktop")}
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition ${
-                  viewMode === "desktop" ? "bg-[#0b1f33] text-white" : "text-slate-600 hover:text-[#0b1f33]"
+                  viewMode === "desktop" ? "bg-[#082a30] text-white" : "text-slate-600 hover:text-[#082a30]"
                 }`}
               >
                 <Monitor size={13} />
@@ -208,7 +208,7 @@ export function EmailPreviewClient({
               <button
                 onClick={() => setViewMode("mobile")}
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition ${
-                  viewMode === "mobile" ? "bg-[#0b1f33] text-white" : "text-slate-600 hover:text-[#0b1f33]"
+                  viewMode === "mobile" ? "bg-[#082a30] text-white" : "text-slate-600 hover:text-[#082a30]"
                 }`}
               >
                 <Smartphone size={13} />
