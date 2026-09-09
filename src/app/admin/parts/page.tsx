@@ -10,14 +10,14 @@ export default async function AdminPartsPage() {
     <div className="p-5 lg:p-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-[#0b1f33] sm:text-3xl">Parts catalogue</h1>
+          <h1 className="text-2xl font-bold text-[#082a30] sm:text-3xl">Parts catalogue</h1>
           <p className="mt-1 text-sm text-slate-500">Manage your parts inventory and compatibility.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/admin/parts/categories" className="rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-sm font-semibold text-[#0b1f33] shadow-sm hover:bg-slate-50">
+          <Link href="/admin/parts/categories" className="rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-sm font-semibold text-[#082a30] shadow-sm hover:bg-slate-50">
             Manage Categories
           </Link>
-          <Link href="/admin/parts/new" className="inline-flex items-center gap-2 rounded-lg bg-[#0b1f33] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
+          <Link href="/admin/parts/new" className="inline-flex items-center gap-2 rounded-lg bg-[#082a30] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
             <Plus size={16} />
             Add Part
           </Link>
@@ -48,21 +48,21 @@ export default async function AdminPartsPage() {
                         <Package size={16} className="text-slate-400" />
                       )}
                     </div>
-                    <div className="font-semibold text-[#0b1f33]">{part.name}</div>
+                    <div className="font-semibold text-[#082a30]">{part.name}</div>
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="font-mono text-xs">{part.sku}</div>
                   <div className="text-xs text-slate-500">{part.brand}</div>
                 </td>
-                <td className="px-6 py-4 font-medium text-[#0b1f33]">
+                <td className="px-6 py-4 font-medium text-[#082a30]">
                   £{(part.price_pence / 100).toFixed(2)}
                 </td>
                 <td className="px-6 py-4">
                   {part.stock_quantity > 0 ? (
                     <span className="font-medium text-slate-700">{part.stock_quantity}</span>
                   ) : (
-                    <span className="font-semibold text-[#d92d20]">Out of stock</span>
+                    <span className="font-semibold text-[#e94a3f]">Out of stock</span>
                   )}
                 </td>
                 <td className="px-6 py-4">
@@ -73,7 +73,7 @@ export default async function AdminPartsPage() {
                   )}
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <Link href={`/admin/parts/${part.id}`} className="font-semibold text-[#0b1f33] hover:underline">
+                  <Link href={`/admin/parts/${part.id}`} className="font-semibold text-[#082a30] hover:underline">
                     Edit
                   </Link>
                 </td>

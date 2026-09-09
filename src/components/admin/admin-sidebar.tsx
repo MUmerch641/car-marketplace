@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CarFront, ClipboardCheck, LayoutDashboard, Mail, Settings2, ShieldCheck, UsersRound, Wrench } from "lucide-react";
+import { CarFront, ClipboardCheck, Droplets, LayoutDashboard, Mail, Settings2, ShieldCheck, UsersRound, Wrench } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
 const navigation = [
@@ -11,6 +11,7 @@ const navigation = [
   { label: "Service bookings", href: "/admin/bookings", icon: ClipboardCheck },
   { label: "Verifications", href: "/admin/verifications", icon: ShieldCheck },
   { label: "Service catalogue", href: "/admin/services", icon: Wrench },
+  { label: "Oil & fitments", href: "/admin/oils", icon: Droplets },
   { label: "Parts catalogue", href: "/admin/parts", icon: Wrench },
   { label: "Email templates", href: "/admin/emails", icon: Mail },
   { label: "People", href: "/admin/users", icon: UsersRound },
@@ -28,7 +29,7 @@ export function AdminSidebar() {
       <nav className="flex gap-1 overflow-x-auto p-3 md:flex-1 md:flex-col md:gap-1 md:space-y-0 md:overflow-x-hidden md:overflow-y-auto md:p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {navigation.map(({ label, href, icon: Icon, exact }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);
-          return <Link key={href} href={href} className={`group flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition ${active ? "bg-[#d92d20] text-white shadow-lg shadow-red-950/30" : "hover:bg-white/8 hover:text-white"}`}>
+          return <Link key={href} href={href} className={`group flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition ${active ? "bg-[#e94a3f] text-white shadow-lg shadow-red-950/30" : "hover:bg-white/8 hover:text-white"}`}>
             <Icon size={18} strokeWidth={active ? 2.3 : 1.8} />{label}
           </Link>;
         })}

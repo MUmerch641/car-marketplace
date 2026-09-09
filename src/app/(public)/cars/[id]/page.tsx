@@ -48,30 +48,30 @@ export default async function CarDetailPage({ params }: { params: Promise<{ id: 
         <div>
           <CarGallery images={car.images} title={car.title} />
           <section className="mt-7 border-t border-slate-200 pt-6">
-            <h2 className="text-xl font-bold text-[#0b1f33]">About this car</h2>
+            <h2 className="text-xl font-bold text-[#082a30]">About this car</h2>
             <p className="mt-3 max-w-3xl whitespace-pre-line text-[15px] leading-7 text-slate-600">{car.description}</p>
           </section>
-          {specs.length > 0 && <section className="mt-7 border-t border-slate-200 pt-6"><h2 className="text-xl font-bold text-[#0b1f33]">Vehicle specifications</h2><dl className="mt-4 grid gap-x-8 border-t border-slate-100 sm:grid-cols-2">{specs.map(([label, value]) => <div key={label} className="flex items-center justify-between gap-4 border-b border-slate-100 py-3 text-sm"><dt className="text-slate-500">{label}</dt><dd className="text-right font-semibold text-[#0b1f33]">{value}</dd></div>)}</dl></section>}
+          {specs.length > 0 && <section className="mt-7 border-t border-slate-200 pt-6"><h2 className="text-xl font-bold text-[#082a30]">Vehicle specifications</h2><dl className="mt-4 grid gap-x-8 border-t border-slate-100 sm:grid-cols-2">{specs.map(([label, value]) => <div key={label} className="flex items-center justify-between gap-4 border-b border-slate-100 py-3 text-sm"><dt className="text-slate-500">{label}</dt><dd className="text-right font-semibold text-[#082a30]">{value}</dd></div>)}</dl></section>}
         </div>
 
         <aside className="lg:sticky lg:top-24">
           <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             {(car.verified || car.featured) && <div className="mb-4 flex flex-wrap gap-2">{car.verified && <Badge className="status-confirmed">Inspected by Shaz</Badge>}{car.featured && <Badge tone="amber" className="status-pending">Featured</Badge>}</div>}
-            <h1 className="text-2xl font-bold leading-tight tracking-tight text-[#0b1f33] sm:text-3xl">{car.title}</h1>
-            <p className="mt-3 text-3xl font-bold tracking-tight text-[#d92d20]">{car.price}</p>
+            <h1 className="text-2xl font-bold leading-tight tracking-tight text-[#082a30] sm:text-3xl">{car.title}</h1>
+            <p className="mt-3 text-3xl font-bold tracking-tight text-[#e94a3f]">{car.price}</p>
             <p className="mt-3 text-sm leading-6 text-slate-600">{car.mileage} <span className="px-1 text-slate-300">·</span> {car.fuel} <span className="px-1 text-slate-300">·</span> {car.transmission}</p>
             <p className="mt-2 text-sm text-slate-600">{car.city}</p>
             {car.verified && car.verifiedAt && <p className="mt-3 text-xs text-slate-500">Inspection completed on {dateLabel(car.verifiedAt)}</p>}
             <div className="mt-5 border-t border-slate-200 pt-5">
               {car.status === "sold" ? (
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center">
-                  <p className="text-xl font-extrabold tracking-tight text-[#0b1f33]">This vehicle has been sold</p>
+                  <p className="text-xl font-extrabold tracking-tight text-[#082a30]">This vehicle has been sold</p>
                   <p className="mt-2 text-sm text-slate-600">The seller has marked this listing as sold and it is no longer available.</p>
                 </div>
               ) : (
                 <>
                   <SellerContact carId={car.id} />
-                  {own ? ownInspection ? <Link href={`/dashboard/verifications/${ownInspection.id}`} className="mt-3 block w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-[#0b1f33] hover:bg-slate-50">{ownInspection.status === "completed" ? "Inspected by Shaz" : "View inspection request"}</Link> : inspectionInProgress ? <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm font-semibold text-amber-900">Inspection in progress</p> : <Link href={destination} className="mt-3 block w-full rounded-md border border-[#d92d20] bg-white px-4 py-3 text-center text-sm font-semibold text-[#d92d20] hover:bg-red-50">Request Shaz Inspection</Link> : sellerInspection ? <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900"><p className="font-semibold">{sellerInspection.seller_inspection_status === "completed" ? "Inspected by Shaz" : "Seller inspection in progress"}</p><p className="mt-1 text-emerald-800">{sellerInspection.seller_inspection_status === "completed" ? `Inspection completed by our team${sellerInspection.inspected_at ? ` on ${dateLabel(sellerInspection.inspected_at)}` : ""}.` : "Inspection information will be available after the seller inspection is completed."}</p></div> : inspectionInProgress ? <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><p className="font-semibold">Inspection in progress</p><p className="mt-1">An inspection is already in progress for this vehicle.</p></div> : <><p className="mt-4 text-sm font-medium text-slate-700">Inspection not yet completed</p><Link href={inspectionHref} className="mt-3 block w-full rounded-md border border-[#d92d20] bg-white px-4 py-3 text-center text-sm font-semibold text-[#d92d20] hover:bg-red-50">Get this car inspected</Link></>}
+                  {own ? ownInspection ? <Link href={`/dashboard/verifications/${ownInspection.id}`} className="mt-3 block w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-[#082a30] hover:bg-slate-50">{ownInspection.status === "completed" ? "Inspected by Shaz" : "View inspection request"}</Link> : inspectionInProgress ? <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm font-semibold text-amber-900">Inspection in progress</p> : <Link href={destination} className="mt-3 block w-full rounded-md border border-[#e94a3f] bg-white px-4 py-3 text-center text-sm font-semibold text-[#e94a3f] hover:bg-red-50">Request Shaz Inspection</Link> : sellerInspection ? <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900"><p className="font-semibold">{sellerInspection.seller_inspection_status === "completed" ? "Inspected by Shaz" : "Seller inspection in progress"}</p><p className="mt-1 text-emerald-800">{sellerInspection.seller_inspection_status === "completed" ? `Inspection completed by our team${sellerInspection.inspected_at ? ` on ${dateLabel(sellerInspection.inspected_at)}` : ""}.` : "Inspection information will be available after the seller inspection is completed."}</p></div> : inspectionInProgress ? <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><p className="font-semibold">Inspection in progress</p><p className="mt-1">An inspection is already in progress for this vehicle.</p></div> : <><p className="mt-4 text-sm font-medium text-slate-700">Inspection not yet completed</p><Link href={inspectionHref} className="mt-3 block w-full rounded-md border border-[#e94a3f] bg-white px-4 py-3 text-center text-sm font-semibold text-[#e94a3f] hover:bg-red-50">Get this car inspected</Link></>}
                 </>
               )}
             </div>

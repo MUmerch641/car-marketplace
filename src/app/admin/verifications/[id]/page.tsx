@@ -56,7 +56,7 @@ export default async function AdminReportReviewPage({ params }: { params: Promis
       <div>
         <Link
           href="/admin/verifications"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#0b1f33]"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#082a30]"
         >
           <ArrowLeft size={14} />
           <span>Back to Verification Requests</span>
@@ -75,13 +75,13 @@ export default async function AdminReportReviewPage({ params }: { params: Promis
             </span>
             <span
               className={`rounded-lg px-2.5 py-1 text-xs font-bold ${
-                v.status === "completed" ? "bg-emerald-100 text-emerald-900" : "bg-[#0b1f33] text-white"
+                v.status === "completed" ? "bg-emerald-100 text-emerald-900" : "bg-[#082a30] text-white"
               }`}
             >
               {v.status.replace(/_/g, " ").toUpperCase()}
             </span>
           </div>
-          <h1 className="mt-2 text-2xl font-bold text-[#0b1f33]">
+          <h1 className="mt-2 text-2xl font-bold text-[#082a30]">
             {v.external_make || "Vehicle"} {v.external_model || ""} · {v.city}
           </h1>
           <p className="mt-1 text-xs text-slate-500">
@@ -108,7 +108,7 @@ export default async function AdminReportReviewPage({ params }: { params: Promis
       {r ? (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <h2 className="text-lg font-bold text-[#0b1f33]">Submitted Report Findings</h2>
+            <h2 className="text-lg font-bold text-[#082a30]">Submitted Report Findings</h2>
             <ResultBadge result={r.overall_result} />
           </div>
 
@@ -168,7 +168,7 @@ export default async function AdminReportReviewPage({ params }: { params: Promis
       {/* Attached Evidence Photos */}
       {imgs.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
-          <h2 className="text-base font-bold text-[#0b1f33]">Inspection Evidence Photos ({imgs.length})</h2>
+          <h2 className="text-base font-bold text-[#082a30]">Inspection Evidence Photos ({imgs.length})</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {imgs.map(
               (x, i) =>

@@ -35,10 +35,10 @@ export default async function MyCarsPage() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#0b1f33]">My Cars</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-[#082a30]">My Cars</h1>
             <p className="mt-2 text-[15px] text-slate-600">Manage the vehicles you have listed on Shaz.</p>
           </div>
-          <Link href="/sell-car" className="inline-flex w-fit items-center rounded-lg bg-[#d92d20] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#b42318]">
+          <Link href="/sell-car" className="inline-flex w-fit items-center rounded-lg bg-[#e94a3f] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#c73830]">
             Sell another car <ArrowRight size={16} className="ml-2" />
           </Link>
         </header>
@@ -61,13 +61,13 @@ export default async function MyCarsPage() {
                               {car.registration}
                             </div>
                           )}
-                          <h3 className="text-lg font-bold text-[#0b1f33] leading-tight">{car.title}</h3>
+                          <h3 className="text-lg font-bold text-[#082a30] leading-tight">{car.title}</h3>
                         </div>
                         <Status status={car.status ?? "draft"} />
                       </div>
                       
                       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-500">
-                        <span className="font-semibold text-[#0b1f33]">{car.price}</span>
+                        <span className="font-semibold text-[#082a30]">{car.price}</span>
                         <span className="text-slate-300">|</span>
                         <span>{car.mileage}</span>
                         <span className="text-slate-300">|</span>
@@ -86,13 +86,13 @@ export default async function MyCarsPage() {
                     
                     <div className="mt-4 flex flex-wrap items-center gap-3 sm:justify-end">
                       {car.status === "active" && (
-                        <Link href={`/cars/${car.id}`} className="text-slate-700 hover:text-[#0b1f33] text-sm font-semibold">
+                        <Link href={`/cars/${car.id}`} className="text-slate-700 hover:text-[#082a30] text-sm font-semibold">
                           View
                         </Link>
                       )}
                       
                       {['draft', 'rejected', 'active', 'pending'].includes(car.status ?? "") && (
-                        <Link href={`/dashboard/cars/${car.id}/edit`} className="text-[#d92d20] hover:text-[#b42318] text-sm font-semibold">
+                        <Link href={`/dashboard/cars/${car.id}/edit`} className="text-[#e94a3f] hover:text-[#c73830] text-sm font-semibold">
                           Edit
                         </Link>
                       )}
@@ -112,11 +112,11 @@ export default async function MyCarsPage() {
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-50">
                 <CarFront size={28} className="text-slate-400" />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-[#0b1f33]">No cars listed yet</h3>
+              <h3 className="mt-5 text-lg font-bold text-[#082a30]">No cars listed yet</h3>
               <p className="mt-2 text-[15px] text-slate-600 max-w-sm">
                 You haven&apos;t listed any cars on the marketplace yet. Create your first listing to reach thousands of buyers.
               </p>
-              <Link href="/sell-car" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#d92d20] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#b42318]">
+              <Link href="/sell-car" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#e94a3f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#c73830]">
                 Sell a car <ArrowRight size={16} />
               </Link>
             </div>

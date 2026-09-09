@@ -28,9 +28,9 @@ export function SubmitButton({
   if (size === "sm") sizeStyle = "px-3 py-1.5 text-xs rounded-lg";
   if (size === "lg") sizeStyle = "px-6 py-3 text-sm rounded-xl";
 
-  let variantStyle = "bg-[#d92d20] text-white hover:bg-red-700 focus:ring-red-500 shadow-sm";
+  let variantStyle = "bg-[#e94a3f] text-white hover:bg-red-700 focus:ring-red-500 shadow-sm";
   if (variant === "secondary") variantStyle = "bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 focus:ring-slate-400";
-  if (variant === "dark") variantStyle = "bg-[#0b1f33] text-white hover:bg-[#163452] focus:ring-[#0b1f33] shadow-sm";
+  if (variant === "dark") variantStyle = "bg-[#082a30] text-white hover:bg-[#163452] focus:ring-[#082a30] shadow-sm";
   if (variant === "danger") variantStyle = "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm";
   if (variant === "outline") variantStyle = "border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 focus:ring-slate-300 shadow-sm";
   if (variant === "ghost") variantStyle = "text-slate-700 hover:bg-slate-100 focus:ring-slate-200";

@@ -35,7 +35,7 @@ export function ActionMenu({ children }: ActionMenuProps) {
           e.preventDefault();
           setOpen(!open);
         }}
-        className="flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-[#0b1f33] transition-colors focus:outline-none"
+        className="flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-[#082a30] transition-colors focus:outline-none"
         aria-expanded={open}
         aria-haspopup="true"
       >
