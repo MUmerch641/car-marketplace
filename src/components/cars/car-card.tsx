@@ -11,8 +11,8 @@ export function CarCard({ car }: { car: CarCardData }) {
         {(car.verified || car.featured) && <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">{car.verified && <Badge className="status-confirmed">Verified</Badge>}{car.featured && <Badge tone="amber" className="status-pending">Featured</Badge>}</div>}
       </div>
       <div className="p-4">
-        <h2 className="text-[16px] font-semibold leading-5 text-[#0b1f33]">{car.title}</h2>
-        <p className="mt-2 text-xl font-bold tracking-tight text-[#0b1f33]">{car.price}</p>
+        <h2 className="text-[16px] font-semibold leading-5 text-[#082a30]">{car.title}</h2>
+        <p className="mt-2 text-xl font-bold tracking-tight text-[#082a30]">{car.price}</p>
         <p className="mt-2 text-sm text-slate-600">{car.mileage} <span className="px-1 text-slate-300">·</span> {car.fuel} <span className="px-1 text-slate-300">·</span> {car.transmission}</p>
         <p className="mt-3 border-t border-slate-100 pt-3 text-sm font-medium text-slate-600">{car.city}</p>
       </div>

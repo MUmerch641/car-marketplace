@@ -73,12 +73,12 @@ function EmptyState({
   return (
     <div className="border-t border-slate-100 py-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
       <div>
-        <p className="text-sm font-semibold text-[#0b1f33]">{title}</p>
+        <p className="text-sm font-semibold text-[#082a30]">{title}</p>
         <p className="mt-1 text-sm leading-6 text-slate-500">{copy}</p>
       </div>
       <Link
         href={href}
-        className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#d92d20] hover:text-[#b42318] sm:mt-0"
+        className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#e94a3f] hover:text-[#c73830] sm:mt-0"
       >
         {action} <ArrowRight size={15} />
       </Link>
@@ -129,7 +129,7 @@ export default async function DashboardPage() {
         <header className="flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-medium text-slate-500">Your Shaz account</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-[#0b1f33] sm:text-[34px]">
+            <h1 className="mt-1 text-3xl font-bold tracking-tight text-[#082a30] sm:text-[34px]">
               Welcome back{firstName ? `, ${firstName}` : ""}
             </h1>
             <p className="mt-2 text-[15px] text-slate-600">Manage your vehicles, bookings and listings.</p>
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
             >
               Add vehicle
             </Link>
-            <Link href="/sell-car" className="inline-flex items-center rounded-lg bg-[#d92d20] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#b42318]">
+            <Link href="/sell-car" className="inline-flex items-center rounded-lg bg-[#e94a3f] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#c73830]">
               Sell a car <ArrowRight size={16} className="ml-2" />
             </Link>
           </div>
@@ -155,8 +155,8 @@ export default async function DashboardPage() {
             { href: "/cars", label: "Browse cars", copy: "Search the marketplace", icon: Search },
           ].map(({ href, label, copy, icon: Icon }) => (
             <Link key={label} href={href} className="group bg-white px-4 py-4 transition hover:bg-slate-50">
-              <Icon size={18} className="text-[#d92d20]" />
-              <p className="mt-3 text-sm font-semibold text-[#0b1f33]">{label} <ArrowRight size={14} className="mb-0.5 inline transition group-hover:translate-x-0.5" /></p>
+              <Icon size={18} className="text-[#e94a3f]" />
+              <p className="mt-3 text-sm font-semibold text-[#082a30]">{label} <ArrowRight size={14} className="mb-0.5 inline transition group-hover:translate-x-0.5" /></p>
               <p className="mt-1 text-xs leading-5 text-slate-500">{copy}</p>
             </Link>
           ))}
@@ -165,8 +165,8 @@ export default async function DashboardPage() {
         <section id="garage" className="mt-7 scroll-mt-6 border-y border-slate-200 bg-white px-5 py-5 sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[.12em] text-[#d92d20]">Vehicle hub</p>
-              <h2 className="mt-1 text-xl font-bold text-[#0b1f33]">My Garage</h2>
+              <p className="text-xs font-bold uppercase tracking-[.12em] text-[#e94a3f]">Vehicle hub</p>
+              <h2 className="mt-1 text-xl font-bold text-[#082a30]">My Garage</h2>
               <p className="mt-1 text-sm leading-6 text-slate-600">Keep your vehicles in one place for faster parts, services and inspections.</p>
             </div>
             <Link href="/dashboard/garage" className="w-fit rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
                     <div className="inline-block rounded border border-yellow-500 bg-yellow-400 px-2 py-0.5 text-sm font-bold uppercase tracking-widest text-black mb-3">
                       {vehicle.registration}
                     </div>
-                    <h3 className="font-bold text-[#0b1f33] truncate">
+                    <h3 className="font-bold text-[#082a30] truncate">
                       {vehicle.year} {vehicle.make} {vehicle.model}
                     </h3>
                     <p className="mt-1 text-xs text-slate-500">
@@ -205,9 +205,9 @@ export default async function DashboardPage() {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
                 <CarFront size={20} className="text-slate-400" />
               </div>
-              <p className="mt-3 text-sm font-semibold text-[#0b1f33]">No vehicles in your garage</p>
+              <p className="mt-3 text-sm font-semibold text-[#082a30]">No vehicles in your garage</p>
               <p className="mt-1 text-sm text-slate-600">Add a vehicle using its registration number.</p>
-              <Link href="/dashboard/garage" className="mt-4 inline-flex text-sm font-semibold text-[#d92d20] hover:text-[#b42318]">
+              <Link href="/dashboard/garage" className="mt-4 inline-flex text-sm font-semibold text-[#e94a3f] hover:text-[#c73830]">
                 Add vehicle
               </Link>
             </div>
@@ -217,10 +217,10 @@ export default async function DashboardPage() {
         <section id="listings" className="mt-7 border-t border-slate-200 pt-5">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-[#0b1f33]">My listings</h2>
+              <h2 className="text-xl font-bold text-[#082a30]">My listings</h2>
               <p className="mt-1 text-sm text-slate-600">Cars you have listed on Shaz.</p>
             </div>
-            <Link href="/sell-car" className="hidden items-center gap-1 text-sm font-semibold text-[#d92d20] hover:text-[#b42318] sm:inline-flex">Sell a car <ArrowRight size={15} /></Link>
+            <Link href="/sell-car" className="hidden items-center gap-1 text-sm font-semibold text-[#e94a3f] hover:text-[#c73830] sm:inline-flex">Sell a car <ArrowRight size={15} /></Link>
           </div>
           {cars.length ? (
             <div className="mt-4 rounded-xl border border-slate-200 bg-white">
@@ -232,7 +232,7 @@ export default async function DashboardPage() {
                     {!car.image && <CarFront className="mx-auto mt-5 text-slate-400" size={22} />}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-[#0b1f33]">{car.title}</p>
+                    <p className="truncate text-sm font-semibold text-[#082a30]">{car.title}</p>
                     <p className="mt-1 text-sm text-slate-500">{car.price} <span className="px-1 text-slate-300">|</span> {car.mileage} <span className="px-1 text-slate-300">|</span> {car.city}</p>
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end">
@@ -243,12 +243,12 @@ export default async function DashboardPage() {
                           <CheckCircle2 size={14} /> Inspected by Shaz
                         </span>
                       ) : (
-                        <Link href={`/verification?car=${car.id}`} className="text-slate-500 hover:text-[#0b1f33] mr-2">
+                        <Link href={`/verification?car=${car.id}`} className="text-slate-500 hover:text-[#082a30] mr-2">
                           Request Inspection
                         </Link>
                       ))}
-                      {car.status === "active" && <Link href={`/cars/${car.id}`} className="text-slate-700 hover:text-[#0b1f33]">View</Link>}
-                      <Link href={`/dashboard/cars/${car.id}/edit?step=details`} className="text-[#d92d20] hover:text-[#b42318]">Edit</Link>
+                      {car.status === "active" && <Link href={`/cars/${car.id}`} className="text-slate-700 hover:text-[#082a30]">View</Link>}
+                      <Link href={`/dashboard/cars/${car.id}/edit?step=details`} className="text-[#e94a3f] hover:text-[#c73830]">Edit</Link>
                       {car.status === "active" && (
                         <ActionMenu>
                           <MarkSoldButton carId={car.id} />
@@ -267,14 +267,14 @@ export default async function DashboardPage() {
         <div className="mt-7 grid gap-7 lg:grid-cols-2">
           <section id="bookings" className="scroll-mt-6 border-t border-slate-200 pt-5">
             <div className="flex items-center justify-between gap-4">
-              <div><h2 className="text-xl font-bold text-[#0b1f33]">Upcoming bookings</h2><p className="mt-1 text-sm text-slate-600">Your mobile car care appointments.</p></div>
-              <Link href="/dashboard/bookings" className="inline-flex items-center gap-1 text-sm font-semibold text-[#d92d20] hover:text-[#b42318]">View all <ArrowRight size={15} /></Link>
+              <div><h2 className="text-xl font-bold text-[#082a30]">Upcoming bookings</h2><p className="mt-1 text-sm text-slate-600">Your mobile car care appointments.</p></div>
+              <Link href="/dashboard/bookings" className="inline-flex items-center gap-1 text-sm font-semibold text-[#e94a3f] hover:text-[#c73830]">View all <ArrowRight size={15} /></Link>
             </div>
             {bookings.length ? (
               <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
                 {bookings.map((booking) => (
                   <Link key={booking.id} href={`/dashboard/bookings/${booking.id}`} className="block border-b border-slate-100 p-4 last:border-b-0 hover:bg-slate-50">
-                    <div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-[#0b1f33]">{booking.service_types?.name ?? "Mobile service"}</p><p className="mt-1 text-sm text-slate-600">{booking.car_make} {booking.car_model}</p></div><Status status={booking.status} styles={bookingStatusStyles} /></div>
+                    <div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-[#082a30]">{booking.service_types?.name ?? "Mobile service"}</p><p className="mt-1 text-sm text-slate-600">{booking.car_make} {booking.car_model}</p></div><Status status={booking.status} styles={bookingStatusStyles} /></div>
                     <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500"><span className="inline-flex items-center gap-1"><CalendarDays size={13} />{dateLabel(booking.preferred_date)}</span>{(booking.city || booking.postcode) && <span className="inline-flex items-center gap-1"><MapPin size={13} />{[booking.city, booking.postcode].filter(Boolean).join(" ")}</span>}</div>
                   </Link>
                 ))}
@@ -284,14 +284,14 @@ export default async function DashboardPage() {
 
           <section id="inspections" className="scroll-mt-6 border-t border-slate-200 pt-5">
             <div className="flex items-center justify-between gap-4">
-              <div><h2 className="text-xl font-bold text-[#0b1f33]">Vehicle inspections</h2><p className="mt-1 text-sm text-slate-600">Requests and inspection reports.</p></div>
-              <Link href="/dashboard/verifications" className="inline-flex items-center gap-1 text-sm font-semibold text-[#d92d20] hover:text-[#b42318]">View all <ArrowRight size={15} /></Link>
+              <div><h2 className="text-xl font-bold text-[#082a30]">Vehicle inspections</h2><p className="mt-1 text-sm text-slate-600">Requests and inspection reports.</p></div>
+              <Link href="/dashboard/verifications" className="inline-flex items-center gap-1 text-sm font-semibold text-[#e94a3f] hover:text-[#c73830]">View all <ArrowRight size={15} /></Link>
             </div>
             {verifications.length ? (
               <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
                 {verifications.map((inspection) => {
                   const vehicle = inspection.cars ? `${inspection.cars.year} ${inspection.cars.make} ${inspection.cars.model}` : `${inspection.external_make ?? "Vehicle"} ${inspection.external_model ?? ""}`.trim();
-                  return <Link key={inspection.id} href={`/dashboard/verifications/${inspection.id}`} className="block border-b border-slate-100 p-4 last:border-b-0 hover:bg-slate-50"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-[#0b1f33]">{vehicle}</p><p className="mt-1 text-sm text-slate-600">{inspection.vehicle_registration}</p></div><Status status={inspection.status} styles={inspectionStatusStyles} /></div><p className="mt-3 inline-flex items-center gap-1 text-xs text-slate-500"><CalendarDays size={13} />{dateLabel(inspection.scheduled_for ?? inspection.preferred_date)}</p></Link>;
+                  return <Link key={inspection.id} href={`/dashboard/verifications/${inspection.id}`} className="block border-b border-slate-100 p-4 last:border-b-0 hover:bg-slate-50"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-[#082a30]">{vehicle}</p><p className="mt-1 text-sm text-slate-600">{inspection.vehicle_registration}</p></div><Status status={inspection.status} styles={inspectionStatusStyles} /></div><p className="mt-3 inline-flex items-center gap-1 text-xs text-slate-500"><CalendarDays size={13} />{dateLabel(inspection.scheduled_for ?? inspection.preferred_date)}</p></Link>;
                 })}
               </div>
             ) : <EmptyState title="No active inspections" copy="Request a vehicle inspection when you need one." href="/verification" action="Request inspection" />}

@@ -5,7 +5,7 @@ export function ServiceCard({ service }: { service: PublicService }) {
   return (
     <Link href={`/services/${service.slug}`} className="card-standard group">
       <div className="border-b border-[#E4E7EC] bg-ink px-4 py-5">
-        <p className="text-sm font-bold uppercase tracking-[.12em] text-[#F97066]">Mobile service</p>
+        <p className="text-sm font-bold uppercase tracking-[.12em] text-[#FF8A73]">Mobile service</p>
         <p className="mt-3 font-h2 text-white">From £{service.basePrice.toLocaleString("en-GB")}</p>
       </div>
       <div className="p-6">

@@ -27,10 +27,10 @@ export function emailLayout(content: string, title?: string): string {
       border: 1px solid #e2e8f0;
     }
     .header {
-      background-color: #0b1f33;
+      background-color: #082a30;
       padding: 28px 32px;
       text-align: left;
-      border-bottom: 2px solid #d92d20;
+      border-bottom: 2px solid #e94a3f;
     }
     .logo-text {
       font-size: 22px;
@@ -40,7 +40,7 @@ export function emailLayout(content: string, title?: string): string {
       text-decoration: none;
     }
     .logo-accent {
-      color: #d92d20;
+      color: #e94a3f;
     }
     .content {
       padding: 32px;
@@ -48,7 +48,7 @@ export function emailLayout(content: string, title?: string): string {
     h1 {
       font-size: 22px;
       font-weight: 700;
-      color: #0b1f33;
+      color: #082a30;
       margin: 0 0 12px 0;
       line-height: 1.3;
     }
@@ -81,13 +81,13 @@ export function emailLayout(content: string, title?: string): string {
       font-weight: 500;
     }
     .details-value {
-      color: #0b1f33;
+      color: #082a30;
       font-weight: 600;
       text-align: right;
     }
     .btn {
       display: inline-block;
-      background-color: #d92d20;
+      background-color: #e94a3f;
       color: #ffffff !important;
       font-size: 15px;
       font-weight: 700;
@@ -98,7 +98,7 @@ export function emailLayout(content: string, title?: string): string {
       text-align: center;
     }
     .btn-dark {
-      background-color: #0b1f33;
+      background-color: #082a30;
     }
     .badge {
       display: inline-block;

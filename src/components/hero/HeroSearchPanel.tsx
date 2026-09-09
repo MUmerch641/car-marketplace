@@ -26,12 +26,12 @@ export function HeroSearchPanel() {
     <div className="overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
       {/* Tab bar */}
       <div className="flex border-b border-[#E4E7EC] bg-[#F8F9FA]">
-        <button className="relative px-6 py-3.5 text-sm font-bold text-[#0B1F33] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#D92D20]">
+        <button className="relative px-6 py-3.5 text-sm font-bold text-[#082A30] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#E94A3F]">
           Buy a Car
         </button>
         <Link
           href="/sell-car"
-          className="px-6 py-3.5 text-sm font-semibold text-[#667085] transition-colors hover:text-[#0B1F33]"
+          className="px-6 py-3.5 text-sm font-semibold text-[#667085] transition-colors hover:text-[#082A30]"
         >
           Sell My Car
         </Link>
@@ -141,7 +141,7 @@ export function HeroSearchPanel() {
         <div className="flex items-center p-3">
           <button
             type="submit"
-            className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-[#D92D20] px-8 text-sm font-bold text-white transition-all hover:bg-[#B42318] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D92D20]"
+            className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-[#E94A3F] px-8 text-sm font-bold text-white transition-all hover:bg-[#C73830] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E94A3F]"
           >
             <Search size={16} />
             Search Cars
@@ -156,7 +156,7 @@ export function HeroSearchPanel() {
         </p>
         <Link
           href="/cars"
-          className="flex items-center gap-1 text-xs font-bold text-[#D92D20] hover:underline"
+          className="flex items-center gap-1 text-xs font-bold text-[#E94A3F] hover:underline"
         >
           Advanced Search →
         </Link>

@@ -45,7 +45,7 @@ export default async function CustomerReportPage({ params }: { params: Promise<{
       <div>
         <Link
           href={`/dashboard/verifications/${id}`}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#0b1f33]"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#082a30]"
         >
           <ArrowLeft size={14} />
           <span>Back to Inspection Timeline</span>
@@ -56,14 +56,14 @@ export default async function CustomerReportPage({ params }: { params: Promise<{
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="rounded-md bg-[#0b1f33] px-2.5 py-0.5 text-xs font-bold text-white uppercase">
+              <span className="rounded-md bg-[#082a30] px-2.5 py-0.5 text-xs font-bold text-white uppercase">
                 {v.inspection_type === "seller_pre_inspection" ? "Seller Pre-Inspection" : "Buyer Inspection"}
               </span>
               <span className="rounded-md bg-amber-400 px-2 py-0.5 font-mono text-xs font-extrabold text-black">
                 {v.vehicle_registration}
               </span>
             </div>
-            <h1 className="mt-2 text-2xl font-bold text-[#0b1f33]">
+            <h1 className="mt-2 text-2xl font-bold text-[#082a30]">
               {v.external_make || "Vehicle"} {v.external_model || ""} · {v.city}
             </h1>
           </div>
@@ -115,7 +115,7 @@ export default async function CustomerReportPage({ params }: { params: Promise<{
 
       {gallery.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
-          <h2 className="text-base font-bold text-[#0b1f33]">Inspection Evidence Photos ({gallery.length})</h2>
+          <h2 className="text-base font-bold text-[#082a30]">Inspection Evidence Photos ({gallery.length})</h2>
           {expiry && (
             <p className="text-xs text-slate-500">
               Inspection photos are available until {new Date(expiry).toLocaleDateString("en-GB")}.

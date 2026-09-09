@@ -11,7 +11,7 @@ export default async function InspectorLayout({ children }: { children: React.Re
   return (
     <div className="min-h-screen bg-[#f4f6f9] text-slate-800 antialiased">
       {/* Field Worker Header */}
-      <header className="sticky top-0 z-30 border-b border-[#203a52] bg-[#0b1f33] text-white shadow-md">
+      <header className="sticky top-0 z-30 border-b border-[#203a52] bg-[#082a30] text-white shadow-md">
         <div className="mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           {/* Logo & Workspace Title */}
           <div className="flex items-center gap-3">
@@ -28,7 +28,7 @@ export default async function InspectorLayout({ children }: { children: React.Re
           {/* Right Header Navigation: Worker Name, Back to website, Logout */}
           <div className="flex items-center gap-3 sm:gap-6">
             <div className="flex items-center gap-2 border-r border-white/15 pr-3 text-xs sm:pr-6 sm:text-sm">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#d92d20] text-xs font-bold text-white uppercase">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e94a3f] text-xs font-bold text-white uppercase">
                 {workerName.slice(0, 1)}
               </div>
               <span className="hidden font-semibold text-slate-200 sm:inline">{workerName}</span>

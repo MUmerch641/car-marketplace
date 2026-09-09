@@ -104,7 +104,7 @@ export function PartForm({ categories, initialData }: PartFormProps) {
       {error && <div className="rounded-lg bg-red-50 p-4 text-sm font-medium text-red-600">{error}</div>}
 
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-5 text-lg font-bold text-[#0b1f33]">Basic Information</h2>
+        <h2 className="mb-5 text-lg font-bold text-[#082a30]">Basic Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="md:col-span-2">
             <label className="mb-1.5 block text-sm font-semibold text-slate-700">Part Name</label>
@@ -140,8 +140,8 @@ export function PartForm({ categories, initialData }: PartFormProps) {
 
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-[#0b1f33]">Vehicle Compatibility</h2>
-          <button type="button" onClick={addFitment} className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 text-sm font-semibold text-[#0b1f33] hover:bg-slate-200">
+          <h2 className="text-lg font-bold text-[#082a30]">Vehicle Compatibility</h2>
+          <button type="button" onClick={addFitment} className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 text-sm font-semibold text-[#082a30] hover:bg-slate-200">
             <Plus size={16} /> Add Fitment
           </button>
         </div>
@@ -199,7 +199,7 @@ export function PartForm({ categories, initialData }: PartFormProps) {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-5 text-lg font-bold text-[#0b1f33]">Pricing & Inventory</h2>
+        <h2 className="mb-5 text-lg font-bold text-[#082a30]">Pricing & Inventory</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-700">Price (GBP)</label>
@@ -223,7 +223,7 @@ export function PartForm({ categories, initialData }: PartFormProps) {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-5 text-lg font-bold text-[#0b1f33]">Product Image</h2>
+        <h2 className="mb-5 text-lg font-bold text-[#082a30]">Product Image</h2>
         <div>
           <label className="mb-1.5 block text-sm font-semibold text-slate-700">Primary Image (JPEG, PNG, WebP up to 10MB)</label>
           <input type="file" name="image" accept="image/jpeg, image/png, image/webp" className="w-full rounded-lg border p-2.5 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200" />
@@ -234,7 +234,7 @@ export function PartForm({ categories, initialData }: PartFormProps) {
         <button type="button" onClick={() => router.back()} className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50">
           Cancel
         </button>
-        <button type="submit" disabled={loading} className="rounded-xl bg-[#0b1f33] px-8 py-3 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-50">
+        <button type="submit" disabled={loading} className="rounded-xl bg-[#082a30] px-8 py-3 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-50">
           {loading ? "Saving..." : "Save Part"}
         </button>
       </div>

@@ -83,7 +83,7 @@ export default async function Page() {
                         : "Buyer inspection"}
                     </span>
                   </div>
-                  <h2 className="mt-3 text-lg font-bold text-[#0b1f33]">
+                  <h2 className="mt-3 text-lg font-bold text-[#082a30]">
                     {request.vehicle_registration} · {request.city}
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
@@ -158,7 +158,7 @@ export default async function Page() {
                         </SubmitButton>
                       </form>
                       <details>
-                        <summary className="cursor-pointer text-sm font-semibold text-[#d92d20]">Change time</summary>
+                        <summary className="cursor-pointer text-sm font-semibold text-[#e94a3f]">Change time</summary>
                         <form
                           action={async (form) => {
                             "use server";

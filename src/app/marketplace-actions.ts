@@ -46,7 +46,6 @@ export async function updateActiveListingAction(carId: string, form: FormData) {
     if (form.get("ulezCompliant") === "yes") ulez_compliant = true;
     else if (form.get("ulezCompliant") === "no") ulez_compliant = false;
 
-    // @ts-expect-error RPC not in types yet
     const { error } = await supabase.rpc("update_active_car_listing", {
       p_car_id: carId,
       p_price: number(form, "price"),
@@ -54,9 +53,9 @@ export async function updateActiveListingAction(carId: string, form: FormData) {
       p_city: text(form, "city"),
       p_postcode: text(form, "postcode"),
       p_description: text(form, "description"),
-      p_mot_expiry: text(form, "motExpiry") || null,
-      p_service_history: text(form, "serviceHistory") || null,
-      p_ulez_compliant: ulez_compliant
+      p_mot_expiry: text(form, "motExpiry") || undefined,
+      p_service_history: text(form, "serviceHistory") || undefined,
+      p_ulez_compliant: ulez_compliant ?? undefined
     });
     if (error) return { error: "We could not update this active listing." };
     revalidatePath(`/dashboard/cars/${carId}/edit`);

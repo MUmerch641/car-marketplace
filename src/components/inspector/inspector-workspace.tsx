@@ -162,7 +162,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             onClick={() => setActiveTab("today")}
             className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "today"
-                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                ? "text-[#082a30] border-b-2 border-[#082a30]"
                 : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
@@ -174,7 +174,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             onClick={() => setActiveTab("jobs")}
             className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "jobs"
-                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                ? "text-[#082a30] border-b-2 border-[#082a30]"
                 : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
@@ -186,7 +186,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             onClick={() => setActiveTab("map")}
             className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "map"
-                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                ? "text-[#082a30] border-b-2 border-[#082a30]"
                 : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
@@ -197,7 +197,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             onClick={() => setActiveTab("history")}
             className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
               activeTab === "history"
-                ? "text-[#0b1f33] border-b-2 border-[#0b1f33]"
+                ? "text-[#082a30] border-b-2 border-[#082a30]"
                 : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
             }`}
           >
@@ -216,7 +216,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <div>
-              <h2 className="text-base font-bold text-[#0b1f33] sm:text-lg">Today's Schedule</h2>
+              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">Today's Schedule</h2>
               <p className="text-xs text-slate-500">Sorted chronologically by scheduled start time.</p>
             </div>
             <span className="rounded-lg bg-slate-200/70 px-2.5 py-1 text-xs font-bold text-slate-700">
@@ -229,13 +229,13 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
                 <CheckCircle2 size={24} />
               </div>
-              <h3 className="mt-3 text-sm font-bold text-[#0b1f33]">No jobs assigned for today</h3>
+              <h3 className="mt-3 text-sm font-bold text-[#082a30]">No jobs assigned for today</h3>
               <p className="mt-1 max-w-sm text-xs text-slate-500">
                 You have no active mobile services or vehicle inspections scheduled for today. Check the Jobs tab to review upcoming assignments.
               </p>
               <button
                 onClick={() => setActiveTab("jobs")}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#0b1f33] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-slate-800"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#082a30] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-slate-800"
               >
                 <span>View all jobs</span>
                 <ArrowRight size={14} />
@@ -271,7 +271,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   placeholder="Search registration, vehicle, location, customer..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-xs font-semibold text-slate-800 outline-none transition-colors focus:border-[#0b1f33] focus:bg-white sm:text-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-xs font-semibold text-slate-800 outline-none transition-colors focus:border-[#082a30] focus:bg-white sm:text-sm"
                 />
                 {searchQuery && (
                   <button
@@ -301,7 +301,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   onClick={() => setFilterChip(chip.id as typeof filterChip)}
                   className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${
                     filterChip === chip.id
-                      ? "bg-[#0b1f33] text-white"
+                      ? "bg-[#082a30] text-white"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900"
                   }`}
                 >
@@ -314,14 +314,14 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
           {/* Filtered Jobs List */}
           {filteredJobs.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-              <p className="text-sm font-bold text-[#0b1f33]">No jobs found matching your filters</p>
+              <p className="text-sm font-bold text-[#082a30]">No jobs found matching your filters</p>
               <p className="mt-1 text-xs text-slate-500">Try selecting a different filter chip or clearing your search term.</p>
               <button
                 onClick={() => {
                   setFilterChip("all");
                   setSearchQuery("");
                 }}
-                className="mt-3 text-xs font-bold text-[#d92d20] hover:underline"
+                className="mt-3 text-xs font-bold text-[#e94a3f] hover:underline"
               >
                 Reset filters
               </button>
@@ -348,7 +348,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <div>
-              <h2 className="text-base font-bold text-[#0b1f33] sm:text-lg">Assigned Job Locations</h2>
+              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">Assigned Job Locations</h2>
               <p className="text-xs text-slate-500">Route Overview for Navigation</p>
             </div>
           </div>
@@ -356,7 +356,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
           {jobs.filter((j) => !j.isCompleted).length === 0 ? (
             <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
               <MapPin size={24} className="mx-auto text-slate-400" />
-              <p className="mt-2 text-sm font-bold text-[#0b1f33]">No active locations to display</p>
+              <p className="mt-2 text-sm font-bold text-[#082a30]">No active locations to display</p>
               <p className="text-xs text-slate-500">All assigned jobs are completed or no jobs assigned.</p>
             </div>
           ) : (
@@ -374,7 +374,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                     >
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0b1f33] text-xs font-bold text-white">
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#082a30] text-xs font-bold text-white">
                             {idx + 1}
                           </span>
                           <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700">
@@ -392,8 +392,8 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                           >
                             {job.jobTypeLabel}
                           </span>
-                          <h3 className="mt-1 text-sm font-bold text-[#0b1f33]">{job.vehicleDisplay}</h3>
-                          <p className="font-mono text-xs font-extrabold text-[#d92d20]">{job.carRegistration}</p>
+                          <h3 className="mt-1 text-sm font-bold text-[#082a30]">{job.vehicleDisplay}</h3>
+                          <p className="font-mono text-xs font-extrabold text-[#e94a3f]">{job.carRegistration}</p>
                         </div>
 
                         <div className="rounded-xl bg-slate-50 p-2.5 text-xs text-slate-600">
@@ -407,7 +407,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                           href={googleMapsUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl bg-[#0b1f33] py-2 text-xs font-bold text-white transition-colors hover:bg-slate-800"
+                          className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl bg-[#082a30] py-2 text-xs font-bold text-white transition-colors hover:bg-slate-800"
                         >
                           <Navigation size={13} />
                           <span>Google Maps</span>
@@ -436,7 +436,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <div>
-              <h2 className="text-base font-bold text-[#0b1f33] sm:text-lg">Completed & Past Jobs</h2>
+              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">Completed & Past Jobs</h2>
               <p className="text-xs text-slate-500">History of finished field operations.</p>
             </div>
             <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800">
@@ -447,7 +447,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
           {historyJobs.length === 0 ? (
             <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
               <CheckCircle2 size={24} className="mx-auto text-slate-400" />
-              <p className="mt-2 text-sm font-bold text-[#0b1f33]">No completed jobs in history</p>
+              <p className="mt-2 text-sm font-bold text-[#082a30]">No completed jobs in history</p>
               <p className="text-xs text-slate-500">Completed services and inspection reports will appear here.</p>
             </div>
           ) : (
@@ -496,7 +496,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* Vehicle Title & Reg */}
               <div>
-                <h2 className="text-xl font-bold text-[#0b1f33]">{selectedJob.vehicleDisplay}</h2>
+                <h2 className="text-xl font-bold text-[#082a30]">{selectedJob.vehicleDisplay}</h2>
                 <div className="mt-1 flex items-center gap-2">
                   <span className="rounded-md bg-amber-400 px-2 py-0.5 font-mono text-xs font-extrabold text-black">
                     {selectedJob.carRegistration}
@@ -549,7 +549,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
                     <Clock size={12} /> Appointment Time
                   </span>
-                  <p className="font-bold text-[#0b1f33] text-sm">{selectedJob.scheduledTime}</p>
+                  <p className="font-bold text-[#082a30] text-sm">{selectedJob.scheduledTime}</p>
                   <p className="text-slate-500">{selectedJob.scheduledDate}</p>
                 </div>
 
@@ -557,9 +557,9 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
                     <User size={12} /> Customer Contact
                   </span>
-                  <p className="font-bold text-[#0b1f33] text-sm">{selectedJob.customerName}</p>
+                  <p className="font-bold text-[#082a30] text-sm">{selectedJob.customerName}</p>
                   {selectedJob.customerPhone && (
-                    <a href={`tel:${selectedJob.customerPhone}`} className="inline-flex items-center gap-1 text-[#d92d20] hover:underline font-semibold">
+                    <a href={`tel:${selectedJob.customerPhone}`} className="inline-flex items-center gap-1 text-[#e94a3f] hover:underline font-semibold">
                       <Phone size={12} /> {selectedJob.customerPhone}
                     </a>
                   )}
@@ -571,13 +571,13 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                 <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
                   <MapPin size={12} /> Location & Postcode
                 </span>
-                <p className="font-bold text-[#0b1f33] text-sm">{selectedJob.fullAddress}</p>
+                <p className="font-bold text-[#082a30] text-sm">{selectedJob.fullAddress}</p>
                 <div className="pt-2 flex gap-2">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedJob.fullAddress)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg bg-[#0b1f33] px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800"
+                    className="inline-flex items-center gap-1 rounded-lg bg-[#082a30] px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800"
                   >
                     <Navigation size={12} />
                     <span>Navigate (Google Maps)</span>
@@ -645,7 +645,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                     <button
                       disabled={isPending}
                       onClick={() => handleStartInspection(selectedJob.id, selectedJob.verificationRequestId!)}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#d92d20] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-red-700 disabled:opacity-50"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#e94a3f] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-red-700 disabled:opacity-50"
                     >
                       <Play size={14} />
                       <span>Start Inspection</span>
@@ -655,7 +655,7 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   {selectedJob.status === "inspection_in_progress" && (
                     <Link
                       href={`/inspector/verifications/${selectedJob.verificationRequestId}`}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0b1f33] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-slate-800"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#082a30] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-slate-800"
                     >
                       <FileText size={14} />
                       <span>Continue Inspection / Fill Report</span>
@@ -702,7 +702,7 @@ function JobCard({
       {/* Left Column: Time & Main Details */}
       <div className="flex items-start gap-4 sm:items-center">
         {/* Time Box */}
-        <div className="flex min-w-[60px] flex-col items-center justify-center rounded bg-slate-50 border border-slate-100 px-3 py-2 text-[#0b1f33]">
+        <div className="flex min-w-[60px] flex-col items-center justify-center rounded bg-slate-50 border border-slate-100 px-3 py-2 text-[#082a30]">
           <span className="text-sm font-bold tracking-tight">{job.scheduledTime}</span>
           <span className="text-[10px] font-semibold text-slate-500 uppercase">{job.isToday ? "Today" : job.scheduledDate.slice(0, 6)}</span>
         </div>
@@ -721,7 +721,7 @@ function JobCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-bold text-[#0b1f33]">{job.vehicleDisplay}</h3>
+            <h3 className="text-sm font-bold text-[#082a30]">{job.vehicleDisplay}</h3>
             {job.carRegistration && (
               <span className="rounded-md bg-amber-300/80 px-1.5 py-0.5 font-mono text-[11px] font-extrabold text-black">
                 {job.carRegistration}
@@ -790,7 +790,7 @@ function JobCard({
               <button
                 disabled={isPending}
                 onClick={() => onStartInspection(job.id, job.verificationRequestId!)}
-                className="inline-flex items-center gap-1 rounded-xl bg-[#d92d20] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded-xl bg-[#e94a3f] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
               >
                 <Play size={13} />
                 <span>Start inspection</span>
@@ -800,7 +800,7 @@ function JobCard({
             {job.status === "inspection_in_progress" && (
               <Link
                 href={`/inspector/verifications/${job.verificationRequestId}`}
-                className="inline-flex items-center gap-1 rounded-xl bg-[#0b1f33] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-slate-800"
+                className="inline-flex items-center gap-1 rounded-xl bg-[#082a30] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-slate-800"
               >
                 <FileText size={13} />
                 <span>Continue</span>
@@ -831,7 +831,7 @@ function WorkflowStep({ label, active, completed }: { label: string; active: boo
           completed
             ? "bg-emerald-600 text-white"
             : active
-            ? "bg-[#0b1f33] text-white"
+            ? "bg-[#082a30] text-white"
             : "bg-slate-200 text-slate-400"
         }`}
       >

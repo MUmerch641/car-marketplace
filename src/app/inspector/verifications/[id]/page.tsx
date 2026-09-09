@@ -38,7 +38,7 @@ export default async function InspectionReportPage({ params }: { params: Promise
       <div>
         <Link
           href="/inspector"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#0b1f33]"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#082a30]"
         >
           <ArrowLeft size={14} />
           <span>Back to Field Workspace</span>
@@ -71,7 +71,7 @@ export default async function InspectionReportPage({ params }: { params: Promise
             <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
               <MapPin size={12} /> Inspection Location
             </span>
-            <p className="font-bold text-[#0b1f33] text-sm">{v.inspection_address}, {v.city}</p>
+            <p className="font-bold text-[#082a30] text-sm">{v.inspection_address}, {v.city}</p>
             <p className="text-slate-500 font-mono">{v.postcode}</p>
           </div>
 
@@ -79,8 +79,8 @@ export default async function InspectionReportPage({ params }: { params: Promise
             <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
               <User size={12} /> Seller / Contact Person
             </span>
-            <p className="font-bold text-[#0b1f33] text-sm">{v.seller_name}</p>
-            <a href={`tel:${v.seller_phone}`} className="inline-flex items-center gap-1 font-semibold text-[#d92d20] hover:underline">
+            <p className="font-bold text-[#082a30] text-sm">{v.seller_name}</p>
+            <a href={`tel:${v.seller_phone}`} className="inline-flex items-center gap-1 font-semibold text-[#e94a3f] hover:underline">
               <Phone size={12} /> {v.seller_phone}
             </a>
           </div>
@@ -89,7 +89,7 @@ export default async function InspectionReportPage({ params }: { params: Promise
 
       {/* Form / Report Content */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-[#0b1f33]">Inspection Checklist & Summary</h2>
+        <h2 className="text-lg font-bold text-[#082a30]">Inspection Checklist & Summary</h2>
         <p className="mt-0.5 text-xs text-slate-500">Record component ratings and overall findings.</p>
 
         {editable ? (
@@ -115,7 +115,7 @@ export default async function InspectionReportPage({ params }: { params: Promise
       {/* Image Evidence */}
       {imgs.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-[#0b1f33]">Attached Evidence Photos ({imgs.length})</h3>
+          <h3 className="text-sm font-bold text-[#082a30]">Attached Evidence Photos ({imgs.length})</h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {imgs.map(
               (x, i) =>
@@ -164,7 +164,7 @@ function ReportForm({
           <select
             name="result"
             defaultValue="passed"
-            className="w-full rounded-xl border border-slate-300 bg-white p-2.5 text-xs font-bold text-slate-900 outline-none focus:border-[#0b1f33]"
+            className="w-full rounded-xl border border-slate-300 bg-white p-2.5 text-xs font-bold text-slate-900 outline-none focus:border-[#082a30]"
           >
             {[
               { val: "passed", label: "Passed (Clean)" },
@@ -188,7 +188,7 @@ function ReportForm({
             required
             rows={3}
             placeholder="Describe overall condition, engine operation, transmission feel, bodywork condition..."
-            className="w-full rounded-xl border border-slate-300 bg-white p-3 text-xs text-slate-900 outline-none focus:border-[#0b1f33]"
+            className="w-full rounded-xl border border-slate-300 bg-white p-3 text-xs text-slate-900 outline-none focus:border-[#082a30]"
           />
         </div>
 
@@ -198,7 +198,7 @@ function ReportForm({
             name="notes"
             rows={2}
             placeholder="Private notes for staff..."
-            className="w-full rounded-xl border border-slate-300 bg-white p-3 text-xs text-slate-900 outline-none focus:border-[#0b1f33]"
+            className="w-full rounded-xl border border-slate-300 bg-white p-3 text-xs text-slate-900 outline-none focus:border-[#082a30]"
           />
         </div>
 
@@ -230,11 +230,11 @@ function ReportForm({
 
           <div className="flex flex-wrap items-center gap-4 pt-2 text-xs">
             <label className="flex items-center gap-2 font-semibold text-slate-800">
-              <input type="checkbox" name="mileage" defaultChecked className="h-4 w-4 rounded border-slate-300 text-[#0b1f33]" />
+              <input type="checkbox" name="mileage" defaultChecked className="h-4 w-4 rounded border-slate-300 text-[#082a30]" />
               <span>Verified Odometer Mileage</span>
             </label>
             <label className="flex items-center gap-2 font-semibold text-slate-800">
-              <input type="checkbox" name="registrationChecked" defaultChecked className="h-4 w-4 rounded border-slate-300 text-[#0b1f33]" />
+              <input type="checkbox" name="registrationChecked" defaultChecked className="h-4 w-4 rounded border-slate-300 text-[#082a30]" />
               <span>Verified VIN & Plate Registration</span>
             </label>
           </div>

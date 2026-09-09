@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 // Helper for formatting casing
-const formatWord = (str: string) => {
+const formatWord = (str: string | null) => {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
@@ -36,7 +36,7 @@ export default async function GaragePage() {
 
         <div className="w-full">
           {vehicles.length > 0 && (
-            <h2 className="text-[20px] sm:text-[24px] font-bold text-[#0b1f33] mb-6">Your Vehicles</h2>
+            <h2 className="text-[20px] sm:text-[24px] font-bold text-[#082a30] mb-6">Your Vehicles</h2>
           )}
           
           {vehicles.length > 0 ? (
@@ -51,7 +51,7 @@ export default async function GaragePage() {
                    {/* Content Area */}
                    <div className="min-w-0 flex-1">
                      <div className="flex items-center gap-3">
-                       <h3 className="truncate text-sm font-semibold text-[#0b1f33]">
+                       <h3 className="truncate text-sm font-semibold text-[#082a30]">
                          {vehicle.year} {vehicle.make} {vehicle.model}
                        </h3>
                        {vehicle.registration && (
@@ -70,10 +70,10 @@ export default async function GaragePage() {
                    {/* Actions Area */}
                    <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end border-t border-slate-100 sm:border-0 pt-4 sm:pt-0">
                      <div className="flex items-center gap-3 text-sm font-semibold">
-                       <Link href="/services" className="text-slate-700 hover:text-[#0b1f33]">
+                       <Link href="/services" className="text-slate-700 hover:text-[#082a30]">
                          Book Service
                        </Link>
-                       <Link href={`/parts?vehicleId=${vehicle.id}`} className="text-[#d92d20] hover:text-[#b42318]">
+                       <Link href={`/parts?vehicleId=${vehicle.id}`} className="text-[#e94a3f] hover:text-[#c73830]">
                          Compatible Parts
                        </Link>
                        <ActionMenu>
@@ -89,7 +89,7 @@ export default async function GaragePage() {
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 shadow-sm border border-slate-100">
                 <CarFront size={28} className="text-slate-400" />
               </div>
-              <p className="mt-6 text-[18px] font-bold text-[#0b1f33]">No vehicles in your garage yet</p>
+              <p className="mt-6 text-[18px] font-bold text-[#082a30]">No vehicles in your garage yet</p>
               <p className="mt-2.5 text-[15px] text-slate-500 max-w-sm mx-auto leading-relaxed">Add your first vehicle to make future services and inspections quicker.</p>
             </div>
           )}

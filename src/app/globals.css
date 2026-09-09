@@ -5,13 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-ink: #0B1F33;
-  --color-brand: #D92D20;
-  --color-brand-hover: #B42318;
-  --color-mint: #F5F6F7;
-  --color-sand: #F5F6F7;
-  --font-sans: var(--font-geist);
-  --font-heading: var(--font-geist);
+  --color-ink: #082A30;
+  --color-brand: #E94A3F;
+  --color-brand-hover: #C73830;
+  --color-mint: #F7F4EF;
+  --color-sand: #F7F4EF;
+  --font-sans: var(--font-manrope);
+  --font-heading: var(--font-manrope);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -54,7 +54,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: #fff; color: #101828; }
+body { background: #fff; color: #13252a; overflow-x: hidden; }
 a { text-decoration: none; }
 
 /* ─── Typography scale ────────────────────────────────────────────────────── */
@@ -104,6 +104,34 @@ a { text-decoration: none; }
   to   { opacity: 1; }
 }
 
+@keyframes shaz-page-arrive {
+  from { opacity: 0.72; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shaz-logo-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shaz-logo-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-2px) rotate(1deg); }
+}
+
+@keyframes shaz-road-drift {
+  to { background-position: 80px 0; }
+}
+
+@keyframes shaz-orbit-drift {
+  0%, 100% { transform: rotate(-7deg) scale(1); }
+  50% { transform: rotate(7deg) scale(1.035); }
+}
+
+@keyframes shaz-button-glint {
+  0%, 72%, 100% { transform: translateX(-160%) skewX(-18deg); }
+  88% { transform: translateX(360%) skewX(-18deg); }
+}
+
 /* ─── Reveal utility classes ──────────────────────────────────────────────── */
 .animate-reveal {
   animation: reveal-up var(--dur-section) var(--ease-out) both;
@@ -137,39 +165,79 @@ a { text-decoration: none; }
     visibility: visible !important;
     opacity: 1 !important;
   }
-}
 
-/* ─── Shaz Logo — wheel rotation ─────────────────────────────────────── */
-@keyframes wheel-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.shaz-wheel-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-/* The SVG itself rotates around its centre */
-.shaz-wheel-wrapper .shaz-wheel {
-  animation: wheel-spin 12s linear infinite;
-  transform-origin: center center;
-  will-change: transform;
-}
-
-/* Respect reduced motion — stop the wheel */
-@media (prefers-reduced-motion: reduce) {
-  .shaz-wheel-wrapper .shaz-wheel {
-    animation: none !important;
+  .shaz-motion *,
+  .shaz-motion *::before,
+  .shaz-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-/* Logo hover — subtly speeds up the wheel */
-.shaz-logo:hover .shaz-wheel-wrapper .shaz-wheel {
-  animation-duration: 4s;
+.shaz-motion main > :first-child { animation: shaz-page-arrive 760ms var(--ease-out) both; }
+
+.shaz-logo > svg {
+  animation: shaz-logo-float 3.8s ease-in-out infinite;
+  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.16));
+  transform-origin: center;
+  transition: filter var(--dur-fast) var(--ease-out);
 }
+
+.shaz-wheel-spin {
+  animation: shaz-logo-spin 7s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: animation-duration 300ms ease;
+}
+
+.shaz-logo:hover > svg { filter: drop-shadow(0 7px 12px rgba(233, 74, 63, 0.32)); }
+.shaz-logo:hover .shaz-wheel-spin { animation-duration: 1.6s; }
+.shaz-road-lines { animation: shaz-road-drift 14s linear infinite; }
+.shaz-page-orbit { animation: shaz-orbit-drift 9s ease-in-out infinite; }
+
+.shaz-motion article,
+.shaz-motion .card-standard,
+.shaz-motion .card-large {
+  transition: transform 320ms var(--ease-out), box-shadow 320ms var(--ease-out), border-color 320ms ease;
+}
+
+.shaz-motion article:hover,
+.shaz-motion .card-standard:hover,
+.shaz-motion .card-large:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 38px rgba(8, 42, 48, 0.11);
+}
+
+.shaz-motion article img,
+.shaz-motion section img {
+  transition: transform 700ms var(--ease-out), filter 500ms ease;
+}
+
+.shaz-motion article:hover img { transform: scale(1.035); }
+
+.shaz-button {
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.shaz-button::after {
+  animation: shaz-button-glint 5.2s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+  content: "";
+  inset: 0 auto 0 0;
+  pointer-events: none;
+  position: absolute;
+  width: 34%;
+  z-index: 0;
+}
+
+.shaz-motion button { transition: transform 180ms var(--ease-out), box-shadow 220ms ease, background-color 220ms ease, border-color 220ms ease; }
+.shaz-motion button:hover { transform: translateY(-1px); }
+.shaz-motion button:active,
+.shaz-motion a:active { transform: translateY(1px) scale(.985); }
 
 
 :root {
@@ -255,7 +323,7 @@ a { text-decoration: none; }
 
 @layer components {
   .auth-input {
-    @apply w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 transition focus:border-[#D92D20] focus:ring-4 focus:ring-red-100;
+    @apply w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 transition focus:border-[#E94A3F] focus:ring-4 focus:ring-red-100;
   }
   .font-h1 {
     font-size: var(--font-h1);
@@ -320,7 +388,7 @@ a { text-decoration: none; }
   }
   
   .input-error {
-    @apply rounded-md bg-[#FEF3F2] px-3 py-2 text-xs font-medium text-[#B42318];
+    @apply rounded-md bg-[#FEF3F2] px-3 py-2 text-xs font-medium text-[#C73830];
   }
   
   .input-success {
@@ -329,19 +397,19 @@ a { text-decoration: none; }
   
   /* Button hierarchy */
   .btn-primary {
-    @apply rounded-md bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-[#B42318] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+    @apply rounded-lg bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#C73830] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
   }
   
   .btn-secondary {
-    @apply rounded-md border border-[#E4E7EC] bg-white px-5 py-2.5 text-sm font-bold text-[#101828] hover:bg-[#F9FAFB] hover:border-[#D0D5DD] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D0D5DD];
+    @apply rounded-lg border border-[#E4E7EC] bg-white px-5 py-2.5 text-sm font-bold text-[#101828] hover:bg-[#F9FAFB] hover:border-[#D0D5DD] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D0D5DD];
   }
   
   .btn-tertiary {
-    @apply text-sm font-semibold text-brand hover:text-[#B42318] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+    @apply text-sm font-semibold text-brand hover:text-[#C73830] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
   }
   
   .btn-destructive {
-    @apply rounded-md bg-[#B42318] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9F1C15] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B42318];
+    @apply rounded-md bg-[#C73830] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9F1C15] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C73830];
   }
   
   /* Card styles */
@@ -375,7 +443,7 @@ a { text-decoration: none; }
   }
   
   .status-cancelled {
-    @apply rounded-md bg-[#FEF3F2] px-2 py-1 text-xs font-medium text-[#B42318];
+    @apply rounded-md bg-[#FEF3F2] px-2 py-1 text-xs font-medium text-[#C73830];
   }
   
   .status-sold {

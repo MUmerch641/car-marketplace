@@ -10,32 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
-  }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -257,6 +232,50 @@ export type Database = {
           },
         ]
       }
+      device_push_tokens: {
+        Row: {
+          created_at: string
+          device_id: string | null
+          expo_push_token: string
+          id: string
+          is_active: boolean
+          last_seen_at: string
+          platform: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_id?: string | null
+          expo_push_token: string
+          id?: string
+          is_active?: boolean
+          last_seen_at?: string
+          platform: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string | null
+          expo_push_token?: string
+          id?: string
+          is_active?: boolean
+          last_seen_at?: string
+          platform?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_push_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_assignments: {
         Row: {
           accepted_at: string | null
@@ -333,46 +352,46 @@ export type Database = {
       }
       garage_vehicles: {
         Row: {
-          colour: string
+          colour: string | null
           created_at: string
           customer_id: string
           engine_capacity_cc: number | null
-          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
           id: string
           make: string
           model: string
           mot_expiry: string | null
           registration: string
           updated_at: string
-          year: number
+          year: number | null
         }
         Insert: {
-          colour: string
+          colour?: string | null
           created_at?: string
           customer_id: string
           engine_capacity_cc?: number | null
-          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
           id?: string
           make: string
           model: string
           mot_expiry?: string | null
           registration: string
           updated_at?: string
-          year: number
+          year?: number | null
         }
         Update: {
-          colour?: string
+          colour?: string | null
           created_at?: string
           customer_id?: string
           engine_capacity_cc?: number | null
-          fuel_type?: Database["public"]["Enums"]["fuel_type"]
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
           id?: string
           make?: string
           model?: string
           mot_expiry?: string | null
           registration?: string
           updated_at?: string
-          year?: number
+          year?: number | null
         }
         Relationships: [
           {
@@ -503,6 +522,21 @@ export type Database = {
           },
         ]
       }
+      keep_alive: {
+        Row: {
+          id: number
+          last_ping: string | null
+        }
+        Insert: {
+          id: number
+          last_ping?: string | null
+        }
+        Update: {
+          id?: number
+          last_ping?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -540,6 +574,298 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oil_fitments: {
+        Row: {
+          created_at: string
+          engine_capacity_max_cc: number | null
+          engine_capacity_min_cc: number | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
+          id: string
+          is_primary: boolean
+          make: string
+          model: string
+          notes: string | null
+          oil_product_id: string
+          source_reference: string | null
+          updated_at: string
+          verified_at: string | null
+          year_from: number | null
+          year_to: number | null
+        }
+        Insert: {
+          created_at?: string
+          engine_capacity_max_cc?: number | null
+          engine_capacity_min_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          id?: string
+          is_primary?: boolean
+          make: string
+          model: string
+          notes?: string | null
+          oil_product_id: string
+          source_reference?: string | null
+          updated_at?: string
+          verified_at?: string | null
+          year_from?: number | null
+          year_to?: number | null
+        }
+        Update: {
+          created_at?: string
+          engine_capacity_max_cc?: number | null
+          engine_capacity_min_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          id?: string
+          is_primary?: boolean
+          make?: string
+          model?: string
+          notes?: string | null
+          oil_product_id?: string
+          source_reference?: string | null
+          updated_at?: string
+          verified_at?: string | null
+          year_from?: number | null
+          year_to?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oil_fitments_oil_product_id_fkey"
+            columns: ["oil_product_id"]
+            isOneToOne: false
+            referencedRelation: "oil_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      oil_products: {
+        Row: {
+          brand: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price: number
+          specifications: string[]
+          supplier_id: string | null
+          supplier_sku: string | null
+          updated_at: string
+          viscosity_grade: string
+          volume_litres: number
+        }
+        Insert: {
+          brand: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price: number
+          specifications?: string[]
+          supplier_id?: string | null
+          supplier_sku?: string | null
+          updated_at?: string
+          viscosity_grade: string
+          volume_litres: number
+        }
+        Update: {
+          brand?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price?: number
+          specifications?: string[]
+          supplier_id?: string | null
+          supplier_sku?: string | null
+          updated_at?: string
+          viscosity_grade?: string
+          volume_litres?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oil_products_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      part_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      part_images: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          id: string
+          part_id: string
+          sort_order: number
+          storage_path: string
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          id?: string
+          part_id: string
+          sort_order?: number
+          storage_path: string
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          id?: string
+          part_id?: string
+          sort_order?: number
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "part_images_part_id_fkey"
+            columns: ["part_id"]
+            isOneToOne: false
+            referencedRelation: "parts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      part_vehicle_compatibility: {
+        Row: {
+          created_at: string
+          engine_capacity_cc: number | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
+          id: string
+          make: string
+          model: string
+          notes: string | null
+          part_id: string
+          updated_at: string
+          year_from: number | null
+          year_to: number | null
+        }
+        Insert: {
+          created_at?: string
+          engine_capacity_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          id?: string
+          make: string
+          model: string
+          notes?: string | null
+          part_id: string
+          updated_at?: string
+          year_from?: number | null
+          year_to?: number | null
+        }
+        Update: {
+          created_at?: string
+          engine_capacity_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          id?: string
+          make?: string
+          model?: string
+          notes?: string | null
+          part_id?: string
+          updated_at?: string
+          year_from?: number | null
+          year_to?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "part_vehicle_compatibility_part_id_fkey"
+            columns: ["part_id"]
+            isOneToOne: false
+            referencedRelation: "parts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parts: {
+        Row: {
+          brand: string | null
+          category_id: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price_pence: number
+          sku: string
+          slug: string
+          stock_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          brand?: string | null
+          category_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price_pence: number
+          sku: string
+          slug: string
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          brand?: string | null
+          category_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price_pence?: number
+          sku?: string
+          slug?: string
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "part_categories"
             referencedColumns: ["id"]
           },
         ]
@@ -647,6 +973,72 @@ export type Database = {
         }
         Relationships: []
       }
+      push_notification_events: {
+        Row: {
+          assignment_id: string | null
+          body: string
+          created_at: string
+          data: Json
+          dedupe_key: string
+          event_type: string
+          expo_ticket_ids: Json
+          id: string
+          job_id: string | null
+          job_kind: string | null
+          processed_at: string | null
+          recipient_id: string
+          send_error: string | null
+          title: string
+        }
+        Insert: {
+          assignment_id?: string | null
+          body: string
+          created_at?: string
+          data?: Json
+          dedupe_key: string
+          event_type: string
+          expo_ticket_ids?: Json
+          id?: string
+          job_id?: string | null
+          job_kind?: string | null
+          processed_at?: string | null
+          recipient_id: string
+          send_error?: string | null
+          title: string
+        }
+        Update: {
+          assignment_id?: string | null
+          body?: string
+          created_at?: string
+          data?: Json
+          dedupe_key?: string
+          event_type?: string
+          expo_ticket_ids?: Json
+          id?: string
+          job_id?: string | null
+          job_kind?: string | null
+          processed_at?: string | null
+          recipient_id?: string
+          send_error?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_notification_events_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "employee_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "push_notification_events_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_bookings: {
         Row: {
           address_line_1: string
@@ -661,8 +1053,15 @@ export type Database = {
           confirmed_at: string | null
           created_at: string
           customer_id: string
+          engine_capacity_cc: number | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
           id: string
           notes: string | null
+          oil_fitment_status: string
+          oil_price: number | null
+          oil_product_id: string | null
+          oil_product_name: string | null
+          oil_viscosity_grade: string | null
           on_the_way_at: string | null
           postcode: string
           preferred_date: string
@@ -672,6 +1071,7 @@ export type Database = {
           started_at: string | null
           status: Database["public"]["Enums"]["service_booking_status"]
           updated_at: string
+          vehicle_year: number | null
         }
         Insert: {
           address_line_1: string
@@ -686,8 +1086,15 @@ export type Database = {
           confirmed_at?: string | null
           created_at?: string
           customer_id: string
+          engine_capacity_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
           id?: string
           notes?: string | null
+          oil_fitment_status?: string
+          oil_price?: number | null
+          oil_product_id?: string | null
+          oil_product_name?: string | null
+          oil_viscosity_grade?: string | null
           on_the_way_at?: string | null
           postcode: string
           preferred_date: string
@@ -697,6 +1104,7 @@ export type Database = {
           started_at?: string | null
           status?: Database["public"]["Enums"]["service_booking_status"]
           updated_at?: string
+          vehicle_year?: number | null
         }
         Update: {
           address_line_1?: string
@@ -711,8 +1119,15 @@ export type Database = {
           confirmed_at?: string | null
           created_at?: string
           customer_id?: string
+          engine_capacity_cc?: number | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
           id?: string
           notes?: string | null
+          oil_fitment_status?: string
+          oil_price?: number | null
+          oil_product_id?: string | null
+          oil_product_name?: string | null
+          oil_viscosity_grade?: string | null
           on_the_way_at?: string | null
           postcode?: string
           preferred_date?: string
@@ -722,6 +1137,7 @@ export type Database = {
           started_at?: string | null
           status?: Database["public"]["Enums"]["service_booking_status"]
           updated_at?: string
+          vehicle_year?: number | null
         }
         Relationships: [
           {
@@ -732,10 +1148,97 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "service_bookings_oil_product_id_fkey"
+            columns: ["oil_product_id"]
+            isOneToOne: false
+            referencedRelation: "oil_products"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "service_bookings_service_type_id_fkey"
             columns: ["service_type_id"]
             isOneToOne: false
             referencedRelation: "service_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_job_images: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          service_job_report_id: string
+          sort_order: number
+          stage: Database["public"]["Enums"]["service_evidence_stage"]
+          storage_path: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          service_job_report_id: string
+          sort_order?: number
+          stage: Database["public"]["Enums"]["service_evidence_stage"]
+          storage_path: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          service_job_report_id?: string
+          sort_order?: number
+          stage?: Database["public"]["Enums"]["service_evidence_stage"]
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_job_images_service_job_report_id_fkey"
+            columns: ["service_job_report_id"]
+            isOneToOne: false
+            referencedRelation: "service_job_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_job_reports: {
+        Row: {
+          created_at: string
+          id: string
+          inspector_id: string
+          service_booking_id: string
+          updated_at: string
+          worker_notes: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inspector_id: string
+          service_booking_id: string
+          updated_at?: string
+          worker_notes?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inspector_id?: string
+          service_booking_id?: string
+          updated_at?: string
+          worker_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_job_reports_inspector_id_fkey"
+            columns: ["inspector_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_job_reports_service_booking_id_fkey"
+            columns: ["service_booking_id"]
+            isOneToOne: true
+            referencedRelation: "service_bookings"
             referencedColumns: ["id"]
           },
         ]
@@ -775,6 +1278,99 @@ export type Database = {
           name?: string
           short_description?: string | null
           slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      supplier_orders: {
+        Row: {
+          collected_at: string | null
+          created_at: string
+          external_reference: string | null
+          id: string
+          order_notes: string | null
+          ready_at: string | null
+          sent_at: string | null
+          service_booking_id: string
+          status: string
+          supplier_id: string
+          updated_at: string
+        }
+        Insert: {
+          collected_at?: string | null
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          order_notes?: string | null
+          ready_at?: string | null
+          sent_at?: string | null
+          service_booking_id: string
+          status?: string
+          supplier_id: string
+          updated_at?: string
+        }
+        Update: {
+          collected_at?: string | null
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          order_notes?: string | null
+          ready_at?: string | null
+          sent_at?: string | null
+          service_booking_id?: string
+          status?: string
+          supplier_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplier_orders_service_booking_id_fkey"
+            columns: ["service_booking_id"]
+            isOneToOne: true
+            referencedRelation: "service_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplier_orders_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppliers: {
+        Row: {
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          id: string
+          name: string
+          ordering_notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          ordering_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          ordering_notes?: string | null
+          status?: string
           updated_at?: string
         }
         Relationships: []
@@ -886,6 +1482,53 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_add_part_image: {
+        Args: {
+          p_alt_text?: string
+          p_part_id: string
+          p_sort_order?: number
+          p_storage_path: string
+        }
+        Returns: string
+      }
+      admin_delete_part_image_metadata: {
+        Args: { p_image_id: string }
+        Returns: undefined
+      }
+      admin_replace_part_fitments: {
+        Args: { p_fitments: Json; p_part_id: string }
+        Returns: number
+      }
+      admin_update_part_image: {
+        Args: { p_alt_text: string; p_image_id: string; p_sort_order: number }
+        Returns: undefined
+      }
+      admin_upsert_part: {
+        Args: {
+          p_brand: string
+          p_category_id: string
+          p_description: string
+          p_is_active: boolean
+          p_name: string
+          p_part_id?: string
+          p_price_pence: number
+          p_sku: string
+          p_slug: string
+          p_stock_quantity: number
+        }
+        Returns: string
+      }
+      admin_upsert_part_category: {
+        Args: {
+          p_category_id?: string
+          p_description: string
+          p_is_active: boolean
+          p_name: string
+          p_slug: string
+          p_sort_order: number
+        }
+        Returns: string
+      }
       advance_service_booking: {
         Args: {
           p_booking_id: string
@@ -920,6 +1563,26 @@ export type Database = {
       confirm_verification_request: {
         Args: { p_id: string }
         Returns: undefined
+      }
+      create_oil_change_booking: {
+        Args: {
+          p_address_line_1: string
+          p_address_line_2: string
+          p_car_make: string
+          p_car_model: string
+          p_car_registration: string
+          p_city: string
+          p_engine_capacity_cc: number
+          p_fuel_type: Database["public"]["Enums"]["fuel_type"]
+          p_notes?: string
+          p_oil_product_id: string
+          p_postcode: string
+          p_preferred_date: string
+          p_preferred_time: string
+          p_service_type_id: string
+          p_vehicle_year: number
+        }
+        Returns: string
       }
       create_service_booking: {
         Args: {
@@ -978,6 +1641,22 @@ export type Database = {
           phone: string
         }[]
       }
+      get_compatible_parts_for_garage_vehicle: {
+        Args: { p_garage_vehicle_id: string }
+        Returns: {
+          brand: string
+          category_id: string
+          category_name: string
+          category_slug: string
+          description: string
+          name: string
+          part_id: string
+          price_pence: number
+          sku: string
+          slug: string
+          stock_quantity: number
+        }[]
+      }
       get_public_listing_inspection_availability: {
         Args: { p_car_id: string }
         Returns: {
@@ -1005,6 +1684,10 @@ export type Database = {
         Args: { p_direction: string; p_image_id: string }
         Returns: undefined
       }
+      register_push_token: {
+        Args: { p_device_id?: string; p_platform: string; p_token: string }
+        Returns: string
+      }
       reveal_seller_contact: {
         Args: { p_car_id: string }
         Returns: {
@@ -1026,6 +1709,10 @@ export type Database = {
           p_summary: string
           p_tyres: Database["public"]["Enums"]["condition_rating"]
         }
+        Returns: string
+      }
+      save_service_job_report: {
+        Args: { p_booking_id: string; p_notes?: string }
         Returns: string
       }
       schedule_verification_inspection: {
@@ -1051,6 +1738,21 @@ export type Database = {
       submit_car_for_review: { Args: { p_car_id: string }; Returns: undefined }
       submit_inspection_report: {
         Args: { p_request_id: string }
+        Returns: undefined
+      }
+      unregister_push_token: { Args: { p_token: string }; Returns: undefined }
+      update_active_car_listing: {
+        Args: {
+          p_car_id: string
+          p_city: string
+          p_description: string
+          p_mileage: number
+          p_mot_expiry?: string
+          p_postcode: string
+          p_price: number
+          p_service_history?: string
+          p_ulez_compliant?: boolean
+        }
         Returns: undefined
       }
     }
@@ -1107,6 +1809,7 @@ export type Database = {
         | "in_progress"
         | "completed"
         | "cancelled"
+      service_evidence_stage: "before" | "after"
       staff_status: "active" | "inactive"
       transmission_type: "manual" | "automatic" | "semi_automatic" | "other"
       verification_request_status:
@@ -1133,12 +1836,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1162,11 +1865,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1187,11 +1890,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1212,11 +1915,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1229,11 +1932,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1243,9 +1946,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       assignment_status: [
@@ -1307,6 +2007,7 @@ export const Constants = {
         "completed",
         "cancelled",
       ],
+      service_evidence_stage: ["before", "after"],
       staff_status: ["active", "inactive"],
       transmission_type: ["manual", "automatic", "semi_automatic", "other"],
       verification_request_status: [

@@ -14,7 +14,7 @@ export default async function EditPartPage({ params }: { params: Promise<{ id: s
   return (
     <div className="p-5 lg:p-8 max-w-[1000px] mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#0b1f33] sm:text-3xl">Edit Part</h1>
+        <h1 className="text-2xl font-bold text-[#082a30] sm:text-3xl">Edit Part</h1>
         <p className="mt-1 text-sm text-slate-500">Update {part.name}</p>
       </div>
 

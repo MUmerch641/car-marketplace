@@ -14,10 +14,10 @@ export default async function AdminCarsPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
-      <p className="text-sm font-bold uppercase tracking-[.12em] text-[#D92D20]">
+      <p className="text-sm font-bold uppercase tracking-[.12em] text-[#E94A3F]">
         Moderation
       </p>
-      <h1 className="mt-2 text-3xl font-bold text-[#0B1F33]">All car listings</h1>
+      <h1 className="mt-2 text-3xl font-bold text-[#082A30]">All car listings</h1>
 
       {cars?.length ? (
         <div className="mt-7 space-y-4">
@@ -32,7 +32,7 @@ export default async function AdminCarsPage() {
                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${
                       car.status === 'active' ? 'bg-[#ECFDF3] text-[#027A48]' :
                       car.status === 'pending_review' ? 'bg-[#FFFAEB] text-[#B54708]' :
-                      car.status === 'rejected' ? 'bg-[#FEF3F2] text-[#B42318]' :
+                      car.status === 'rejected' ? 'bg-[#FEF3F2] text-[#C73830]' :
                       'bg-[#F2F4F7] text-[#344054]'
                     }`}>
                       {String(car.status).replace('_', ' ').toUpperCase()}
@@ -53,7 +53,7 @@ export default async function AdminCarsPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Link href={`/admin/cars/${car.id}`} className="font-bold text-[#D92D20] hover:underline">
+                  <Link href={`/admin/cars/${car.id}`} className="font-bold text-[#E94A3F] hover:underline">
                     View listing
                   </Link>
                   {car.status !== "pending_review" && (
@@ -85,9 +85,9 @@ export default async function AdminCarsPage() {
                       name="reason"
                       required
                       placeholder="Rejection reason"
-                      className="flex-1 rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none focus:border-[#D92D20] focus:ring-4 focus:ring-red-50"
+                      className="flex-1 rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none focus:border-[#E94A3F] focus:ring-4 focus:ring-red-50"
                     />
-                    <button className="rounded-xl border border-[#D92D20] px-6 py-2.5 text-sm font-bold text-[#D92D20] transition-all hover:bg-red-50">
+                    <button className="rounded-xl border border-[#E94A3F] px-6 py-2.5 text-sm font-bold text-[#E94A3F] transition-all hover:bg-red-50">
                       Reject
                     </button>
                   </form>

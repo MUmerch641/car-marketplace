@@ -84,12 +84,12 @@ export function AddVehicleSection() {
       {/* Page Header */}
       <header className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6 mb-8 border-b border-slate-200">
         <div>
-          <h1 className="text-[32px] sm:text-[36px] font-bold tracking-tight text-[#0b1f33]">My Garage</h1>
+          <h1 className="text-[32px] sm:text-[36px] font-bold tracking-tight text-[#082a30]">My Garage</h1>
           <p className="mt-2 text-[15px] sm:text-[16px] text-slate-500 max-w-xl">Manage your vehicles, services and inspections in one place.</p>
         </div>
         <button 
           onClick={() => setIsExpanded(!isExpanded)} 
-          className="shrink-0 inline-flex items-center justify-center rounded-xl bg-[#0b1f33] px-6 py-3 text-[14px] font-bold text-white transition-colors hover:bg-slate-800 shadow-sm"
+          className="shrink-0 inline-flex items-center justify-center rounded-xl bg-[#082a30] px-6 py-3 text-[14px] font-bold text-white transition-colors hover:bg-slate-800 shadow-sm"
         >
           {isExpanded ? 'Cancel' : '+ Add Vehicle'}
         </button>
@@ -99,7 +99,7 @@ export function AddVehicleSection() {
       {isExpanded && (
         <div className="mb-10 w-full animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
-            <h3 className="text-[18px] font-bold text-[#0b1f33] mb-4">Add a new vehicle</h3>
+            <h3 className="text-[18px] font-bold text-[#082a30] mb-4">Add a new vehicle</h3>
             
             {!vehicle ? (
               <form onSubmit={handleSubmit} className="w-full max-w-[420px]">
@@ -121,7 +121,7 @@ export function AddVehicleSection() {
                       value={registration}
                       onChange={handleRegistrationChange}
                       placeholder="AB12 CDE"
-                      className="m-0 w-full flex-1 border-none bg-transparent px-4 py-0 text-[22px] sm:text-[24px] font-bold uppercase tracking-[0.1em] outline-none focus:ring-0 placeholder:text-[#0b1f33]/40 text-slate-900"
+                      className="m-0 w-full flex-1 border-none bg-transparent px-4 py-0 text-[22px] sm:text-[24px] font-bold uppercase tracking-[0.1em] outline-none focus:ring-0 placeholder:text-[#082a30]/40 text-slate-900"
                       autoComplete="off"
                       maxLength={10}
                     />
@@ -139,7 +139,7 @@ export function AddVehicleSection() {
                     className={`flex h-[52px] sm:h-[56px] w-full items-center justify-center gap-2 rounded-xl text-[15px] font-bold transition-all ${
                       !hasValidRegistration 
                         ? 'bg-slate-100 text-slate-400 border border-slate-200' 
-                        : 'bg-[#0b1f33] text-white hover:bg-slate-800 shadow-sm'
+                        : 'bg-[#082a30] text-white hover:bg-slate-800 shadow-sm'
                     } disabled:pointer-events-none`}
                   >
                     {loading && <Loader2 size={18} className="animate-spin text-current" />}
@@ -150,7 +150,7 @@ export function AddVehicleSection() {
             ) : (
               <div className="w-full max-w-[420px] animate-in fade-in duration-300">
                 <div className="rounded-xl bg-slate-50 border border-slate-100 p-5 mb-5">
-                  <h4 className="text-[16px] font-bold text-[#0b1f33]">{vehicle.make} {vehicle.model}</h4>
+                  <h4 className="text-[16px] font-bold text-[#082a30]">{vehicle.make} {vehicle.model}</h4>
                   <p className="text-[14px] text-slate-500 mt-1">{vehicle.year} · {vehicle.colour} · {vehicle.fuel_type}</p>
                 </div>
 
@@ -173,7 +173,7 @@ export function AddVehicleSection() {
                     type="button"
                     onClick={handleSave}
                     disabled={loading}
-                    className="flex h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#0b1f33] text-[14px] font-bold text-white transition-colors hover:bg-slate-800 shadow-sm disabled:opacity-50"
+                    className="flex h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#082a30] text-[14px] font-bold text-white transition-colors hover:bg-slate-800 shadow-sm disabled:opacity-50"
                   >
                     {loading && <Loader2 size={18} className="animate-spin text-white" />}
                     {loading ? "Saving..." : "Confirm & Save"}

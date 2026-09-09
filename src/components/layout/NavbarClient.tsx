@@ -12,7 +12,7 @@ interface NavbarClientProps {
 }
 
 const navItems = [
-  { href: "/services", label: "Mobile Services" },
+  { href: "/services", label: "Oil Change" },
   { href: "/verification", label: "Vehicle Inspection" },
   { href: "/cars", label: "Buy & Sell Cars" },
   { href: "/parts", label: "Parts" },
@@ -81,7 +81,7 @@ export function NavbarClient({ profile }: NavbarClientProps) {
                 "group relative text-sm font-semibold text-[#D0D5DD]",
                 "transition-colors duration-200 hover:text-white",
                 "after:absolute after:-bottom-0.5 after:left-0 after:h-0.5",
-                "after:w-0 after:bg-[#D92D20] after:transition-[width] after:duration-200",
+                "after:w-0 after:bg-[#E94A3F] after:transition-[width] after:duration-200",
                 "hover:after:w-full",
               ].join(" ")}
             >
@@ -103,10 +103,10 @@ export function NavbarClient({ profile }: NavbarClientProps) {
               </Link>
               <div className="absolute right-0 top-full w-48 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5">
-                  <Link href={dashboardHref} className="px-4 py-3 text-sm font-semibold text-[#0b1f33] hover:bg-slate-50">Dashboard</Link>
-                  <Link href="/dashboard/cars" className="px-4 py-3 text-sm font-semibold text-[#0b1f33] hover:bg-slate-50">My Cars</Link>
-                  <Link href="/dashboard/garage" className="px-4 py-3 text-sm font-semibold text-[#0b1f33] hover:bg-slate-50">My Garage</Link>
-                  <Link href="/dashboard/bookings" className="px-4 py-3 text-sm font-semibold text-[#0b1f33] border-b border-slate-100 hover:bg-slate-50">Bookings</Link>
+                  <Link href={dashboardHref} className="px-4 py-3 text-sm font-semibold text-[#082a30] hover:bg-slate-50">Dashboard</Link>
+                  <Link href="/dashboard/cars" className="px-4 py-3 text-sm font-semibold text-[#082a30] hover:bg-slate-50">My Cars</Link>
+                  <Link href="/dashboard/garage" className="px-4 py-3 text-sm font-semibold text-[#082a30] hover:bg-slate-50">My Garage</Link>
+                  <Link href="/dashboard/bookings" className="px-4 py-3 text-sm font-semibold text-[#082a30] border-b border-slate-100 hover:bg-slate-50">Bookings</Link>
                   <form action={logoutAction} className="block w-full">
                     <button type="submit" className="w-full px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors">Logout</button>
                   </form>
@@ -123,7 +123,7 @@ export function NavbarClient({ profile }: NavbarClientProps) {
             </Link>
           )}
           <Button href="/services" className="px-4 py-2.5">
-            Book a Service
+            Book Oil Change
           </Button>
 
           {/* Mobile hamburger */}
