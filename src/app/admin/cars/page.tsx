@@ -22,11 +22,11 @@ export default async function AdminCarsPage() {
       {cars?.length ? (
         <div className="mt-7 space-y-4">
           {cars.map((car) => (
-            <article key={car.id} className="rounded-2xl border border-[#E4E7EC] bg-white p-6 shadow-sm">
+            <article key={car.id} className="rounded-2xl border border-[#E4E7E3] bg-white p-6 shadow-sm">
               <div className="flex flex-col justify-between gap-4 sm:flex-row">
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="font-bold text-lg text-[#101828]">
+                    <h2 className="font-bold text-lg text-[#082A30]">
                       {car.year} {car.make} {car.model} {car.variant}
                     </h2>
                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${
@@ -48,7 +48,7 @@ export default async function AdminCarsPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 font-semibold text-[#667085]">
+                  <p className="mt-1 font-semibold text-[#526568]">
                     £{car.price.toLocaleString("en-GB")} · {car.city}
                   </p>
                 </div>
@@ -85,7 +85,7 @@ export default async function AdminCarsPage() {
                       name="reason"
                       required
                       placeholder="Rejection reason"
-                      className="flex-1 rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none focus:border-[#E94A3F] focus:ring-4 focus:ring-red-50"
+                      className="flex-1 rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none focus:border-[#E94A3F] focus:ring-4 focus:ring-red-50"
                     />
                     <button className="rounded-xl border border-[#E94A3F] px-6 py-2.5 text-sm font-bold text-[#E94A3F] transition-all hover:bg-red-50">
                       Reject
@@ -97,7 +97,7 @@ export default async function AdminCarsPage() {
           ))}
         </div>
       ) : (
-        <div className="mt-7 rounded-2xl border border-dashed border-[#D0D5DD] p-10 text-center text-[#667085]">
+        <div className="mt-7 rounded-2xl border border-dashed border-[#B8C5BE] p-10 text-center text-[#526568]">
           No listings found in the system.
         </div>
       )}

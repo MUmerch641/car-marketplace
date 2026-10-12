@@ -22,14 +22,14 @@ const smoothEase = [0.16, 1, 0.3, 1] as const;
 
 export default function AnimatedContent({
   children,
-  distance = 28,
+  distance = 14,
   direction = "vertical",
   reverse = false,
-  duration = 0.72,
+  duration = 0.3,
   ease = "smooth",
-  initialOpacity = 0.08,
+  initialOpacity = 1,
   animateOpacity = true,
-  scale = 0.985,
+  scale = 1,
   threshold = 0.16,
   delay = 0,
   onComplete,

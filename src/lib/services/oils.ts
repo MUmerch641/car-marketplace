@@ -15,6 +15,7 @@ export type OilRecommendation = {
 };
 
 type FitmentRow = {
+  verified_at: string | null;
   year_from: number | null;
   year_to: number | null;
   fuel_type: VehicleLookupResult["fuel_type"] | null;
@@ -38,9 +39,10 @@ export async function getOilRecommendations(vehicle: VehicleLookupResult): Promi
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("oil_fitments")
-    .select("year_from,year_to,fuel_type,engine_capacity_min_cc,engine_capacity_max_cc,is_primary,oil_products!inner(id,brand,name,viscosity_grade,specifications,volume_litres,price,description,image_url)")
+    .select("verified_at,year_from,year_to,fuel_type,engine_capacity_min_cc,engine_capacity_max_cc,is_primary,oil_products!inner(id,brand,name,viscosity_grade,specifications,volume_litres,price,description,image_url)")
     .ilike("make", vehicle.make)
-    .ilike("model", vehicle.model);
+    .ilike("model", vehicle.model)
+    .eq("oil_products.is_active", true);
 
   if (error) {
     console.error("Oil fitment lookup error:", error);
@@ -49,9 +51,10 @@ export async function getOilRecommendations(vehicle: VehicleLookupResult): Promi
 
   return ((data ?? []) as unknown as FitmentRow[])
     .filter((row) => {
-      const yearMatches = !vehicle.year || ((!row.year_from || vehicle.year >= row.year_from) && (!row.year_to || vehicle.year <= row.year_to));
+      if (!row.verified_at) return false;
+      const yearMatches = (!row.year_from && !row.year_to) || (!!vehicle.year && (!row.year_from || vehicle.year >= row.year_from) && (!row.year_to || vehicle.year <= row.year_to));
       const fuelMatches = !row.fuel_type || row.fuel_type === vehicle.fuel_type;
-      const engineMatches = !vehicle.engine_capacity_cc || ((!row.engine_capacity_min_cc || vehicle.engine_capacity_cc >= row.engine_capacity_min_cc) && (!row.engine_capacity_max_cc || vehicle.engine_capacity_cc <= row.engine_capacity_max_cc));
+      const engineMatches = (!row.engine_capacity_min_cc && !row.engine_capacity_max_cc) || (!!vehicle.engine_capacity_cc && (!row.engine_capacity_min_cc || vehicle.engine_capacity_cc >= row.engine_capacity_min_cc) && (!row.engine_capacity_max_cc || vehicle.engine_capacity_cc <= row.engine_capacity_max_cc));
       return yearMatches && fuelMatches && engineMatches && row.oil_products;
     })
     .map((row) => ({

@@ -1,3 +1,5 @@
+import { CustomerAccountNav } from "@/components/dashboard/customer-account-nav";
+import { getCurrentProfile } from "@/lib/auth/server";
 import Link from "next/link";
 import { CarCard } from "@/components/cars/car-card";
 import { SearchControls } from "@/components/cars/search-controls";
@@ -12,7 +14,8 @@ export default async function CarsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const result = await browseCars(params);
+  const [result,profile] = await Promise.all([browseCars(params),getCurrentProfile()]);
+  const customer = profile?.role === "customer";
   const values = Object.fromEntries(
     Object.entries(params).filter(([, value]) => typeof value === "string")
   ) as Record<string, string>;
@@ -25,19 +28,20 @@ export default async function CarsPage({
 
   return (
     <>
+      {customer && <CustomerAccountNav/>}
       <PageHero
         eyebrow="Used cars"
         title="Find the right car for your road ahead."
         copy="Browse active listings from sellers across the UK."
       />
 
-      <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
+      <div className="mx-auto max-w-7xl px-5 py-10 pb-24 sm:pb-10 lg:px-8">
         <SearchControls values={values} />
 
 
 
         <div className="mt-8 flex items-center justify-between">
-          <p className="text-sm font-semibold text-[#667085]">
+          <p className="text-sm font-semibold text-[#526568]">
             {result.count} {result.count === 1 ? "car" : "cars"} found
           </p>
         </div>
@@ -56,28 +60,28 @@ export default async function CarsPage({
           </div>
         ) : (
           <AnimatedContent distance={16} duration={0.6}>
-            <div className="mt-8 rounded-2xl border border-[#E4E7EC] bg-[#F9FAFB] p-10 text-center">
+            <div className="mt-8 rounded-2xl border border-[#E4E7E3] bg-[#FBF8F4] p-10 text-center">
               <h2 className="font-h3 text-ink">No cars found</h2>
-              <p className="mt-2 text-[#667085]">
+              <p className="mt-2 text-[#526568]">
                 Try removing a filter or broadening your search.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <Link
                   href="/cars"
-                  className="rounded-md border border-[#E4E7EC] bg-white px-5 py-2.5 text-sm font-bold text-ink hover:bg-[#F9FAFB]"
+                  className="rounded-md border border-[#E4E7E3] bg-white px-5 py-2.5 text-sm font-bold text-ink hover:bg-[#FBF8F4]"
                 >
                   Clear filters
                 </Link>
                 <Link
                   href="/sell-car"
-                  className="rounded-md bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-[#C73830]"
+                  className="rounded-md bg-brand-hover px-5 py-2.5 text-sm font-bold text-white hover:bg-[#C73830]"
                 >
                   Sell Your Car
                 </Link>
               </div>
               {/* Popular makes below empty state */}
               <div className="mt-10">
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#667085]">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#526568]">
                   Popular makes
                 </p>
                 <div className="mt-3 flex flex-wrap justify-center gap-2">
@@ -86,7 +90,7 @@ export default async function CarsPage({
                       <Link
                         key={make}
                         href={`/cars?make=${make}`}
-                        className="rounded-full border border-[#D0D5DD] bg-white px-3 py-1.5 text-xs font-semibold text-[#344054] hover:border-brand hover:text-brand"
+                        className="rounded-full border border-[#B8C5BE] bg-white px-3 py-1.5 text-xs font-semibold text-[#344054] hover:border-brand hover:text-brand"
                       >
                         {make}
                       </Link>
@@ -108,7 +112,7 @@ export default async function CarsPage({
                 Previous
               </Link>
             )}
-            <span className="text-sm text-[#667085]">
+            <span className="text-sm text-[#526568]">
               Page {result.page} of {totalPages}
             </span>
             {result.page < totalPages && (

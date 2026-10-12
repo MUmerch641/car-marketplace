@@ -24,11 +24,11 @@ export function SubmitButton({
 
   let baseStyle = "inline-flex items-center justify-center font-bold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer";
 
-  let sizeStyle = "px-4 py-2.5 text-xs rounded-xl";
-  if (size === "sm") sizeStyle = "px-3 py-1.5 text-xs rounded-lg";
-  if (size === "lg") sizeStyle = "px-6 py-3 text-sm rounded-xl";
+  let sizeStyle = "min-h-12 px-5 py-3 text-sm rounded-[14px]";
+  if (size === "sm") sizeStyle = "min-h-10 px-3 py-2 text-xs rounded-xl";
+  if (size === "lg") sizeStyle = "min-h-12 px-6 py-3 text-sm rounded-[14px]";
 
-  let variantStyle = "bg-[#e94a3f] text-white hover:bg-red-700 focus:ring-red-500 shadow-sm";
+  let variantStyle = "bg-brand-hover text-white hover:bg-[#AC302A] focus:ring-red-500 shadow-sm";
   if (variant === "secondary") variantStyle = "bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 focus:ring-slate-400";
   if (variant === "dark") variantStyle = "bg-[#082a30] text-white hover:bg-[#163452] focus:ring-[#082a30] shadow-sm";
   if (variant === "danger") variantStyle = "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm";

@@ -1063,6 +1063,9 @@ export type Database = {
           oil_product_name: string | null
           oil_viscosity_grade: string | null
           on_the_way_at: string | null
+          parking_access_notes: string | null
+          parking_location: string | null
+          level_surface_access: boolean | null
           postcode: string
           preferred_date: string
           preferred_time: string
@@ -1096,6 +1099,9 @@ export type Database = {
           oil_product_name?: string | null
           oil_viscosity_grade?: string | null
           on_the_way_at?: string | null
+          parking_access_notes?: string | null
+          parking_location?: string | null
+          level_surface_access?: boolean | null
           postcode: string
           preferred_date: string
           preferred_time: string
@@ -1129,6 +1135,9 @@ export type Database = {
           oil_product_name?: string | null
           oil_viscosity_grade?: string | null
           on_the_way_at?: string | null
+          parking_access_notes?: string | null
+          parking_location?: string | null
+          level_surface_access?: boolean | null
           postcode?: string
           preferred_date?: string
           preferred_time?: string
@@ -1572,15 +1581,15 @@ export type Database = {
           p_car_model: string
           p_car_registration: string
           p_city: string
-          p_engine_capacity_cc: number
+          p_engine_capacity_cc: number | null
           p_fuel_type: Database["public"]["Enums"]["fuel_type"]
           p_notes?: string
-          p_oil_product_id: string
+          p_oil_product_id: string | null
           p_postcode: string
           p_preferred_date: string
           p_preferred_time: string
           p_service_type_id: string
-          p_vehicle_year: number
+          p_vehicle_year: number | null
         }
         Returns: string
       }

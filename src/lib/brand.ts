@@ -8,14 +8,17 @@
 
 export const brand = {
   name: "Shaz",
-  tagline: "Cars and car care, made clear.",
+  tagline: "Car care on your terms.",
 };
 
 /* ── Contact ──────────────────────────────────────────────────────────────── */
 
 export const contact = {
-  email: "contact@shaz.uk",
-  phone: "0800 SHAZ",
+  email: "support@shaz.co.uk",
+  phone: "+44 800 123 4567",
+  phoneHref: "+448001234567",
+  address: "123 Market Square, London, W1D 4AQ, United Kingdom",
+  isPlaceholder: true,
 };
 
 /* ── Receipt/Invoice Reference Format ─────────────────────────────────────── */

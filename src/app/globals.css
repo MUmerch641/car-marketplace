@@ -5,11 +5,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-ink: #082A30;
-  --color-brand: #E94A3F;
-  --color-brand-hover: #C73830;
-  --color-mint: #F7F4EF;
-  --color-sand: #F7F4EF;
+  --color-slate-50: #fbf8f4;
+  --color-slate-100: #f1ede6;
+  --color-slate-200: #e4e7e3;
+  --color-slate-300: #b8c5be;
+  --color-slate-400: #627477;
+  --color-slate-500: #526568;
+  --color-slate-600: #526568;
+  --color-slate-700: #24464a;
+  --color-slate-800: #163d42;
+  --color-slate-900: #082a30;
+  --color-ink: #082a30;
+  --color-brand: #e94a3f;
+  --color-brand-hover: #c73830;
+  --color-mint: #f7f4ef;
+  --color-sand: #f7f4ef;
   --font-sans: var(--font-manrope);
   --font-heading: var(--font-manrope);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -52,10 +62,20 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { background: #fff; color: #13252a; overflow-x: hidden; }
-a { text-decoration: none; }
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background: #f7f4ef;
+  color: #082a30;
+  overflow-x: hidden;
+}
+a {
+  text-decoration: none;
+}
 
 /* ─── Typography scale ────────────────────────────────────────────────────── */
 :root {
@@ -70,66 +90,114 @@ a { text-decoration: none; }
 
 /* ─── Motion token system ─────────────────────────────────────────────────── */
 :root {
-  --dur-micro:   150ms;
-  --dur-fast:    250ms;
-  --dur-normal:  350ms;
+  --dur-micro: 150ms;
+  --dur-fast: 250ms;
+  --dur-normal: 350ms;
   --dur-section: 700ms;
-  --dur-hero:    850ms;
-  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-hero: 850ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --stagger-card:    60ms;
-  --stagger-chip:    35ms;
+  --stagger-card: 60ms;
+  --stagger-chip: 35ms;
   --stagger-benefit: 55ms;
-  --stagger-step:   110ms;
+  --stagger-step: 110ms;
 }
 
 /* ─── Scroll-reveal keyframes ─────────────────────────────────────────────── */
 @keyframes reveal-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes reveal-left {
-  from { opacity: 0; transform: translateX(-40px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes reveal-right {
-  from { opacity: 0; transform: translateX(40px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes reveal-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes shaz-page-arrive {
-  from { opacity: 0.72; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0.72;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes shaz-logo-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes shaz-logo-float {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-2px) rotate(1deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(1deg);
+  }
 }
 
 @keyframes shaz-road-drift {
-  to { background-position: 80px 0; }
+  to {
+    background-position: 80px 0;
+  }
 }
 
 @keyframes shaz-orbit-drift {
-  0%, 100% { transform: rotate(-7deg) scale(1); }
-  50% { transform: rotate(7deg) scale(1.035); }
+  0%,
+  100% {
+    transform: rotate(-7deg) scale(1);
+  }
+  50% {
+    transform: rotate(7deg) scale(1.035);
+  }
 }
 
 @keyframes shaz-button-glint {
-  0%, 72%, 100% { transform: translateX(-160%) skewX(-18deg); }
-  88% { transform: translateX(360%) skewX(-18deg); }
+  0%,
+  72%,
+  100% {
+    transform: translateX(-160%) skewX(-18deg);
+  }
+  88% {
+    transform: translateX(360%) skewX(-18deg);
+  }
 }
 
 /* ─── Reveal utility classes ──────────────────────────────────────────────── */
@@ -176,95 +244,168 @@ a { text-decoration: none; }
   }
 }
 
-.shaz-motion main > :first-child { animation: shaz-page-arrive 760ms var(--ease-out) both; }
-
-.shaz-logo > svg {
-  animation: shaz-logo-float 3.8s ease-in-out infinite;
-  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.16));
-  transform-origin: center;
-  transition: filter var(--dur-fast) var(--ease-out);
+/* Motion is attached to the helper and intentional feedback, not every card. */
+.shaz-motion button {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
 }
-
-.shaz-wheel-spin {
-  animation: shaz-logo-spin 7s linear infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: animation-duration 300ms ease;
+button:disabled {
+  cursor: not-allowed;
 }
-
-.shaz-logo:hover > svg { filter: drop-shadow(0 7px 12px rgba(233, 74, 63, 0.32)); }
-.shaz-logo:hover .shaz-wheel-spin { animation-duration: 1.6s; }
-.shaz-road-lines { animation: shaz-road-drift 14s linear infinite; }
-.shaz-page-orbit { animation: shaz-orbit-drift 9s ease-in-out infinite; }
-
-.shaz-motion article,
-.shaz-motion .card-standard,
-.shaz-motion .card-large {
-  transition: transform 320ms var(--ease-out), box-shadow 320ms var(--ease-out), border-color 320ms ease;
+:focus-visible {
+  outline: 2px solid #c73830;
+  outline-offset: 4px;
 }
-
-.shaz-motion article:hover,
-.shaz-motion .card-standard:hover,
-.shaz-motion .card-large:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 38px rgba(8, 42, 48, 0.11);
+.shaz-companion {
+  cursor: pointer;
+  touch-action: manipulation;
 }
-
-.shaz-motion article img,
-.shaz-motion section img {
-  transition: transform 700ms var(--ease-out), filter 500ms ease;
+.shaz-puppet-figure {
+  transform-origin: 64px 148px;
+  animation: shaz-breathe 3.8s ease-in-out infinite;
 }
-
-.shaz-motion article:hover img { transform: scale(1.035); }
-
-.shaz-button {
-  isolation: isolate;
-  overflow: hidden;
-  position: relative;
+.shaz-puppet-head {
+  transform-origin: 38px 68px;
+  animation: shaz-nod 1s ease-out both;
 }
-
-.shaz-button::after {
-  animation: shaz-button-glint 5.2s ease-in-out infinite;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
-  content: "";
-  inset: 0 auto 0 0;
-  pointer-events: none;
-  position: absolute;
-  width: 34%;
-  z-index: 0;
+.shaz-puppet-eyes {
+  transform-origin: 38px 42px;
+  animation: shaz-blink 5.8s ease-in-out infinite;
 }
-
-.shaz-motion button { transition: transform 180ms var(--ease-out), box-shadow 220ms ease, background-color 220ms ease, border-color 220ms ease; }
-.shaz-motion button:hover { transform: translateY(-1px); }
-.shaz-motion button:active,
-.shaz-motion a:active { transform: translateY(1px) scale(.985); }
-
+.shaz-puppet-arm-left,
+.shaz-puppet-arm-right {
+  transform-origin: 12px 9px;
+}
+.shaz-puppet-arm-right {
+  animation: shaz-wave 1.4s ease-in-out both;
+}
+[data-mood="success"] .shaz-puppet-arm-left {
+  animation: shaz-celebrate 1.2s ease-in-out both;
+}
+[data-mood="success"] .shaz-puppet-figure {
+  animation:
+    shaz-hop 700ms ease-out,
+    shaz-breathe 3.8s 700ms ease-in-out infinite;
+}
+[data-mood="attention"] .shaz-puppet-head {
+  animation: shaz-think 1.1s ease-in-out both;
+}
+[data-awake="false"] svg * {
+  animation-play-state: paused;
+}
+@keyframes shaz-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+@keyframes shaz-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25%,
+  55% {
+    transform: rotate(-145deg);
+  }
+  40%,
+  70% {
+    transform: rotate(-120deg);
+  }
+}
+@keyframes shaz-celebrate {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  30%,
+  65% {
+    transform: rotate(130deg);
+  }
+}
+@keyframes shaz-nod {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(8deg);
+  }
+  65% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes shaz-think {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25%,
+  65% {
+    transform: rotate(-8deg);
+  }
+  45% {
+    transform: rotate(5deg);
+  }
+}
+@keyframes shaz-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes shaz-blink {
+  0%,
+  43%,
+  47%,
+  100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(0.1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shaz-companion svg * {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: #f7f4ef;
+  --foreground: #082a30;
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: #082a30;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #c73830;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: #eee9e1;
+  --muted-foreground: #526568;
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #e4e7e3;
+  --input: #b8c5be;
+  --ring: #c73830;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --radius: 1rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -323,7 +464,7 @@ a { text-decoration: none; }
 
 @layer components {
   .auth-input {
-    @apply w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 transition focus:border-[#E94A3F] focus:ring-4 focus:ring-red-100;
+    @apply w-full rounded-xl border border-slate-300 min-h-12 bg-white py-3 pl-10 text-base text-slate-900 shadow-sm outline-none placeholder:text-slate-400 transition focus:border-[#E94A3F] focus:ring-4 focus:ring-red-100;
   }
   .font-h1 {
     font-size: var(--font-h1);
@@ -331,122 +472,128 @@ a { text-decoration: none; }
     line-height: 1.05;
     letter-spacing: -0.02em;
   }
-  
+
   .font-h2 {
     font-size: var(--font-h2);
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.015em;
   }
-  
+
   .font-h3 {
     font-size: var(--font-h3);
     font-weight: 700;
     line-height: 1.15;
   }
-  
+
   .font-h4 {
     font-size: var(--font-h4);
     font-weight: 600;
     line-height: 1.2;
   }
-  
+
   .font-body {
     font-size: var(--font-body);
     font-weight: 400;
     line-height: 1.6;
   }
-  
+
   .font-body-lg {
     font-size: var(--font-body-lg);
     font-weight: 400;
     line-height: 1.6;
   }
-  
+
   .font-body-sm {
     font-size: var(--font-body-sm);
     font-weight: 400;
     line-height: 1.5;
   }
-  
+
   .font-heading {
     font-weight: 800;
     letter-spacing: -0.01em;
   }
-  
+
   /* Input components */
   .input-standard {
-    @apply rounded-md border border-[#D0D5DD] px-3 py-2.5 text-sm outline-none placeholder:text-[#98A2B3] focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-[#FEE4E2];
+    @apply min-h-12 rounded-[14px] border border-[#B8C5BE] bg-white px-4 py-3 text-base text-ink outline-none placeholder:text-[#98A2B3] focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-[#FEE4E2];
   }
-  
+
   .input-label {
     @apply mb-1.5 block text-sm font-bold text-[#344054];
   }
-  
+
   .input-hint {
     @apply mt-1 text-xs text-[#667085];
   }
-  
+
   .input-error {
     @apply rounded-md bg-[#FEF3F2] px-3 py-2 text-xs font-medium text-[#C73830];
   }
-  
+
   .input-success {
     @apply rounded-md bg-[#DCFCE7] px-3 py-2 text-xs font-medium text-[#15803D];
   }
-  
+
   /* Button hierarchy */
   .btn-primary {
-    @apply rounded-lg bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#C73830] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+    @apply min-h-12 rounded-[14px] bg-brand-hover px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#C73830] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
   }
-  
+
   .btn-secondary {
     @apply rounded-lg border border-[#E4E7EC] bg-white px-5 py-2.5 text-sm font-bold text-[#101828] hover:bg-[#F9FAFB] hover:border-[#D0D5DD] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D0D5DD];
   }
-  
+
   .btn-tertiary {
     @apply text-sm font-semibold text-brand hover:text-[#C73830] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
   }
-  
+
   .btn-destructive {
     @apply rounded-md bg-[#C73830] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9F1C15] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C73830];
   }
-  
+
   /* Card styles */
   .card-standard {
-    @apply rounded-xl border border-[#E4E7EC] bg-white shadow-sm;
+    @apply rounded-3xl border border-[#E4E7E3] bg-white shadow-sm;
   }
-  
+
   .card-large {
-    @apply rounded-2xl border border-[#E4E7EC] bg-white;
+    @apply rounded-3xl border border-[#E4E7E3] bg-white;
   }
-  
+
   .card-pill {
     @apply rounded-full border px-3 py-1.5 text-xs font-semibold;
   }
-  
+
   /* Status badges */
   .status-pending {
     @apply rounded-md bg-[#FFFBEB] px-2 py-1 text-xs font-medium text-[#D97706];
   }
-  
+
   .status-confirmed {
     @apply rounded-md bg-[#F0FDF4] px-2 py-1 text-xs font-medium text-[#16A34A];
   }
-  
+
   .status-in-progress {
     @apply rounded-md bg-[#EFF6FF] px-2 py-1 text-xs font-medium text-[#2563EB];
   }
-  
+
   .status-completed {
     @apply rounded-md bg-[#F0FDF4] px-2 py-1 text-xs font-medium text-[#16A34A];
   }
-  
+
   .status-cancelled {
     @apply rounded-md bg-[#FEF3F2] px-2 py-1 text-xs font-medium text-[#C73830];
   }
-  
+
   .status-sold {
     @apply rounded-md bg-[#F3F4F6] px-2 py-1 text-xs font-medium text-[#6B7280];
+  }
+}
+
+@media (max-width: 639px) {
+  body:has(nav[aria-label="Your Shaz account"]) footer {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
 }

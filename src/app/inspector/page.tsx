@@ -1,16 +1,23 @@
+import { readVisitNotes } from "@/lib/services/parking";
+import { ukNow } from "@/lib/services/visit-schedule";
 import { requireRole } from "@/lib/auth/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { InspectorWorkspace, type NormalizedJob } from "@/components/inspector/inspector-workspace";
+import {
+  InspectorWorkspace,
+  type NormalizedJob,
+} from "@/components/inspector/inspector-workspace";
 
 export default async function InspectorPage() {
   const { user, profile } = await requireRole("inspector");
   const adminDb = createAdminClient();
 
   // Fetch active employee assignments using admin client to guarantee complete job data for the authenticated inspector
-  const [{ data: serviceAssignments }, { data: verificationAssignments }] = await Promise.all([
-    adminDb
-      .from("employee_assignments")
-      .select(`
+  const [{ data: serviceAssignments }, { data: verificationAssignments }] =
+    await Promise.all([
+      adminDb
+        .from("employee_assignments")
+        .select(
+          `
         id,
         status,
         assigned_at,
@@ -28,6 +35,9 @@ export default async function InspectorPage() {
           preferred_time,
           status,
           notes,
+          parking_location,
+          level_surface_access,
+          parking_access_notes,
           created_at,
           service_types (
             name
@@ -37,14 +47,16 @@ export default async function InspectorPage() {
             phone
           )
         )
-      `)
-      .eq("employee_id", user.id)
-      .not("service_booking_id", "is", null)
-      .in("status", ["assigned", "accepted", "in_progress", "completed"]),
+      `,
+        )
+        .eq("employee_id", user.id)
+        .not("service_booking_id", "is", null)
+        .in("status", ["assigned", "accepted", "in_progress", "completed"]),
 
-    adminDb
-      .from("employee_assignments")
-      .select(`
+      adminDb
+        .from("employee_assignments")
+        .select(
+          `
         id,
         status,
         assigned_at,
@@ -69,33 +81,50 @@ export default async function InspectorPage() {
           notes,
           created_at
         )
-      `)
-      .eq("employee_id", user.id)
-      .not("verification_request_id", "is", null)
-      .in("status", ["assigned", "accepted", "in_progress", "completed"]),
-  ]);
+      `,
+        )
+        .eq("employee_id", user.id)
+        .not("verification_request_id", "is", null)
+        .in("status", ["assigned", "accepted", "in_progress", "completed"]),
+    ]);
 
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayStr = ukNow().date;
   const normalizedJobs: NormalizedJob[] = [];
 
   // Process mobile service jobs assigned to this inspector
   for (const a of serviceAssignments || []) {
-    const sb = (Array.isArray(a.service_bookings) ? a.service_bookings[0] : a.service_bookings) as Record<string, any> | null;
+    const sb = (
+      Array.isArray(a.service_bookings)
+        ? a.service_bookings[0]
+        : a.service_bookings
+    ) as Record<string, any> | null;
     if (!sb || a.status === "cancelled") continue;
 
+    const access = readVisitNotes(sb.notes);
     const rawStatus = sb.status;
     const scheduledDate = sb.preferred_date || "";
     const scheduledTime = sb.preferred_time || "09:00";
     const carMake = sb.car_make || "Vehicle";
     const carModel = sb.car_model || "";
     const carReg = sb.car_registration || "";
-    const addressLine = [sb.address_line_1, sb.address_line_2].filter(Boolean).join(", ");
+    const addressLine = [sb.address_line_1, sb.address_line_2]
+      .filter(Boolean)
+      .join(", ");
     const fullAddress = `${addressLine}, ${sb.city}, ${sb.postcode}`;
-    const isToday = scheduledDate === todayStr || rawStatus === "on_the_way" || rawStatus === "in_progress";
+    const isToday =
+      scheduledDate === todayStr ||
+      rawStatus === "on_the_way" ||
+      rawStatus === "in_progress";
     const isCompleted = rawStatus === "completed" || rawStatus === "cancelled";
-    const serviceTypeName = Array.isArray(sb.service_types) ? sb.service_types[0]?.name : sb.service_types?.name;
-    const customerName = Array.isArray(sb.profiles) ? sb.profiles[0]?.full_name : sb.profiles?.full_name;
-    const customerPhone = Array.isArray(sb.profiles) ? sb.profiles[0]?.phone : sb.profiles?.phone;
+    const serviceTypeName = Array.isArray(sb.service_types)
+      ? sb.service_types[0]?.name
+      : sb.service_types?.name;
+    const customerName = Array.isArray(sb.profiles)
+      ? sb.profiles[0]?.full_name
+      : sb.profiles?.full_name;
+    const customerPhone = Array.isArray(sb.profiles)
+      ? sb.profiles[0]?.phone
+      : sb.profiles?.phone;
 
     normalizedJobs.push({
       id: `sb-${sb.id}`,
@@ -119,7 +148,10 @@ export default async function InspectorPage() {
       customerPhone: customerPhone || "",
       status: rawStatus,
       statusLabel: formatStatusLabel(rawStatus),
-      notes: sb.notes,
+      notes: access.notes,
+      parkingLocation: sb.parking_location ?? access.parkingLocation,
+      levelSurfaceAccess: sb.level_surface_access ?? access.levelSurfaceAccess,
+      parkingAccessNotes: sb.parking_access_notes ?? access.parkingAccessNotes,
       assignedAt: a.assigned_at,
       isToday,
       isUpcoming: !isCompleted,
@@ -129,31 +161,52 @@ export default async function InspectorPage() {
 
   // Process vehicle inspection jobs assigned to this inspector
   for (const a of verificationAssignments || []) {
-    const vr = (Array.isArray(a.verification_requests) ? a.verification_requests[0] : a.verification_requests) as Record<string, any> | null;
+    const vr = (
+      Array.isArray(a.verification_requests)
+        ? a.verification_requests[0]
+        : a.verification_requests
+    ) as Record<string, any> | null;
     if (!vr || a.status === "cancelled") continue;
 
     const rawStatus = vr.status;
-    const scheduledDate = vr.scheduled_for ? vr.scheduled_for.slice(0, 10) : vr.preferred_date || "";
+    const scheduledDate = vr.scheduled_for
+      ? vr.scheduled_for.slice(0, 10)
+      : vr.preferred_date || "";
     const scheduledTime = vr.scheduled_for
-      ? new Date(vr.scheduled_for).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
+      ? new Date(vr.scheduled_for).toLocaleTimeString("en-GB", {
+          timeZone: "Europe/London",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
       : vr.preferred_time || "TBD";
     const carMake = vr.external_make || "Vehicle";
     const carModel = vr.external_model || "";
     const carReg = vr.vehicle_registration || "";
     const fullAddress = `${vr.inspection_address}, ${vr.city}, ${vr.postcode}`;
-    const isToday = scheduledDate === todayStr || rawStatus === "inspection_in_progress";
-    const isCompleted = rawStatus === "completed" || rawStatus === "report_submitted" || rawStatus === "cancelled";
+    const isToday =
+      scheduledDate === todayStr || rawStatus === "inspection_in_progress";
+    const isCompleted =
+      rawStatus === "completed" ||
+      rawStatus === "report_submitted" ||
+      rawStatus === "cancelled";
 
     normalizedJobs.push({
       id: `vr-${vr.id}`,
       jobType: "inspection",
-      jobTypeLabel: vr.inspection_type === "seller_pre_inspection" ? "Seller Pre-Inspection" : "Vehicle Inspection",
+      jobTypeLabel:
+        vr.inspection_type === "seller_pre_inspection"
+          ? "Seller Pre-Inspection"
+          : "Vehicle Inspection",
       verificationRequestId: vr.id,
-      title: vr.inspection_type === "seller_pre_inspection" ? "Seller Pre-Inspection" : "Buyer Pre-purchase Inspection",
+      title:
+        vr.inspection_type === "seller_pre_inspection"
+          ? "Seller Pre-Inspection"
+          : "Buyer Pre-purchase Inspection",
       carMake,
       carModel,
       carRegistration: carReg,
-      vehicleDisplay: `${carMake} ${carModel}`.trim() || carReg || "Inspection Vehicle",
+      vehicleDisplay:
+        `${carMake} ${carModel}`.trim() || carReg || "Inspection Vehicle",
       scheduledDate,
       scheduledTime,
       scheduledTimeRaw: vr.scheduled_for || `${scheduledDate}T${scheduledTime}`,
@@ -175,9 +228,12 @@ export default async function InspectorPage() {
   }
 
   // Sort chronologically by scheduled time
-  normalizedJobs.sort((a, b) => a.scheduledTimeRaw.localeCompare(b.scheduledTimeRaw));
+  normalizedJobs.sort((a, b) =>
+    a.scheduledTimeRaw.localeCompare(b.scheduledTimeRaw),
+  );
 
-  const workerName = profile.full_name || user.email?.split("@")[0] || "Field Worker";
+  const workerName =
+    profile.full_name || user.email?.split("@")[0] || "Field Worker";
 
   return <InspectorWorkspace jobs={normalizedJobs} workerName={workerName} />;
 }

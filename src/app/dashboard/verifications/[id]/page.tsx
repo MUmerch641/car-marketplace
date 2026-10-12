@@ -94,7 +94,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     (Array.isArray(request.inspection_reports) ? request.inspection_reports.length > 0 : Boolean(request.inspection_reports));
 
   return (
-    <main className="bg-[#f7f8fa] py-7 sm:py-10">
+    <main className="bg-[#F7F4EF] py-7 sm:py-10">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6">
           <div>
@@ -116,7 +116,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           {hasReport && (
             <div className="mt-5">
               <Link
-                className="inline-flex items-center gap-2 rounded-xl bg-[#e94a3f] px-5 py-3 text-xs font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:bg-red-700"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-hover px-5 py-3 text-xs font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:bg-red-700"
                 href={`/dashboard/verifications/${id}/report`}
               >
                 <FileText size={16} />

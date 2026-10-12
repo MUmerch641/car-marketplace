@@ -1,11 +1,59 @@
 import Link from "next/link";
-import { CheckCircle2, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { Check } from "lucide-react";
 import { Logo } from "@/components/Logo";
-
-export function AuthShell({ mode, children }: { mode: "login" | "register"; children: React.ReactNode }) {
-  const isLogin = mode === "login";
-  const title = isLogin ? "Your car journey, all in one place." : "Start with confidence.";
-  const copy = isLogin ? "Manage listings, bookings and verification requests whenever you need to." : "Create your free Shaz account to buy, sell and care for your car.";
-  const benefits = isLogin ? ["Manage your vehicle listings", "Track services and bookings", "Access inspection reports"] : ["List your car free of charge", "Book trusted mobile services", "Request independent inspections"];
-  return <main className="min-h-[calc(100vh-160px)] bg-[#f6f8fb] px-5 py-8 sm:py-12"><div className="mx-auto grid min-h-[650px] max-w-6xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(11,31,51,0.12)] lg:grid-cols-[.95fr_1.05fr]"><section className="relative hidden overflow-hidden bg-[#082a30] p-10 text-white lg:flex lg:flex-col"><div className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "repeating-linear-gradient(135deg, #fff 0, #fff 1px, transparent 1px, transparent 34px)" }} /><div className="relative"><Link href="/" aria-label="Return to Shaz home"><Logo size="sm" /></Link></div><div className="relative my-auto"><span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#fda29b]"><ShieldCheck size={14} /> Shaz account</span><h1 className="mt-6 max-w-md text-4xl font-bold leading-tight tracking-tight">{title}</h1><p className="mt-5 max-w-md text-base leading-7 text-slate-300">{copy}</p><ul className="mt-9 space-y-4">{benefits.map((benefit) => <li key={benefit} className="flex items-center gap-3 text-sm font-semibold text-slate-200"><CheckCircle2 size={18} className="shrink-0 text-[#7fdbca]" />{benefit}</li>)}</ul></div><p className="relative text-xs text-slate-400">Secure account access for the Shaz marketplace.</p></section><section className="flex flex-col p-6 sm:p-10 lg:p-12"><div className="lg:hidden"><Link href="/" aria-label="Return to Shaz home"><Logo size="sm" variant="light" /></Link></div><div className="mx-auto w-full max-w-md lg:my-auto">{children}</div></section></div></main>;
+export function AuthShell({
+  mode,
+  children,
+}: {
+  mode: "login" | "register";
+  children: React.ReactNode;
+}) {
+  const login = mode === "login";
+  return (
+    <main className="bg-sand px-5 py-8 sm:py-12">
+      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-[28px] border border-[#E4E7E3] bg-white lg:grid-cols-2">
+        <section className="hidden bg-[#E3F1EB] p-9 lg:block">
+          <Link href="/" aria-label="Shaz home">
+            <Logo variant="light" />
+          </Link>
+          <h1 className="mt-10 text-3xl font-extrabold leading-tight tracking-tight text-ink">
+            {login
+              ? "Good to have you back"
+              : "A little less hassle for your car"}
+          </h1>
+          <p className="mt-4 text-sm leading-7 text-[#526568]">
+            Your cars, visits and payments, all together in your Shaz account.
+          </p>
+          <Image
+            src="/shaz/service-helper.png"
+            alt=""
+            width={420}
+            height={300}
+            className="my-5 h-48 w-full object-contain"
+          />
+          <ul className="space-y-3 text-sm font-semibold text-ink">
+            {[
+              "Book a service at home or work",
+              "Keep your cars in your garage",
+              "Follow your visits and inspection reports",
+            ].map((item) => (
+              <li key={item} className="flex gap-2">
+                <Check size={18} className="shrink-0 text-[#276154]" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section className="px-6 py-8 sm:px-10 lg:py-12">
+          <div className="mb-6 lg:hidden">
+            <Link href="/" aria-label="Shaz home">
+              <Logo variant="light" />
+            </Link>
+          </div>
+          <div className="mx-auto max-w-md">{children}</div>
+        </section>
+      </div>
+    </main>
+  );
 }

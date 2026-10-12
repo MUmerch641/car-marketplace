@@ -47,7 +47,7 @@ export default async function PartsPage({
   }
 
   return (
-    <main className="bg-[#f7f8fa] min-h-screen">
+    <main className="bg-[#F7F4EF] min-h-screen">
       {/* Vehicle Context Banner */}
       {vehicle && (
         <div className="bg-[#082a30] text-white">
@@ -83,7 +83,7 @@ export default async function PartsPage({
         {!vehicle && (
            <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
              <div className="flex items-center gap-4">
-               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e94a3f]/10">
+               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-hover/10">
                  <AlertCircle size={24} className="text-[#e94a3f]" />
                </div>
                <div>

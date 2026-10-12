@@ -22,10 +22,10 @@ export default function AboutPage() {
                 <h2 className="text-3xl font-extrabold tracking-tight text-[#082A30] sm:text-4xl">
                   A marketplace built on transparency and trust.
                 </h2>
-                <p className="mt-5 text-lg leading-8 text-[#667085]">
+                <p className="mt-5 text-lg leading-8 text-[#526568]">
                   Buying, selling, and maintaining a car should not require navigating a maze of disconnected services. We are building a practical marketplace around clearer information and helpful, real-world support.
                 </p>
-                <p className="mt-4 text-lg leading-8 text-[#667085]">
+                <p className="mt-4 text-lg leading-8 text-[#526568]">
                   Our goal is simple: make it easier to make a good decision about your car, at every stage of ownership. Whether you're searching for your next vehicle or maintaining your current one, we're here to help.
                 </p>
               </div>
@@ -54,7 +54,7 @@ export default function AboutPage() {
               <h2 className="text-3xl font-extrabold tracking-tight text-[#082A30] sm:text-4xl mb-6">
                 Redefining the car buying experience.
               </h2>
-              <div className="space-y-4 text-lg text-[#667085]">
+              <div className="space-y-4 text-lg text-[#526568]">
                 <p>
                   At Shaz, we believe buying or selling a car shouldn&apos;t be a stressful ordeal filled with uncertainty. We&apos;ve built a platform that puts transparency and trust at the forefront.
                 </p>
@@ -68,8 +68,8 @@ export default function AboutPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FEE4E2]">
                   <ShieldCheck className="h-6 w-6 text-[#E94A3F]" />
                 </div>
-                <h3 className="mt-6 text-xl font-bold text-[#101828]">Radical Transparency</h3>
-                <p className="mt-3 text-[#667085]">We provide all the information you need to make informed decisions without hidden fees or surprises.</p>
+                <h3 className="mt-6 text-xl font-bold text-[#082A30]">Radical Transparency</h3>
+                <p className="mt-3 text-[#526568]">We provide all the information you need to make informed decisions without hidden fees or surprises.</p>
               </SpotlightCard>
             </AnimatedContent>
 
@@ -78,8 +78,8 @@ export default function AboutPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FEE4E2]">
                   <HeartHandshake className="h-6 w-6 text-[#E94A3F]" />
                 </div>
-                <h3 className="mt-6 text-xl font-bold text-[#101828]">Customer First</h3>
-                <p className="mt-3 text-[#667085]">Your peace of mind is our priority. From verification checks to mobile servicing, we design around your convenience.</p>
+                <h3 className="mt-6 text-xl font-bold text-[#082A30]">Customer First</h3>
+                <p className="mt-3 text-[#526568]">Your peace of mind is our priority. From verification checks to mobile servicing, we design around your convenience.</p>
               </SpotlightCard>
             </AnimatedContent>
 
@@ -88,8 +88,8 @@ export default function AboutPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FEE4E2]">
                   <Zap className="h-6 w-6 text-[#E94A3F]" />
                 </div>
-                <h3 className="mt-6 text-xl font-bold text-[#101828]">Effortless Speed</h3>
-                <p className="mt-3 text-[#667085]">We value your time. Our seamless platform allows you to buy, sell, or book services in just a few clicks.</p>
+                <h3 className="mt-6 text-xl font-bold text-[#082A30]">Effortless Speed</h3>
+                <p className="mt-3 text-[#526568]">We value your time. Our seamless platform allows you to buy, sell, or book services in just a few clicks.</p>
               </SpotlightCard>
             </AnimatedContent>
           </div>

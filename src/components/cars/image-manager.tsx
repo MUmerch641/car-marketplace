@@ -116,7 +116,7 @@ export function ImageManager({ carId, userId, images }: { carId: string; userId:
           <h2 id="listing-photos-heading" className="mt-1 text-2xl font-bold text-[#082a30]">Add photos</h2>
           <p className="mt-1 text-sm leading-6 text-slate-600">{images.length} / 12 uploaded. Your first photo is used as the main listing image.</p>
         </div>
-        <label className="inline-flex w-fit cursor-pointer items-center rounded-lg bg-[#e94a3f] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#c73830]">
+        <label className="inline-flex w-fit cursor-pointer items-center rounded-lg bg-brand-hover px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#c73830]">
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" disabled={pending} onChange={(event) => upload(event.target.files)} />
           <ImagePlus size={17} className="mr-2" /> {pending ? "Uploading…" : "Upload photos"}
         </label>

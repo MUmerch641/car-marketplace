@@ -6,7 +6,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
   const { profile } = await requireRole("admin");
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb] md:h-screen md:overflow-hidden">
+    <div className="min-h-screen bg-[#F7F4EF] md:h-screen md:overflow-hidden">
       <AdminSidebar />
       <section className="min-w-0 md:ml-64 md:h-screen md:overflow-y-auto">
         <div className="sticky top-0 z-20 flex h-[76px] items-center justify-between border-b border-slate-200 bg-white/95 px-5 backdrop-blur sm:px-8">

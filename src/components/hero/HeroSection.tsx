@@ -1,41 +1,80 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Droplets, ShieldCheck } from "lucide-react";
-
-const trustPoints = ["We come to your home or work", "Oil matched to your vehicle", "Clear service updates"];
-
+import { ArrowRight, Check, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ShazCompanion } from "@/components/shaz/companion";
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#082A30]">
-      <div className="shaz-road-lines pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "repeating-linear-gradient(135deg, #fff 0px, #fff 1px, transparent 1px, transparent 40px)" }} />
-      <div id="hero-sentinel" className="absolute bottom-0 left-0 h-px w-px" aria-hidden="true" />
-
-      <div className="relative mx-auto grid max-w-7xl items-center gap-0 px-5 lg:grid-cols-[1fr_1px_1.05fr] lg:px-8">
-        <div className="py-14 lg:py-20 lg:pr-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 backdrop-blur-sm"><Droplets size={14} className="text-[#FF8A73]" /><span className="text-xs font-bold uppercase tracking-[0.14em] text-[#D0D5DD]">Mobile oil &amp; filter change</span></div>
-
-          <h1 className="mt-5 max-w-2xl text-[2.6rem] font-black leading-[1.08] tracking-[-0.045em] text-white sm:text-5xl lg:text-[3.25rem]">Car care that comes to you.</h1>
-
-          <p className="mt-5 max-w-xl text-base leading-7 text-[#B8C4D1]">Book a mobile oil and filter change at home or work. You can also buy or sell cars and arrange an independent vehicle inspection with Shaz.</p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/services" className="shaz-button inline-flex items-center gap-2 rounded-xl bg-[#E94A3F] px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-red-950/20 transition hover:-translate-y-0.5 hover:bg-[#C73830]">Book an oil change <ArrowRight size={16} /></Link>
-            <Link href="/cars" className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3.5 text-sm font-bold text-white transition hover:border-white/40 hover:bg-white/10">Browse cars</Link>
+    <section className="overflow-hidden bg-sand">
+      <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 py-10 sm:py-14 lg:grid-cols-2 lg:gap-14 lg:px-8">
+        <div>
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[.12em] text-brand-hover">
+            <span className="h-2 w-2 rounded-full bg-brand" />
+            Mobile oil &amp; filter change
+          </p>
+          <h1 className="mt-4 max-w-xl text-[2.75rem] font-extrabold leading-[1.08] tracking-[-.045em] text-ink sm:text-6xl">
+            Car care on
+            <br />
+            your terms<span className="text-brand">.</span>
+          </h1>
+          <p className="mt-5 max-w-lg text-base leading-7 text-[#526568]">
+            Your car stays where it is. We bring the oil and filter change to
+            your home or work, with a clear quote before you pay.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Button href="#find-your-car">
+              Service my car
+              <ArrowRight size={17} />
+            </Button>
+            <Button href="/verification" variant="outline">
+              Inspect a car
+            </Button>
           </div>
-
-          <ul className="mt-8 grid gap-2.5 text-sm text-[#D0D5DD] sm:grid-cols-2">{trustPoints.map((point) => <li key={point} className="flex items-center gap-2"><CheckCircle2 size={16} className="shrink-0 text-[#7FDBCA]" />{point}</li>)}</ul>
-          <Link href="/verification" className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-[#B8C4D1] transition hover:text-white"><ShieldCheck size={15} /> Need confidence before buying? Request an inspection <ArrowRight size={15} /></Link>
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-[#526568]">
+            {["Matched to your car", "Full quote first", "We come to you"].map(
+              (item) => (
+                <li key={item} className="flex items-center gap-1.5">
+                  <Check size={14} className="text-[#276154]" />
+                  {item}
+                </li>
+              ),
+            )}
+          </ul>
         </div>
-
-        <div className="hidden h-full w-px bg-white/5 lg:block" />
-        <div className="relative hidden h-[520px] overflow-hidden lg:block">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#082A30] to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-[#082A30] to-transparent" />
-          <Image src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?auto=format&fit=crop&w=2000&q=90" alt="Shaz automotive professional working on a vehicle" fill priority sizes="50vw" className="object-cover object-center" />
+        <div className="relative rounded-[32px] border border-[#E4E7E3] bg-[#FBF8F4] px-5 pb-5 pt-6 sm:px-8">
+          <div className="absolute left-1/2 top-8 h-52 w-52 -translate-x-1/2 rounded-full bg-[#E3F1EB] sm:h-64 sm:w-64" />
+          <Image
+            src="/shaz/service-helper.png"
+            alt="Shaz mobile car care illustration"
+            width={700}
+            height={520}
+            priority
+            sizes="(max-width: 1024px) 90vw, 45vw"
+            className="relative mx-auto h-56 w-full object-contain sm:h-72"
+          />
+          <div className="relative flex items-center gap-4 rounded-2xl border border-[#E4E7E3] bg-white p-4">
+            <ShazCompanion size={62} />
+            <div>
+              <p className="text-sm font-bold text-ink">
+                Let’s take care of your car
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#526568]">
+                Start with your registration. Shaz takes it from there.
+              </p>
+              <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#276154]">
+                <MapPin size={12} />
+                At home or work
+              </span>
+            </div>
+          </div>
+          <Link
+            href="/services"
+            className="relative mt-3 block text-center text-xs font-semibold text-[#526568] underline underline-offset-4"
+          >
+            See what your service includes
+          </Link>
         </div>
       </div>
-
-      <div className="relative mx-5 aspect-[16/9] overflow-hidden rounded-t-2xl lg:hidden"><div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-[#082A30] to-transparent" /><Image src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?auto=format&fit=crop&w=1200&q=85" alt="Shaz automotive professional working on a vehicle" fill priority sizes="100vw" className="object-cover object-center" /></div>
     </section>
   );
 }

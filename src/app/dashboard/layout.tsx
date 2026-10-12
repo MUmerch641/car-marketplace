@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     <>
       <Navbar />
       <CustomerAccountNav />
-      {children}
+      <div className="pb-24 sm:pb-0">{children}</div>
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "@/components/ui/toast";
 import {
@@ -25,6 +25,8 @@ import {
   FileText,
   Truck,
 } from "lucide-react";
+import { parkingLocationLabel } from "@/lib/services/parking";
+import { ServiceEvidencePanel } from "./service-evidence-panel";
 import { advanceBookingAction } from "@/app/service-actions";
 import { startInspection } from "@/app/verification-actions";
 
@@ -52,6 +54,9 @@ export type NormalizedJob = {
   status: string; // "assigned" | "confirmed" | "on_the_way" | "in_progress" | "inspection_scheduled" | "inspection_in_progress" | "report_submitted" | "completed" | "cancelled"
   statusLabel: string;
   notes?: string | null;
+  parkingLocation?: string | null;
+  levelSurfaceAccess?: boolean | null;
+  parkingAccessNotes?: string | null;
   assignedAt: string;
   isToday: boolean;
   isUpcoming: boolean;
@@ -63,17 +68,40 @@ interface InspectorWorkspaceProps {
   workerName: string;
 }
 
-export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
-  const [activeTab, setActiveTab] = useState<"today" | "jobs" | "map" | "history">("today");
-  const [filterChip, setFilterChip] = useState<"all" | "service" | "inspection" | "upcoming" | "completed">("all");
+export function InspectorWorkspace({
+  jobs,
+  workerName,
+}: InspectorWorkspaceProps) {
+  const [activeTab, setActiveTab] = useState<
+    "today" | "jobs" | "map" | "history"
+  >("today");
+  const [filterChip, setFilterChip] = useState<
+    "all" | "service" | "inspection" | "upcoming" | "completed"
+  >("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedJob, setSelectedJob] = useState<NormalizedJob | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [evidenceBusy, setEvidenceBusy] = useState(false);
+  const panel = useRef<HTMLDivElement>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selectedJob?.id) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panel.current?.focus();
+    return () => {
+      document.body.style.overflow = overflow;
+      previous?.focus();
+    };
+  }, [selectedJob?.id]);
 
   // Date check helpers
   const todayJobs = jobs.filter((j) => j.isToday && !j.isCompleted);
-  const historyJobs = jobs.filter((j) => j.isCompleted || j.status === "cancelled");
+  const historyJobs = jobs.filter(
+    (j) => j.isCompleted || j.status === "cancelled",
+  );
 
   // Filtering logic for "Jobs" tab
   const filteredJobs = jobs.filter((j) => {
@@ -99,7 +127,11 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
   });
 
   // Action Handler for Service Status Progression
-  const handleAdvanceServiceStatus = (jobId: string, bookingId: string, nextStatus: "on_the_way" | "in_progress" | "completed") => {
+  const handleAdvanceServiceStatus = (
+    jobId: string,
+    bookingId: string,
+    nextStatus: "on_the_way" | "in_progress" | "completed",
+  ) => {
     setActionError(null);
     const loadingToast = toast.loading("Updating job status...");
     startTransition(async () => {
@@ -109,7 +141,9 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         setActionError(res.error);
         toast.error(res.error);
       } else {
-        toast.success(`Job status updated to ${formatStatusLabel(nextStatus)}!`);
+        toast.success(
+          `Job status updated to ${formatStatusLabel(nextStatus)}!`,
+        );
         if (selectedJob && selectedJob.id === jobId) {
           setSelectedJob({
             ...selectedJob,
@@ -142,6 +176,32 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold text-[#526568]">
+            Your Shaz workspace
+          </p>
+          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
+            Hello, {workerName.split(" ")[0]}
+          </h1>
+          <p className="mt-2 text-sm text-[#526568]">
+            Your visits, directions and reports for the day.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <span className="rounded-2xl bg-[#E3F1EB] px-4 py-3 text-sm font-bold text-[#276154]">
+            {todayJobs.length} today
+          </span>
+          <span className="rounded-2xl border border-[#E4E7E3] bg-white px-4 py-3 text-sm font-semibold text-[#526568]">
+            {
+              jobs.filter(
+                (job) => !job.isCompleted && job.status !== "cancelled",
+              ).length
+            }{" "}
+            active
+          </span>
+        </div>
+      </header>
       {/* Action Error Alert */}
       {actionError && (
         <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs font-semibold text-red-800 sm:text-sm">
@@ -149,14 +209,17 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             <AlertCircle size={16} className="text-red-600" />
             <span>{actionError}</span>
           </div>
-          <button onClick={() => setActionError(null)} className="text-red-600 hover:text-red-900">
+          <button
+            onClick={() => setActionError(null)}
+            className="text-red-600 hover:text-red-900"
+          >
             <X size={16} />
           </button>
         </div>
       )}
 
       {/* Main Navigation Tabs */}
-      <div className="sticky top-4 z-40 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2 shadow-sm sm:px-6">
+      <div className="sticky top-18 z-20 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-sand/95 px-4 py-2 backdrop-blur-lg shadow-sm sm:px-6">
         <nav className="flex items-center gap-4 sm:gap-6">
           <button
             onClick={() => setActiveTab("today")}
@@ -167,9 +230,11 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             }`}
           >
             <span>Today</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{todayJobs.length}</span>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+              {todayJobs.length}
+            </span>
           </button>
-          
+
           <button
             onClick={() => setActiveTab("jobs")}
             className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
@@ -179,20 +244,11 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             }`}
           >
             <span>Jobs</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{jobs.length}</span>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+              {jobs.length}
+            </span>
           </button>
-          
-          <button
-            onClick={() => setActiveTab("map")}
-            className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
-              activeTab === "map"
-                ? "text-[#082a30] border-b-2 border-[#082a30]"
-                : "text-slate-500 border-b-2 border-transparent hover:text-slate-900"
-            }`}
-          >
-            <span>Map</span>
-          </button>
-          
+
           <button
             onClick={() => setActiveTab("history")}
             className={`flex items-center gap-1.5 py-2 text-sm font-bold transition-colors ${
@@ -203,11 +259,25 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
           >
             <span>History</span>
           </button>
+          <Link
+            href="/inspector/profile"
+            className="min-h-11 content-center py-2 text-sm font-bold text-[#526568]"
+          >
+            Profile
+          </Link>
         </nav>
-
+        <button
+          type="button"
+          onClick={() => setActiveTab("map")}
+          aria-pressed={activeTab === "map"}
+          className="flex min-h-11 items-center gap-2 rounded-xl border border-[#E4E7E3] bg-white px-3 text-xs font-semibold text-ink"
+        >
+          <MapPin size={15} />
+          Job locations
+        </button>
         <div className="hidden items-center gap-2 text-xs font-semibold text-slate-500 md:flex">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
-          <span>Operational: Ready</span>
+          <span>Assigned workspace</span>
         </div>
       </div>
 
@@ -216,11 +286,19 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <div>
-              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">Today's Schedule</h2>
-              <p className="text-xs text-slate-500">Sorted chronologically by scheduled start time.</p>
+              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">
+                Today's Schedule
+              </h2>
+              <p className="text-xs text-slate-500">
+                Sorted chronologically by scheduled start time.
+              </p>
             </div>
             <span className="rounded-lg bg-slate-200/70 px-2.5 py-1 text-xs font-bold text-slate-700">
-              {new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
+              {new Date().toLocaleDateString("en-GB", {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+              })}
             </span>
           </div>
 
@@ -229,9 +307,13 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
                 <CheckCircle2 size={24} />
               </div>
-              <h3 className="mt-3 text-sm font-bold text-[#082a30]">No jobs assigned for today</h3>
+              <h3 className="mt-3 text-sm font-bold text-[#082a30]">
+                No jobs assigned for today
+              </h3>
               <p className="mt-1 max-w-sm text-xs text-slate-500">
-                You have no active mobile services or vehicle inspections scheduled for today. Check the Jobs tab to review upcoming assignments.
+                You have no active mobile services or vehicle inspections
+                scheduled for today. Check the Jobs tab to review upcoming
+                assignments.
               </p>
               <button
                 onClick={() => setActiveTab("jobs")}
@@ -265,7 +347,10 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
           <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="relative flex-1 min-w-[220px]">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search
+                  size={16}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                />
                 <input
                   type="text"
                   placeholder="Search registration, vehicle, location, customer..."
@@ -314,8 +399,13 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
           {/* Filtered Jobs List */}
           {filteredJobs.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-              <p className="text-sm font-bold text-[#082a30]">No jobs found matching your filters</p>
-              <p className="mt-1 text-xs text-slate-500">Try selecting a different filter chip or clearing your search term.</p>
+              <p className="text-sm font-bold text-[#082a30]">
+                No jobs found matching your filters
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                Try selecting a different filter chip or clearing your search
+                term.
+              </p>
               <button
                 onClick={() => {
                   setFilterChip("all");
@@ -348,21 +438,30 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <div>
-              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">Assigned Job Locations</h2>
-              <p className="text-xs text-slate-500">Route Overview for Navigation</p>
+              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">
+                Assigned Job Locations
+              </h2>
+              <p className="text-xs text-slate-500">
+                Route Overview for Navigation
+              </p>
             </div>
           </div>
 
-          {jobs.filter((j) => !j.isCompleted).length === 0 ? (
+          {jobs.filter((j) => !j.isCompleted && j.status !== "cancelled")
+            .length === 0 ? (
             <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
               <MapPin size={24} className="mx-auto text-slate-400" />
-              <p className="mt-2 text-sm font-bold text-[#082a30]">No active locations to display</p>
-              <p className="text-xs text-slate-500">All assigned jobs are completed or no jobs assigned.</p>
+              <p className="mt-2 text-sm font-bold text-[#082a30]">
+                No active locations to display
+              </p>
+              <p className="text-xs text-slate-500">
+                All assigned jobs are completed or no jobs assigned.
+              </p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {jobs
-                .filter((j) => !j.isCompleted)
+                .filter((j) => !j.isCompleted && j.status !== "cancelled")
                 .map((job, idx) => {
                   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(job.fullAddress)}`;
                   const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(job.fullAddress)}`;
@@ -392,13 +491,21 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                           >
                             {job.jobTypeLabel}
                           </span>
-                          <h3 className="mt-1 text-sm font-bold text-[#082a30]">{job.vehicleDisplay}</h3>
-                          <p className="font-mono text-xs font-extrabold text-[#e94a3f]">{job.carRegistration}</p>
+                          <h3 className="mt-1 text-sm font-bold text-[#082a30]">
+                            {job.vehicleDisplay}
+                          </h3>
+                          <p className="font-mono text-xs font-extrabold text-[#e94a3f]">
+                            {job.carRegistration}
+                          </p>
                         </div>
 
                         <div className="rounded-xl bg-slate-50 p-2.5 text-xs text-slate-600">
-                          <p className="font-semibold text-slate-900">{job.fullAddress}</p>
-                          <p className="mt-1 text-[11px] text-slate-500">Contact: {job.customerName}</p>
+                          <p className="font-semibold text-slate-900">
+                            {job.fullAddress}
+                          </p>
+                          <p className="mt-1 text-[11px] text-slate-500">
+                            Contact: {job.customerName}
+                          </p>
                         </div>
                       </div>
 
@@ -436,19 +543,27 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <div>
-              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">Completed & Past Jobs</h2>
-              <p className="text-xs text-slate-500">History of finished field operations.</p>
+              <h2 className="text-base font-bold text-[#082a30] sm:text-lg">
+                Completed & Past Jobs
+              </h2>
+              <p className="text-xs text-slate-500">
+                Your previous services and inspections.
+              </p>
             </div>
             <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800">
-              {historyJobs.length} Completed
+              {historyJobs.length} past visits
             </span>
           </div>
 
           {historyJobs.length === 0 ? (
             <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
               <CheckCircle2 size={24} className="mx-auto text-slate-400" />
-              <p className="mt-2 text-sm font-bold text-[#082a30]">No completed jobs in history</p>
-              <p className="text-xs text-slate-500">Completed services and inspection reports will appear here.</p>
+              <p className="mt-2 text-sm font-bold text-[#082a30]">
+                No completed jobs in history
+              </p>
+              <p className="text-xs text-slate-500">
+                Completed services and inspection reports will appear here.
+              </p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -470,21 +585,64 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
       {/* JOB DETAIL SLIDE-OVER MODAL */}
       {selectedJob && (
         <div className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/60 p-0 sm:p-4">
-          <div className="relative flex h-full w-full max-w-xl flex-col bg-white shadow-2xl sm:h-auto sm:max-h-[90vh] sm:rounded-2xl overflow-hidden border border-slate-200">
+          <div
+            ref={panel}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="job-detail-heading"
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && !isPending && !evidenceBusy)
+                setSelectedJob(null);
+              if (event.key === "Tab") {
+                const focusable = panel.current?.querySelectorAll<HTMLElement>(
+                  'a[href],button:not(:disabled),input:not(:disabled),textarea:not(:disabled),[tabindex="0"]',
+                );
+                const visible = Array.from(focusable ?? []).filter(
+                  (node) => node.getClientRects().length > 0,
+                );
+                const first = visible[0],
+                  last = visible.at(-1);
+                if (
+                  event.shiftKey &&
+                  (document.activeElement === first ||
+                    document.activeElement === panel.current)
+                ) {
+                  event.preventDefault();
+                  last?.focus();
+                } else if (
+                  !event.shiftKey &&
+                  (document.activeElement === last ||
+                    document.activeElement === panel.current)
+                ) {
+                  event.preventDefault();
+                  first?.focus();
+                }
+              }
+            }}
+            className="relative flex h-full w-full max-w-xl flex-col bg-white shadow-2xl sm:h-auto sm:max-h-[90vh] sm:rounded-2xl overflow-hidden border border-slate-200"
+          >
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
               <div className="flex items-center gap-2">
                 <span
                   className={`rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase ${
-                    selectedJob.jobType === "service" ? "bg-amber-100 text-amber-900" : "bg-blue-100 text-blue-900"
+                    selectedJob.jobType === "service"
+                      ? "bg-amber-100 text-amber-900"
+                      : "bg-blue-100 text-blue-900"
                   }`}
                 >
                   {selectedJob.jobTypeLabel}
                 </span>
                 <span className="text-xs font-bold text-slate-500">•</span>
-                <StatusBadge status={selectedJob.status} label={selectedJob.statusLabel} />
+                <StatusBadge
+                  status={selectedJob.status}
+                  label={selectedJob.statusLabel}
+                />
               </div>
               <button
+                disabled={isPending || evidenceBusy}
+                aria-label="Close job details"
                 onClick={() => setSelectedJob(null)}
                 className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               >
@@ -496,48 +654,92 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* Vehicle Title & Reg */}
               <div>
-                <h2 className="text-xl font-bold text-[#082a30]">{selectedJob.vehicleDisplay}</h2>
+                <h2
+                  id="job-detail-heading"
+                  className="text-xl font-bold text-[#082a30]"
+                >
+                  {selectedJob.vehicleDisplay}
+                </h2>
                 <div className="mt-1 flex items-center gap-2">
                   <span className="rounded-md bg-amber-400 px-2 py-0.5 font-mono text-xs font-extrabold text-black">
                     {selectedJob.carRegistration}
                   </span>
-                  <span className="text-xs font-semibold text-slate-500">{selectedJob.title}</span>
+                  <span className="text-xs font-semibold text-slate-500">
+                    {selectedJob.title}
+                  </span>
                 </div>
               </div>
 
               {/* Workflow Stepper */}
               <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Job Workflow Status</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Job Workflow Status
+                </p>
                 <div className="mt-3 grid grid-cols-4 gap-1 text-center text-[10px] font-bold">
                   {selectedJob.jobType === "service" ? (
                     <>
-                      <WorkflowStep label="Assigned" active={true} completed={selectedJob.status !== "assigned"} />
+                      <WorkflowStep
+                        label="Assigned"
+                        active={true}
+                        completed={selectedJob.status !== "assigned"}
+                      />
                       <WorkflowStep
                         label="On The Way"
-                        active={["on_the_way", "in_progress", "completed"].includes(selectedJob.status)}
-                        completed={["in_progress", "completed"].includes(selectedJob.status)}
+                        active={[
+                          "on_the_way",
+                          "in_progress",
+                          "completed",
+                        ].includes(selectedJob.status)}
+                        completed={["in_progress", "completed"].includes(
+                          selectedJob.status,
+                        )}
                       />
                       <WorkflowStep
                         label="In Progress"
-                        active={["in_progress", "completed"].includes(selectedJob.status)}
+                        active={["in_progress", "completed"].includes(
+                          selectedJob.status,
+                        )}
                         completed={selectedJob.status === "completed"}
                       />
-                      <WorkflowStep label="Completed" active={selectedJob.status === "completed"} completed={selectedJob.status === "completed"} />
+                      <WorkflowStep
+                        label="Completed"
+                        active={selectedJob.status === "completed"}
+                        completed={selectedJob.status === "completed"}
+                      />
                     </>
                   ) : (
                     <>
-                      <WorkflowStep label="Assigned" active={true} completed={selectedJob.status !== "assigned" && selectedJob.status !== "inspection_scheduled"} />
+                      <WorkflowStep
+                        label="Assigned"
+                        active={true}
+                        completed={
+                          selectedJob.status !== "assigned" &&
+                          selectedJob.status !== "inspection_scheduled"
+                        }
+                      />
                       <WorkflowStep
                         label="In Progress"
-                        active={["inspection_in_progress", "report_submitted", "completed"].includes(selectedJob.status)}
-                        completed={["report_submitted", "completed"].includes(selectedJob.status)}
+                        active={[
+                          "inspection_in_progress",
+                          "report_submitted",
+                          "completed",
+                        ].includes(selectedJob.status)}
+                        completed={["report_submitted", "completed"].includes(
+                          selectedJob.status,
+                        )}
                       />
                       <WorkflowStep
                         label="Report Submitted"
-                        active={["report_submitted", "completed"].includes(selectedJob.status)}
+                        active={["report_submitted", "completed"].includes(
+                          selectedJob.status,
+                        )}
                         completed={selectedJob.status === "completed"}
                       />
-                      <WorkflowStep label="Finalised" active={selectedJob.status === "completed"} completed={selectedJob.status === "completed"} />
+                      <WorkflowStep
+                        label="Finalised"
+                        active={selectedJob.status === "completed"}
+                        completed={selectedJob.status === "completed"}
+                      />
                     </>
                   )}
                 </div>
@@ -549,7 +751,9 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
                     <Clock size={12} /> Appointment Time
                   </span>
-                  <p className="font-bold text-[#082a30] text-sm">{selectedJob.scheduledTime}</p>
+                  <p className="font-bold text-[#082a30] text-sm">
+                    {selectedJob.scheduledTime}
+                  </p>
                   <p className="text-slate-500">{selectedJob.scheduledDate}</p>
                 </div>
 
@@ -557,9 +761,14 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                   <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
                     <User size={12} /> Customer Contact
                   </span>
-                  <p className="font-bold text-[#082a30] text-sm">{selectedJob.customerName}</p>
+                  <p className="font-bold text-[#082a30] text-sm">
+                    {selectedJob.customerName}
+                  </p>
                   {selectedJob.customerPhone && (
-                    <a href={`tel:${selectedJob.customerPhone}`} className="inline-flex items-center gap-1 text-[#e94a3f] hover:underline font-semibold">
+                    <a
+                      href={`tel:${selectedJob.customerPhone}`}
+                      className="inline-flex items-center gap-1 text-[#e94a3f] hover:underline font-semibold"
+                    >
                       <Phone size={12} /> {selectedJob.customerPhone}
                     </a>
                   )}
@@ -571,7 +780,9 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                 <span className="flex items-center gap-1 font-bold text-slate-400 uppercase text-[10px]">
                   <MapPin size={12} /> Location & Postcode
                 </span>
-                <p className="font-bold text-[#082a30] text-sm">{selectedJob.fullAddress}</p>
+                <p className="font-bold text-[#082a30] text-sm">
+                  {selectedJob.fullAddress}
+                </p>
                 <div className="pt-2 flex gap-2">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedJob.fullAddress)}`}
@@ -585,94 +796,149 @@ export function InspectorWorkspace({ jobs }: InspectorWorkspaceProps) {
                 </div>
               </div>
 
+              {selectedJob.jobType === "service" &&
+                selectedJob.serviceBookingId &&
+                ["in_progress", "completed"].includes(selectedJob.status) && (
+                  <ServiceEvidencePanel
+                    key={selectedJob.serviceBookingId}
+                    bookingId={selectedJob.serviceBookingId}
+                    status={selectedJob.status}
+                    completing={isPending}
+                    onBusy={setEvidenceBusy}
+                    onComplete={() =>
+                      handleAdvanceServiceStatus(
+                        selectedJob.id,
+                        selectedJob.serviceBookingId!,
+                        "completed",
+                      )
+                    }
+                  />
+                )}
+              {selectedJob.jobType === "service" && (
+                <section className="rounded-2xl border border-[#E4E7E3] bg-[#E3F1EB] p-4">
+                  <h3 className="text-sm font-bold text-ink">
+                    Parking & access
+                  </h3>
+                  <p className="mt-2 text-sm text-[#526568]">
+                    {parkingLocationLabel(selectedJob.parkingLocation)}
+                  </p>
+                  <p className="mt-1 text-sm text-[#526568]">
+                    Level surface with room around the car:{" "}
+                    {selectedJob.levelSurfaceAccess == null
+                      ? "Not provided"
+                      : selectedJob.levelSurfaceAccess
+                        ? "Yes"
+                        : "No"}
+                  </p>
+                  {selectedJob.parkingAccessNotes && (
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-[#526568]">
+                      {selectedJob.parkingAccessNotes}
+                    </p>
+                  )}
+                </section>
+              )}
               {/* Notes */}
               {selectedJob.notes && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3.5 text-xs">
                   <span className="font-bold text-amber-900">Job Notes:</span>
-                  <p className="mt-1 text-amber-950 leading-relaxed">{selectedJob.notes}</p>
+                  <p className="mt-1 whitespace-pre-wrap text-amber-950 leading-relaxed">
+                    {selectedJob.notes}
+                  </p>
                 </div>
               )}
             </div>
 
             {/* Modal Actions Footer */}
             <div className="border-t border-slate-100 bg-slate-50 p-4 sm:rounded-b-3xl">
-              {selectedJob.jobType === "service" && selectedJob.serviceBookingId && (
-                <div className="flex flex-wrap items-center justify-end gap-2">
-                  {(selectedJob.status === "assigned" || selectedJob.status === "confirmed") && (
-                    <button
-                      disabled={isPending}
-                      onClick={() => handleAdvanceServiceStatus(selectedJob.id, selectedJob.serviceBookingId!, "on_the_way")}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-amber-700 disabled:opacity-50"
-                    >
-                      <Truck size={14} />
-                      <span>Start Journey (On the way)</span>
-                    </button>
-                  )}
+              {selectedJob.jobType === "service" &&
+                selectedJob.serviceBookingId && (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {(selectedJob.status === "assigned" ||
+                      selectedJob.status === "confirmed") && (
+                      <button
+                        disabled={isPending}
+                        onClick={() =>
+                          handleAdvanceServiceStatus(
+                            selectedJob.id,
+                            selectedJob.serviceBookingId!,
+                            "on_the_way",
+                          )
+                        }
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-ink px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#163D42] disabled:opacity-50"
+                      >
+                        <Truck size={14} />
+                        <span>Start Journey (On the way)</span>
+                      </button>
+                    )}
 
-                  {selectedJob.status === "on_the_way" && (
-                    <button
-                      disabled={isPending}
-                      onClick={() => handleAdvanceServiceStatus(selectedJob.id, selectedJob.serviceBookingId!, "in_progress")}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
-                    >
-                      <Play size={14} />
-                      <span>Arrived / Start Job</span>
-                    </button>
-                  )}
+                    {selectedJob.status === "on_the_way" && (
+                      <button
+                        disabled={isPending}
+                        onClick={() =>
+                          handleAdvanceServiceStatus(
+                            selectedJob.id,
+                            selectedJob.serviceBookingId!,
+                            "in_progress",
+                          )
+                        }
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-hover px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#AC302A] disabled:opacity-50"
+                      >
+                        <Play size={14} />
+                        <span>Arrived / Start Job</span>
+                      </button>
+                    )}
 
-                  {selectedJob.status === "in_progress" && (
-                    <button
-                      disabled={isPending}
-                      onClick={() => handleAdvanceServiceStatus(selectedJob.id, selectedJob.serviceBookingId!, "completed")}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 disabled:opacity-50"
-                    >
-                      <CheckCircle2 size={14} />
-                      <span>Mark Job Completed</span>
-                    </button>
-                  )}
+                    {selectedJob.status === "completed" && (
+                      <span className="inline-flex items-center gap-1 rounded-xl bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-800">
+                        <CheckCircle2 size={14} /> Job Completed
+                      </span>
+                    )}
+                  </div>
+                )}
 
-                  {selectedJob.status === "completed" && (
-                    <span className="inline-flex items-center gap-1 rounded-xl bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-800">
-                      <CheckCircle2 size={14} /> Job Completed
-                    </span>
-                  )}
-                </div>
-              )}
+              {selectedJob.jobType === "inspection" &&
+                selectedJob.verificationRequestId && (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {(selectedJob.status === "assigned" ||
+                      selectedJob.status === "inspection_scheduled" ||
+                      selectedJob.status === "confirmed") && (
+                      <button
+                        disabled={isPending}
+                        onClick={() =>
+                          handleStartInspection(
+                            selectedJob.id,
+                            selectedJob.verificationRequestId!,
+                          )
+                        }
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-hover px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-red-700 disabled:opacity-50"
+                      >
+                        <Play size={14} />
+                        <span>Start Inspection</span>
+                      </button>
+                    )}
 
-              {selectedJob.jobType === "inspection" && selectedJob.verificationRequestId && (
-                <div className="flex flex-wrap items-center justify-end gap-2">
-                  {(selectedJob.status === "assigned" || selectedJob.status === "inspection_scheduled" || selectedJob.status === "confirmed") && (
-                    <button
-                      disabled={isPending}
-                      onClick={() => handleStartInspection(selectedJob.id, selectedJob.verificationRequestId!)}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#e94a3f] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-red-700 disabled:opacity-50"
-                    >
-                      <Play size={14} />
-                      <span>Start Inspection</span>
-                    </button>
-                  )}
+                    {selectedJob.status === "inspection_in_progress" && (
+                      <Link
+                        href={`/inspector/verifications/${selectedJob.verificationRequestId}`}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#082a30] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-slate-800"
+                      >
+                        <FileText size={14} />
+                        <span>Continue Inspection / Fill Report</span>
+                      </Link>
+                    )}
 
-                  {selectedJob.status === "inspection_in_progress" && (
-                    <Link
-                      href={`/inspector/verifications/${selectedJob.verificationRequestId}`}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#082a30] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-slate-800"
-                    >
-                      <FileText size={14} />
-                      <span>Continue Inspection / Fill Report</span>
-                    </Link>
-                  )}
-
-                  {(selectedJob.status === "report_submitted" || selectedJob.status === "completed") && (
-                    <Link
-                      href={`/inspector/verifications/${selectedJob.verificationRequestId}`}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50"
-                    >
-                      <FileText size={14} />
-                      <span>View Inspection Report</span>
-                    </Link>
-                  )}
-                </div>
-              )}
+                    {(selectedJob.status === "report_submitted" ||
+                      selectedJob.status === "completed") && (
+                      <Link
+                        href={`/inspector/verifications/${selectedJob.verificationRequestId}`}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50"
+                      >
+                        <FileText size={14} />
+                        <span>View Inspection Report</span>
+                      </Link>
+                    )}
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -691,20 +957,28 @@ function JobCard({
 }: {
   job: NormalizedJob;
   onSelectJob: (job: NormalizedJob) => void;
-  onAdvanceService: (jobId: string, bookingId: string, nextStatus: "on_the_way" | "in_progress" | "completed") => void;
+  onAdvanceService: (
+    jobId: string,
+    bookingId: string,
+    nextStatus: "on_the_way" | "in_progress" | "completed",
+  ) => void;
   onStartInspection: (jobId: string, requestId: string) => void;
   isPending: boolean;
 }) {
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(job.fullAddress)}`;
 
   return (
-    <div className="flex flex-col justify-between gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-slate-300 sm:flex-row sm:items-center">
+    <div className="flex flex-col justify-between gap-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-slate-300 sm:flex-row sm:items-center">
       {/* Left Column: Time & Main Details */}
       <div className="flex items-start gap-4 sm:items-center">
         {/* Time Box */}
         <div className="flex min-w-[60px] flex-col items-center justify-center rounded bg-slate-50 border border-slate-100 px-3 py-2 text-[#082a30]">
-          <span className="text-sm font-bold tracking-tight">{job.scheduledTime}</span>
-          <span className="text-[10px] font-semibold text-slate-500 uppercase">{job.isToday ? "Today" : job.scheduledDate.slice(0, 6)}</span>
+          <span className="text-sm font-bold tracking-tight">
+            {job.scheduledTime}
+          </span>
+          <span className="text-[10px] font-semibold text-slate-500 uppercase">
+            {job.isToday ? "Today" : job.scheduledDate.slice(0, 6)}
+          </span>
         </div>
 
         {/* Content */}
@@ -712,7 +986,9 @@ function JobCard({
           <div className="flex flex-wrap items-center gap-2">
             <span
               className={`rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase ${
-                job.jobType === "service" ? "bg-amber-100 text-amber-950" : "bg-blue-100 text-blue-950"
+                job.jobType === "service"
+                  ? "bg-amber-100 text-amber-950"
+                  : "bg-blue-100 text-blue-950"
               }`}
             >
               {job.jobTypeLabel}
@@ -721,7 +997,9 @@ function JobCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-bold text-[#082a30]">{job.vehicleDisplay}</h3>
+            <h3 className="text-sm font-bold text-[#082a30]">
+              {job.vehicleDisplay}
+            </h3>
             {job.carRegistration && (
               <span className="rounded-md bg-amber-300/80 px-1.5 py-0.5 font-mono text-[11px] font-extrabold text-black">
                 {job.carRegistration}
@@ -752,8 +1030,10 @@ function JobCard({
             {(job.status === "assigned" || job.status === "confirmed") && (
               <button
                 disabled={isPending}
-                onClick={() => onAdvanceService(job.id, job.serviceBookingId!, "on_the_way")}
-                className="inline-flex items-center gap-1 rounded-xl bg-amber-600 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-amber-700 disabled:opacity-50"
+                onClick={() =>
+                  onAdvanceService(job.id, job.serviceBookingId!, "on_the_way")
+                }
+                className="inline-flex items-center gap-1 rounded-xl bg-ink px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-[#163D42] disabled:opacity-50"
               >
                 <Truck size={13} />
                 <span>Start journey</span>
@@ -763,8 +1043,10 @@ function JobCard({
             {job.status === "on_the_way" && (
               <button
                 disabled={isPending}
-                onClick={() => onAdvanceService(job.id, job.serviceBookingId!, "in_progress")}
-                className="inline-flex items-center gap-1 rounded-xl bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+                onClick={() =>
+                  onAdvanceService(job.id, job.serviceBookingId!, "in_progress")
+                }
+                className="inline-flex items-center gap-1 rounded-xl bg-brand-hover px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-[#AC302A] disabled:opacity-50"
               >
                 <Play size={13} />
                 <span>Start job</span>
@@ -774,11 +1056,11 @@ function JobCard({
             {job.status === "in_progress" && (
               <button
                 disabled={isPending}
-                onClick={() => onAdvanceService(job.id, job.serviceBookingId!, "completed")}
+                onClick={() => onSelectJob(job)}
                 className="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
               >
                 <CheckCircle2 size={13} />
-                <span>Complete</span>
+                <span>Evidence & complete</span>
               </button>
             )}
           </>
@@ -786,11 +1068,15 @@ function JobCard({
 
         {job.jobType === "inspection" && job.verificationRequestId && (
           <>
-            {(job.status === "assigned" || job.status === "inspection_scheduled" || job.status === "confirmed") && (
+            {(job.status === "assigned" ||
+              job.status === "inspection_scheduled" ||
+              job.status === "confirmed") && (
               <button
                 disabled={isPending}
-                onClick={() => onStartInspection(job.id, job.verificationRequestId!)}
-                className="inline-flex items-center gap-1 rounded-xl bg-[#e94a3f] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                onClick={() =>
+                  onStartInspection(job.id, job.verificationRequestId!)
+                }
+                className="inline-flex items-center gap-1 rounded-xl bg-brand-hover px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
               >
                 <Play size={13} />
                 <span>Start inspection</span>
@@ -823,7 +1109,15 @@ function JobCard({
 }
 
 // Workflow Progress Indicator Component
-function WorkflowStep({ label, active, completed }: { label: string; active: boolean; completed: boolean }) {
+function WorkflowStep({
+  label,
+  active,
+  completed,
+}: {
+  label: string;
+  active: boolean;
+  completed: boolean;
+}) {
   return (
     <div className="flex flex-col items-center">
       <div
@@ -831,13 +1125,17 @@ function WorkflowStep({ label, active, completed }: { label: string; active: boo
           completed
             ? "bg-emerald-600 text-white"
             : active
-            ? "bg-[#082a30] text-white"
-            : "bg-slate-200 text-slate-400"
+              ? "bg-[#082a30] text-white"
+              : "bg-slate-200 text-slate-400"
         }`}
       >
         {completed ? "✓" : ""}
       </div>
-      <span className={`mt-1 ${active ? "text-slate-900 font-bold" : "text-slate-400"}`}>{label}</span>
+      <span
+        className={`mt-1 ${active ? "text-slate-900 font-bold" : "text-slate-400"}`}
+      >
+        {label}
+      </span>
     </div>
   );
 }
@@ -870,7 +1168,9 @@ function StatusBadge({ status, label }: { status: string; label: string }) {
   }
 
   return (
-    <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-bold ${colorStyle}`}>
+    <span
+      className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-bold ${colorStyle}`}
+    >
       {label}
     </span>
   );

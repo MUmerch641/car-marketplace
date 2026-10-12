@@ -25,13 +25,13 @@ export function HeroSearchPanel() {
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
       {/* Tab bar */}
-      <div className="flex border-b border-[#E4E7EC] bg-[#F8F9FA]">
-        <button className="relative px-6 py-3.5 text-sm font-bold text-[#082A30] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#E94A3F]">
+      <div className="flex border-b border-[#E4E7E3] bg-[#F8F9FA]">
+        <button className="relative px-6 py-3.5 text-sm font-bold text-[#082A30] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-brand-hover">
           Buy a Car
         </button>
         <Link
           href="/sell-car"
-          className="px-6 py-3.5 text-sm font-semibold text-[#667085] transition-colors hover:text-[#082A30]"
+          className="px-6 py-3.5 text-sm font-semibold text-[#526568] transition-colors hover:text-[#082A30]"
         >
           Sell My Car
         </Link>
@@ -43,7 +43,7 @@ export function HeroSearchPanel() {
         className="grid grid-cols-1 gap-0 sm:grid-cols-2 lg:grid-cols-[1.8fr_1fr_0.9fr_0.9fr_auto]"
       >
         {/* Make or model */}
-        <div className="group relative border-b border-r-0 border-[#E4E7EC] sm:border-b-0 sm:border-r lg:border-b-0 lg:border-r">
+        <div className="group relative border-b border-r-0 border-[#E4E7E3] sm:border-b-0 sm:border-r lg:border-b-0 lg:border-r">
           <label
             htmlFor="hero-make"
             className="absolute left-4 top-3 text-[10px] font-bold uppercase tracking-widest text-[#98A2B3]"
@@ -55,7 +55,7 @@ export function HeroSearchPanel() {
               id="hero-make"
               name="make"
               defaultValue=""
-              className="h-[68px] w-full appearance-none bg-transparent pb-2 pl-4 pr-8 pt-7 text-sm font-semibold text-[#101828] outline-none focus:bg-[#FAFAFA]"
+              className="h-[68px] w-full appearance-none bg-transparent pb-2 pl-4 pr-8 pt-7 text-sm font-semibold text-[#082A30] outline-none focus:bg-[#FAFAFA]"
             >
               <option value="">Any Make or Model</option>
               {makes.slice(1).map((m) => (
@@ -72,7 +72,7 @@ export function HeroSearchPanel() {
         </div>
 
         {/* Postcode */}
-        <div className="group relative border-b border-r-0 border-[#E4E7EC] sm:border-r lg:border-b-0 lg:border-r">
+        <div className="group relative border-b border-r-0 border-[#E4E7E3] sm:border-r lg:border-b-0 lg:border-r">
           <label
             htmlFor="hero-postcode"
             className="absolute left-4 top-3 text-[10px] font-bold uppercase tracking-widest text-[#98A2B3]"
@@ -88,13 +88,13 @@ export function HeroSearchPanel() {
               id="hero-postcode"
               name="postcode"
               placeholder="e.g. SW1A 1AA"
-              className="h-[68px] w-full bg-transparent pb-2 pl-10 pr-4 pt-7 text-sm font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98A2B3] focus:bg-[#FAFAFA]"
+              className="h-[68px] w-full bg-transparent pb-2 pl-10 pr-4 pt-7 text-sm font-semibold text-[#082A30] outline-none placeholder:font-normal placeholder:text-[#98A2B3] focus:bg-[#FAFAFA]"
             />
           </div>
         </div>
 
         {/* Min price */}
-        <div className="group relative border-b border-r-0 border-[#E4E7EC] sm:border-b-0 sm:border-r lg:border-r">
+        <div className="group relative border-b border-r-0 border-[#E4E7E3] sm:border-b-0 sm:border-r lg:border-r">
           <label
             htmlFor="hero-min"
             className="absolute left-4 top-3 text-[10px] font-bold uppercase tracking-widest text-[#98A2B3]"
@@ -110,13 +110,13 @@ export function HeroSearchPanel() {
               name="minPrice"
               inputMode="numeric"
               placeholder="No min"
-              className="h-[68px] w-full bg-transparent pb-2 pl-8 pr-4 pt-7 text-sm font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98A2B3] focus:bg-[#FAFAFA]"
+              className="h-[68px] w-full bg-transparent pb-2 pl-8 pr-4 pt-7 text-sm font-semibold text-[#082A30] outline-none placeholder:font-normal placeholder:text-[#98A2B3] focus:bg-[#FAFAFA]"
             />
           </div>
         </div>
 
         {/* Max price */}
-        <div className="group relative border-b border-[#E4E7EC] lg:border-b-0 lg:border-r">
+        <div className="group relative border-b border-[#E4E7E3] lg:border-b-0 lg:border-r">
           <label
             htmlFor="hero-max"
             className="absolute left-4 top-3 text-[10px] font-bold uppercase tracking-widest text-[#98A2B3]"
@@ -132,7 +132,7 @@ export function HeroSearchPanel() {
               name="maxPrice"
               inputMode="numeric"
               placeholder="No max"
-              className="h-[68px] w-full bg-transparent pb-2 pl-8 pr-4 pt-7 text-sm font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98A2B3] focus:bg-[#FAFAFA]"
+              className="h-[68px] w-full bg-transparent pb-2 pl-8 pr-4 pt-7 text-sm font-semibold text-[#082A30] outline-none placeholder:font-normal placeholder:text-[#98A2B3] focus:bg-[#FAFAFA]"
             />
           </div>
         </div>
@@ -141,7 +141,7 @@ export function HeroSearchPanel() {
         <div className="flex items-center p-3">
           <button
             type="submit"
-            className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-[#E94A3F] px-8 text-sm font-bold text-white transition-all hover:bg-[#C73830] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E94A3F]"
+            className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-brand-hover px-8 text-sm font-bold text-white transition-all hover:bg-[#C73830] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E94A3F]"
           >
             <Search size={16} />
             Search Cars

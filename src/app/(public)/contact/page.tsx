@@ -1,70 +1,75 @@
+import { Mail, ArrowRight, Phone, MapPin } from "lucide-react";
 import { PageHero } from "@/components/shared/page-hero";
-import AnimatedContent from "@/components/AnimatedContent";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
-
+import { ShazGuide } from "@/components/shaz/guide";
+import { Button } from "@/components/ui/button";
+import { contact } from "@/lib/brand";
 export default function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Contact"
-        title="How can we help?"
-        copy="Questions about a listing, car verification, or at-home services? We would be glad to hear from you."
+        eyebrow="Help & support"
+        title="We’re here to help"
+        copy="Questions about your car, a visit or an inspection? Keep your booking reference handy so we can find the right details."
       />
-      <section className="bg-white py-16 lg:py-24">
-        <div className="mx-auto max-w-2xl px-5 lg:px-8">
-          <AnimatedContent direction="vertical" distance={40} duration={0.8}>
-            <div className="text-center">
-              <h2 className="text-3xl font-extrabold tracking-tight text-[#082A30]">Get in touch</h2>
-              <p className="mt-4 text-lg text-[#667085]">
-                Our team is ready to assist you. Reach out through any of the channels below and we&apos;ll get back to you within 24 hours.
-              </p>
-            </div>
-
-            <div className="mt-12 flex flex-col gap-8 rounded-3xl border border-[#E4E7EC] bg-white p-8 shadow-xl shadow-black/5 sm:p-10">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#FEE4E2]">
-                  <Mail className="h-6 w-6 text-[#E94A3F]" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-[#101828]">Email us</h3>
-                  <p className="mt-1 text-[#667085]">For general inquiries and support.</p>
-                  <a href="mailto:support@shaz.co.uk" className="mt-2 block font-semibold text-[#E94A3F] hover:underline">
-                    support@shaz.co.uk
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#FEE4E2]">
-                  <Phone className="h-6 w-6 text-[#E94A3F]" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-[#101828]">Call us</h3>
-                  <p className="mt-1 text-[#667085]">Mon-Fri from 9am to 6pm.</p>
-                  <a href="tel:+448001234567" className="mt-2 block font-semibold text-[#E94A3F] hover:underline">
-                    +44 800 123 4567
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#FEE4E2]">
-                  <MapPin className="h-6 w-6 text-[#E94A3F]" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-[#101828]">Office</h3>
-                  <p className="mt-1 text-[#667085]">Come say hello at our HQ.</p>
-                  <p className="mt-2 font-semibold text-[#344054]">
-                    123 Market Square<br />
-                    London, W1D 4AQ<br />
-                    United Kingdom
-                  </p>
-                </div>
-              </div>
-            </div>
-          </AnimatedContent>
+      <main className="mx-auto max-w-3xl space-y-5 px-5 py-8 sm:py-10">
+        <ShazGuide title="Is this about a visit?">
+          Your booking shows payment progress, change options and any available
+          refund information.
+        </ShazGuide>
+        <div className="flex flex-wrap gap-3">
+          <Button href="/dashboard/bookings">
+            Open my visits
+            <ArrowRight size={16} />
+          </Button>
+          <Button href="/help" variant="outline">
+            Read common questions
+          </Button>
         </div>
-      </section>
+        <section className="rounded-3xl border border-[#E4E7E3] bg-white p-6 sm:p-8">
+          <div className="flex items-start gap-4">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#FFF5F4] text-brand-hover">
+              <Mail size={23} />
+            </span>
+            <div>
+              <h2 className="text-lg font-bold text-ink">Email Shaz</h2>
+              <p className="mt-2 text-sm leading-6 text-[#526568]">
+                Include your booking reference and vehicle registration when
+                asking about a visit.
+              </p>
+              <a
+                href={`mailto:${contact.email}`}
+                className="mt-3 inline-flex min-h-11 break-all text-sm font-bold text-brand-hover underline underline-offset-4"
+              >
+                {contact.email}
+              </a>
+            </div>
+          </div>
+        </section>
+        <section className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-3xl border border-[#E4E7E3] bg-white p-6">
+            <Phone size={22} className="text-brand-hover" />
+            <h2 className="mt-4 text-base font-bold text-ink">Call Shaz</h2>
+            <a
+              href={`tel:${contact.phoneHref}`}
+              className="mt-2 inline-flex min-h-11 text-sm font-semibold text-brand-hover"
+            >
+              {contact.phone}
+            </a>
+          </div>
+          <div className="rounded-3xl border border-[#E4E7E3] bg-white p-6">
+            <MapPin size={22} className="text-brand-hover" />
+            <h2 className="mt-4 text-base font-bold text-ink">Our office</h2>
+            <p className="mt-3 text-sm leading-6 text-[#526568]">
+              {contact.address}
+            </p>
+          </div>
+        </section>
+        {contact.isPlaceholder && (
+          <p className="text-xs leading-5 text-[#526568]">
+            Contact details are placeholders for this preview.
+          </p>
+        )}
+      </main>
     </>
   );
 }

@@ -29,7 +29,7 @@ export function AdminSidebar() {
       <nav className="flex gap-1 overflow-x-auto p-3 md:flex-1 md:flex-col md:gap-1 md:space-y-0 md:overflow-x-hidden md:overflow-y-auto md:p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {navigation.map(({ label, href, icon: Icon, exact }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);
-          return <Link key={href} href={href} className={`group flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition ${active ? "bg-[#e94a3f] text-white shadow-lg shadow-red-950/30" : "hover:bg-white/8 hover:text-white"}`}>
+          return <Link key={href} href={href} className={`group flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition ${active ? "bg-brand-hover text-white shadow-lg shadow-red-950/30" : "hover:bg-white/8 hover:text-white"}`}>
             <Icon size={18} strokeWidth={active ? 2.3 : 1.8} />{label}
           </Link>;
         })}

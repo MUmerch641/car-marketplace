@@ -137,7 +137,7 @@ export default async function AdminCarDetailPage({ params }: { params: Promise<{
                     </button>
                   </form>
                   <form action={async (form: FormData) => { "use server"; await moderateCarAction(car.id, false, String(form.get("reason") ?? "")); }} className="space-y-2">
-                    <input name="reason" required placeholder="Rejection reason..." className="w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 py-3 text-sm font-semibold outline-none focus:border-[#E94A3F] focus:ring-4 focus:ring-red-50" />
+                    <input name="reason" required placeholder="Rejection reason..." className="w-full rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] px-4 py-3 text-sm font-semibold outline-none focus:border-[#E94A3F] focus:ring-4 focus:ring-red-50" />
                     <button className="w-full rounded-xl border border-[#E94A3F] px-4 py-3 text-sm font-bold text-[#E94A3F] transition-all hover:bg-red-50">
                       Reject Listing
                     </button>

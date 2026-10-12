@@ -16,7 +16,7 @@ function PolicySection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-t border-[#E4E7EC] pt-8">
+    <section className="border-t border-[#E4E7E3] pt-8">
       <h2 className="text-xl font-bold tracking-tight text-[#082A30] sm:text-2xl">
         {title}
       </h2>
@@ -40,7 +40,7 @@ function PolicyList({ items }: { items: string[] }) {
 export default function PrivacyPolicyPage() {
   return (
     <main className="bg-[#F7F4EF] px-5 py-12 sm:py-16">
-      <article className="mx-auto max-w-4xl rounded-3xl border border-[#E4E7EC] bg-white px-6 py-9 shadow-sm sm:px-10 sm:py-12">
+      <article className="mx-auto max-w-4xl rounded-3xl border border-[#E4E7E3] bg-white px-6 py-9 shadow-sm sm:px-10 sm:py-12">
         <header className="pb-8">
           <p className="text-sm font-bold uppercase tracking-[0.12em] text-[#C73830]">
             Shaz app and website
@@ -48,7 +48,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-[#082A30] sm:text-5xl">
             Privacy Policy
           </h1>
-          <p className="mt-4 text-sm text-[#667085]">Last updated: {updated}</p>
+          <p className="mt-4 text-sm text-[#526568]">Last updated: {updated}</p>
           <p className="mt-5 text-lg leading-8 text-[#475467]">
             This policy explains how Shaz handles personal information when you
             use the Shaz mobile app or website, contact us, book a service,

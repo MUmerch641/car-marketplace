@@ -95,7 +95,7 @@ export function EmailPreviewClient({
             <button
               type="submit"
               disabled={sending || !testEmail}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#e94a3f] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-brand-hover px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-50"
             >
               <Send size={14} />
               <span>{sending ? "Sending..." : "Send Test"}</span>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { HeroSection } from "@/components/hero/HeroSection";
 import AnimatedContent from "@/components/AnimatedContent";
+import { ShazGuide } from "@/components/shaz/guide";
 import { getHomepageCars } from "@/lib/marketplace/cars";
 import { getActiveServices } from "@/lib/services/services";
 
@@ -23,20 +24,22 @@ export default async function HomePage() {
     <>
       <HeroSection />
 
-      <section className="bg-white py-14">
+      <section id="find-your-car" className="scroll-mt-24 bg-sand py-10 sm:py-14">
         <AnimatedContent className="mx-auto max-w-7xl px-5 lg:px-8" distance={34} duration={0.82}>
-          <SectionHeading eyebrow="Shaz mobile car care" title="Oil and filter changes without the garage trip" copy="Start with your registration. We identify the car and verify the right oil before your appointment." link={{ href: "/services", label: "About the service" }} />
-          <div className="mt-8 grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:grid-cols-[1.2fr_.8fr]">
+          <SectionHeading eyebrow="Shaz mobile car care" title="First, let’s find your car" copy="Enter your registration to start your oil and filter change request." link={{ href: "/services", label: "About the service" }} />
+          <div className="mt-8 grid overflow-hidden rounded-3xl border border-[#E4E7E3] bg-white shadow-sm lg:grid-cols-[1.2fr_.8fr]">
             <div className="p-5 sm:p-7"><OilFinder compact /></div>
-            <aside className="bg-[#082A30] p-6 text-white sm:p-7"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#FF8A73]">Oil &amp; filter change</p><p className="mt-4 text-3xl font-black">{oilService ? `From £${oilService.basePrice.toLocaleString("en-GB")}` : "Coming soon"}</p><p className="mt-3 text-sm leading-6 text-[#C6D1DC]">The final total depends on your car&apos;s approved oil specification and the quantity required.</p><ul className="mt-6 space-y-3 text-sm text-[#D0D5DD]">{["Oil specification checked", "New filter included", "Mobile visit", "Used oil handled responsibly"].map((item) => <li key={item} className="flex gap-2"><CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#FF8A73]" />{item}</li>)}</ul></aside>
+            <aside className="bg-[#082A30] p-6 text-white sm:p-7"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#FF8A73]">Oil &amp; filter change</p><p className="mt-4 text-3xl font-black">{oilService ? `From £${oilService.basePrice.toLocaleString("en-GB")}` : "Coming soon"}</p><p className="mt-3 text-sm leading-6 text-[#C6D1DC]">The final total depends on your car&apos;s approved oil specification and the quantity required.</p><ul className="mt-6 space-y-3 text-sm text-[#B8C5BE]">{["Oil specification checked", "New filter included", "Mobile visit", "Used oil handled responsibly"].map((item) => <li key={item} className="flex gap-2"><CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#FF8A73]" />{item}</li>)}</ul></aside>
           </div>
         </AnimatedContent>
       </section>
 
+      <section className="bg-sand pb-12"><div className="mx-auto max-w-7xl px-5 lg:px-8"><div className="mb-6 grid gap-4 md:grid-cols-3">{[{title:"1 · Your car",copy:"We identify your vehicle and check what it needs."},{title:"2 · Your visit",copy:"Choose a preferred time and tell us where to find your car."},{title:"3 · Your quote",copy:"Shaz confirms the full price. Pay in advance before the visit."}].map(item => <div key={item.title} className="rounded-2xl border border-[#E4E7E3] bg-white p-5"><h3 className="font-bold text-ink">{item.title}</h3><p className="mt-2 text-sm leading-6 text-[#526568]">{item.copy}</p></div>)}</div><ShazGuide title="A request first. A confirmed quote next.">Your preferred slot is a request until Shaz confirms it. You pay the complete quote before your visit.</ShazGuide></div></section>
+
       <section className="border-y border-slate-200 bg-[#F7F4EF] py-14">
         <AnimatedContent className="mx-auto max-w-7xl px-5 lg:px-8" distance={34} duration={0.82}>
           <SectionHeading eyebrow="Everything around your car" title="Care for it. Check it. Buy or sell it." copy="Shaz connects practical car care with a trusted place to buy and sell vehicles." />
-          <div className="mt-8 grid gap-5 md:grid-cols-3">{serviceBenefits.map(({ icon: Icon, title, copy }) => <article key={title} className="h-full rounded-2xl border border-slate-200 bg-white p-7 shadow-sm"><div className="grid h-11 w-11 place-items-center rounded-xl bg-[#FFF0EE] text-[#E94A3F]"><Icon size={22} /></div><h3 className="mt-5 text-xl font-bold text-[#082A30]">{title}</h3><p className="mt-2 leading-7 text-slate-600">{copy}</p></article>)}</div>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">{serviceBenefits.map(({ icon: Icon, title, copy }) => <article key={title} className="h-full rounded-3xl border border-[#E4E7E3] bg-white p-7 shadow-sm"><div className="grid h-11 w-11 place-items-center rounded-xl bg-[#FFF0EE] text-[#E94A3F]"><Icon size={22} /></div><h3 className="mt-5 text-xl font-bold text-[#082A30]">{title}</h3><p className="mt-2 leading-7 text-slate-600">{copy}</p></article>)}</div>
         </AnimatedContent>
       </section>
 

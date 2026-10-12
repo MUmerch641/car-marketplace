@@ -1,3 +1,4 @@
+import { ShazGuide } from "@/components/shaz/guide";
 import { requireUser } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { AddVehicleSection } from "./add-vehicle-form";
@@ -29,7 +30,7 @@ export default async function GaragePage() {
   const vehicles = garageVehicles || [];
 
   return (
-    <main className="bg-[#f7f8fa] py-10 sm:py-16 min-h-screen">
+    <main className="bg-[#F7F4EF] py-7 sm:py-10 min-h-screen">
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
         
         <AddVehicleSection />
@@ -70,8 +71,8 @@ export default async function GaragePage() {
                    {/* Actions Area */}
                    <div className="flex flex-wrap items-center justify-between gap-4 sm:justify-end border-t border-slate-100 sm:border-0 pt-4 sm:pt-0">
                      <div className="flex items-center gap-3 text-sm font-semibold">
-                       <Link href="/services" className="text-slate-700 hover:text-[#082a30]">
-                         Book Service
+                       <Link href={`/services/oil-change/book${vehicle.registration ? `?registration=${encodeURIComponent(vehicle.registration)}` : ""}`} className="text-slate-700 hover:text-[#082a30]">
+                         Service this car
                        </Link>
                        <Link href={`/parts?vehicleId=${vehicle.id}`} className="text-[#e94a3f] hover:text-[#c73830]">
                          Compatible Parts
@@ -86,7 +87,8 @@ export default async function GaragePage() {
              </div>
           ) : (
             <div className="mt-2 rounded-2xl border border-dashed border-slate-300 bg-white p-12 sm:p-20 text-center shadow-sm">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 shadow-sm border border-slate-100">
+              <ShazGuide title="Let’s start your garage">Add your car above. Its details will be ready when you book your next visit.</ShazGuide>
+              <div className="mx-auto mt-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 shadow-sm border border-slate-100">
                 <CarFront size={28} className="text-slate-400" />
               </div>
               <p className="mt-6 text-[18px] font-bold text-[#082a30]">No vehicles in your garage yet</p>

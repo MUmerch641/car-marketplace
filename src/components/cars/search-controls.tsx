@@ -9,7 +9,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
   );
 
   return (
-    <form action="/cars" className="rounded-2xl border border-[#E4E7EC] bg-white p-4 shadow-sm transition-all">
+    <form action="/cars" className="rounded-2xl border border-[#E4E7E3] bg-white p-4 shadow-sm transition-all">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]">
         
         {/* Make or model */}
@@ -24,7 +24,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
               name="make"
               defaultValue={values.make}
               placeholder="e.g. BMW"
-              className="h-[52px] w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] pl-10 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
+              className="h-[52px] w-full rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] pl-10 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
             />
           </div>
         </div>
@@ -41,7 +41,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
               name="postcode"
               defaultValue={values.postcode}
               placeholder="Postcode"
-              className="h-[52px] w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] pl-10 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
+              className="h-[52px] w-full rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] pl-10 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
             />
           </div>
         </div>
@@ -59,7 +59,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
               defaultValue={values.minPrice}
               inputMode="numeric"
               placeholder="No min"
-              className="h-[52px] w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] pl-8 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
+              className="h-[52px] w-full rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] pl-8 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
             />
           </div>
         </div>
@@ -77,12 +77,12 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
               defaultValue={values.maxPrice}
               inputMode="numeric"
               placeholder="No max"
-              className="h-[52px] w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] pl-8 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
+              className="h-[52px] w-full rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] pl-8 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
             />
           </div>
         </div>
 
-        <button type="submit" className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-[#E94A3F] px-8 text-sm font-bold text-white transition-all hover:bg-[#C73830] hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E94A3F] lg:w-auto">
+        <button type="submit" className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-brand-hover px-8 text-sm font-bold text-white transition-all hover:bg-[#C73830] hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E94A3F] lg:w-auto">
           <Search size={18} />
           <span>Search</span>
         </button>
@@ -92,7 +92,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
         <button 
           type="button" 
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="flex items-center gap-2 text-sm font-semibold text-[#667085] hover:text-[#082A30] transition-colors"
+          className="flex items-center gap-2 text-sm font-semibold text-[#526568] hover:text-[#082A30] transition-colors"
         >
           <SlidersHorizontal size={16} />
           {showAdvanced ? "Hide Advanced Filters" : "Show Advanced Filters"}
@@ -102,7 +102,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
       {showAdvanced && (
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-reveal-fade">
           <div className="relative group">
-            <select name="fuel" defaultValue={values.fuel} className="h-[52px] w-full appearance-none rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none transition-all hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50">
+            <select name="fuel" defaultValue={values.fuel} className="h-[52px] w-full appearance-none rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none transition-all hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50">
               <option value="">Any Fuel Type</option>
               <option value="petrol">Petrol</option>
               <option value="diesel">Diesel</option>
@@ -113,7 +113,7 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
           </div>
 
           <div className="relative group">
-            <select name="transmission" defaultValue={values.transmission} className="h-[52px] w-full appearance-none rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none transition-all hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50">
+            <select name="transmission" defaultValue={values.transmission} className="h-[52px] w-full appearance-none rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none transition-all hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50">
               <option value="">Any Transmission</option>
               <option value="manual">Manual</option>
               <option value="automatic">Automatic</option>
@@ -129,13 +129,13 @@ export function SearchControls({ values = {} }: { values?: Record<string, string
                 defaultValue={values.maxMileage}
                 placeholder="Max Mileage"
                 inputMode="numeric"
-                className="h-[52px] w-full rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] pl-10 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
+                className="h-[52px] w-full rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] pl-10 pr-4 text-sm font-semibold outline-none transition-all placeholder:font-normal placeholder:text-[#98A2B3] hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50"
               />
             </div>
           </div>
 
           <div className="relative group">
-            <select name="sort" defaultValue={values.sort} className="h-[52px] w-full appearance-none rounded-xl border border-[#E4E7EC] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none transition-all hover:border-[#D0D5DD] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50">
+            <select name="sort" defaultValue={values.sort} className="h-[52px] w-full appearance-none rounded-xl border border-[#E4E7E3] bg-[#FAFAFA] px-4 text-sm font-semibold outline-none transition-all hover:border-[#B8C5BE] focus:border-[#E94A3F] focus:bg-white focus:ring-4 focus:ring-red-50">
               <option value="newest">Sort by: Newest</option>
               <option value="price_asc">Sort by: Price (Low to High)</option>
               <option value="price_desc">Sort by: Price (High to Low)</option>

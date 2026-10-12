@@ -1,214 +1,185 @@
 "use client";
-
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { logoutAction } from "@/app/auth/actions";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Menu, X, ChevronDown, UserRound } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
-
-
-interface NavbarClientProps {
-  profile: { role: string } | null;
-}
-
-const navItems = [
-  { href: "/services", label: "Oil Change" },
-  { href: "/verification", label: "Vehicle Inspection" },
-  { href: "/cars", label: "Buy & Sell Cars" },
-  { href: "/parts", label: "Parts" },
-  { href: "/about", label: "About" },
+import { logoutAction } from "@/app/auth/actions";
+const links = [
+  { href: "/services", label: "Service my car" },
+  { href: "/verification", label: "Inspect a car" },
+  { href: "/cars", label: "Cars" },
+  { href: "/help", label: "Help" },
 ];
-
-export function NavbarClient({ profile }: NavbarClientProps) {
-  const [scrolled, setScrolled] = useState(false);
+export function NavbarClient({
+  profile,
+}: {
+  profile: { role: string } | null;
+}) {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Use IntersectionObserver on a sentinel below the hero to detect scroll-past
-    const sentinel = document.getElementById("hero-sentinel");
-    if (!sentinel) {
-      // Fallback: simple scroll listener if sentinel isn't on the page
-      const onScroll = () => setScrolled(window.scrollY > 60);
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setScrolled(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, []);
-
-  // Close mobile menu on route change (if user clicks a link)
-  const closeMobile = () => setMobileOpen(false);
-
+  const [accountOpen, setAccountOpen] = useState(false);
+  const account = useRef<HTMLDivElement>(null);
   const dashboardHref =
     profile?.role === "admin"
       ? "/admin"
       : profile?.role === "inspector"
         ? "/inspector"
         : "/dashboard";
-
+  const customer =
+    profile && profile.role !== "admin" && profile.role !== "inspector";
+  const close = () => {
+    setMobileOpen(false);
+    setAccountOpen(false);
+  };
+  useEffect(() => {
+    const click = (event: PointerEvent) => {
+      if (account.current && !account.current.contains(event.target as Node))
+        setAccountOpen(false);
+    };
+    const key = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+        setAccountOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", click);
+    document.addEventListener("keydown", key);
+    return () => {
+      document.removeEventListener("pointerdown", click);
+      document.removeEventListener("keydown", key);
+    };
+  }, []);
   return (
-    <header
-      className={[
-        "sticky top-0 z-50 border-b border-[#203A52] bg-ink text-white",
-        "transition-shadow duration-300",
-        scrolled ? "shadow-[0_2px_16px_rgba(0,0,0,0.35)]" : "shadow-none",
-      ].join(" ")}
-    >
-      <div className="mx-auto flex h-17 max-w-7xl items-center justify-between px-5 lg:px-8">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center"
-          onClick={closeMobile}
-          aria-label="Shaz — Go to homepage"
-        >
-          <Logo variant="dark" size="sm" />
+    <header className="sticky top-0 z-50 border-b border-[#E4E7E3] bg-sand/95 text-ink backdrop-blur-lg">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-3 px-5 lg:px-8">
+        <Link href="/" onClick={close} aria-label="Shaz home">
+          <Logo variant="light" />
         </Link>
-
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-6 xl:flex" aria-label="Main navigation">
-          {navItems.map((item) => (
+        <nav
+          aria-label="Main navigation"
+          className="hidden items-center gap-7 lg:flex"
+        >
+          {links.map((link) => (
             <Link
-              key={item.href}
-              href={item.href}
-              className={[
-                "group relative text-sm font-semibold text-[#D0D5DD]",
-                "transition-colors duration-200 hover:text-white",
-                "after:absolute after:-bottom-0.5 after:left-0 after:h-0.5",
-                "after:w-0 after:bg-[#E94A3F] after:transition-[width] after:duration-200",
-                "hover:after:w-full",
-              ].join(" ")}
+              key={link.href}
+              href={link.href}
+              aria-current={pathname.startsWith(link.href) ? "page" : undefined}
+              className={`py-3 text-sm font-bold transition-colors hover:text-brand-hover ${pathname.startsWith(link.href) ? "text-brand-hover" : "text-[#526568]"}`}
             >
-              {item.label}
+              {link.label}
             </Link>
           ))}
         </nav>
-
-        {/* Right side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {profile ? (
-            <>
-            <div className="hidden sm:block relative group">
-              <Link
-                href={dashboardHref}
-                className="flex items-center gap-1.5 text-sm font-bold text-white transition-opacity hover:opacity-80 py-2"
+            <div ref={account} className="relative hidden sm:block">
+              <button
+                type="button"
+                aria-expanded={accountOpen}
+                aria-controls="account-menu"
+                onClick={() => setAccountOpen((value) => !value)}
+                className="flex min-h-12 items-center gap-2 rounded-xl px-3 text-sm font-bold"
               >
-                Account <span className="text-[10px] opacity-70">▼</span>
-              </Link>
-              <div className="absolute right-0 top-full w-48 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5">
-                  <Link href={dashboardHref} className="px-4 py-3 text-sm font-semibold text-[#082a30] hover:bg-slate-50">Dashboard</Link>
-                  <Link href="/dashboard/cars" className="px-4 py-3 text-sm font-semibold text-[#082a30] hover:bg-slate-50">My Cars</Link>
-                  <Link href="/dashboard/garage" className="px-4 py-3 text-sm font-semibold text-[#082a30] hover:bg-slate-50">My Garage</Link>
-                  <Link href="/dashboard/bookings" className="px-4 py-3 text-sm font-semibold text-[#082a30] border-b border-slate-100 hover:bg-slate-50">Bookings</Link>
-                  <form action={logoutAction} className="block w-full">
-                    <button type="submit" className="w-full px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors">Logout</button>
+                <UserRound size={18} />
+                Account
+                <ChevronDown size={14} />
+              </button>
+              {accountOpen && (
+                <div
+                  id="account-menu"
+                  className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-2xl border border-[#E4E7E3] bg-white p-2 shadow-lg"
+                >
+                  <Link
+                    href={dashboardHref}
+                    onClick={close}
+                    className="block rounded-xl px-3 py-3 text-sm font-semibold hover:bg-sand"
+                  >
+                    {customer ? "Home" : "Workspace"}
+                  </Link>
+                  {customer &&
+                    [
+                      { href: "/dashboard/bookings", label: "Visits" },
+                      { href: "/dashboard/garage", label: "Garage" },
+                      { href: "/dashboard/cars", label: "My listings" },
+                      {
+                        href: "/dashboard/verifications",
+                        label: "Inspection reports",
+                      },
+                    ].map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={close}
+                        className="block rounded-xl px-3 py-3 text-sm font-semibold hover:bg-sand"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  <form action={logoutAction}>
+                    <button className="w-full rounded-xl px-3 py-3 text-left text-sm font-semibold text-brand-hover hover:bg-sand">
+                      Sign out
+                    </button>
                   </form>
                 </div>
-              </div>
+              )}
             </div>
-            </>
           ) : (
             <Link
               href="/login"
-              className="hidden text-sm font-bold text-white transition-opacity hover:opacity-80 sm:block"
+              className="hidden min-h-12 items-center px-3 text-sm font-bold sm:inline-flex"
             >
-              Login
+              Sign in
             </Link>
           )}
-          <Button href="/services" className="px-4 py-2.5">
-            Book Oil Change
+          <Button href="/services" className="hidden sm:inline-flex">
+            Book a service
           </Button>
-
-          {/* Mobile hamburger */}
           <button
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 xl:hidden"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            type="button"
+            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen((v) => !v)}
+            aria-controls="mobile-navigation"
+            onClick={() => setMobileOpen((value) => !value)}
+            className="grid h-12 w-12 place-items-center rounded-2xl border border-[#E4E7E3] bg-white lg:hidden"
           >
-            <span
-              className={[
-                "block h-0.5 w-5 bg-white transition-transform duration-300",
-                mobileOpen ? "translate-y-2 rotate-45" : "",
-              ].join(" ")}
-            />
-            <span
-              className={[
-                "block h-0.5 w-5 bg-white transition-opacity duration-200",
-                mobileOpen ? "opacity-0" : "",
-              ].join(" ")}
-            />
-            <span
-              className={[
-                "block h-0.5 w-5 bg-white transition-transform duration-300",
-                mobileOpen ? "-translate-y-2 -rotate-45" : "",
-              ].join(" ")}
-            />
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
-
-      {/* Mobile menu — smooth max-height transition */}
-      <div
-        className={[
-          "overflow-hidden border-t border-[#1A3050] xl:hidden",
-          "transition-[max-height,opacity] duration-300 ease-in-out",
-          mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-        ].join(" ")}
-        aria-hidden={!mobileOpen}
-      >
+      {mobileOpen && (
         <nav
-          className="flex flex-col gap-1 px-5 py-4"
+          id="mobile-navigation"
           aria-label="Mobile navigation"
+          className="border-t border-[#E4E7E3] bg-sand px-5 pb-5 pt-3 lg:hidden"
         >
-          {navItems.map((item) => (
+          {links.map((link) => (
             <Link
-              key={item.href}
-              href={item.href}
-              onClick={closeMobile}
-              className="rounded-lg px-3 py-2.5 text-sm font-semibold text-[#D0D5DD] transition-colors hover:bg-white/5 hover:text-white"
+              key={link.href}
+              href={link.href}
+              onClick={close}
+              className="block rounded-xl px-3 py-3 text-sm font-semibold hover:bg-white"
             >
-              {item.label}
+              {link.label}
             </Link>
           ))}
-          <div className="mt-2 border-t border-[#1A3050] pt-3">
-            {profile ? (
-              <>
-                <Link
-                  href={dashboardHref}
-                  onClick={closeMobile}
-                  className="block rounded-lg px-3 py-2.5 text-sm font-bold text-white transition-colors hover:bg-white/5"
-                >
-                  Account
-                </Link>
-                <form action={logoutAction}>
-                  <button className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-bold text-[#D0D5DD] transition-colors hover:bg-white/5 hover:text-white">
-                    Logout
-                  </button>
-                </form>
-              </>
-            ) : (
-              <Link
-                href="/login"
-                onClick={closeMobile}
-                className="block rounded-lg px-3 py-2.5 text-sm font-bold text-white transition-colors hover:bg-white/5"
-              >
-                Login
-              </Link>
-            )}
-          </div>
+          <Link
+            href={profile ? dashboardHref : "/login"}
+            onClick={close}
+            className="block rounded-xl px-3 py-3 text-sm font-bold"
+          >
+            {profile ? "My account" : "Sign in"}
+          </Link>
+          <Link
+            href="/services"
+            onClick={close}
+            className="mt-2 flex min-h-12 items-center justify-center rounded-[14px] bg-brand-hover text-sm font-bold text-white"
+          >
+            Book a service
+          </Link>
         </nav>
-      </div>
-
-      {/* Invisible ref for scroll detection */}
-      <div ref={sentinelRef} />
+      )}
     </header>
   );
 }

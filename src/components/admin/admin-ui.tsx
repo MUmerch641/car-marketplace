@@ -10,5 +10,5 @@ export function AdminStatus({ children, tone = "slate" }: { children: ReactNode;
 }
 
 export const adminInput = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#e94a3f] focus:ring-4 focus:ring-red-100";
-export const adminButton = "inline-flex items-center justify-center rounded-lg bg-[#e94a3f] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#c73830] focus:outline-none focus:ring-4 focus:ring-red-100";
+export const adminButton = "inline-flex items-center justify-center rounded-lg bg-brand-hover px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#c73830] focus:outline-none focus:ring-4 focus:ring-red-100";
 export const adminSecondaryButton = "inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100";

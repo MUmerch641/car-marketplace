@@ -1,6 +1,9 @@
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/server";
 import { getActiveService } from "@/lib/services/services";
+import { createClient } from "@/lib/supabase/server";
 import { BookingForm } from "@/components/services/booking-form";
 
 export default async function BookServicePage({
@@ -12,21 +15,25 @@ export default async function BookServicePage({
 }) {
   const { slug } = await params;
   const query = await searchParams;
-  if (!await getCurrentUser()) {
-    const next = `/services/${slug}/book${query.registration ? `?registration=${encodeURIComponent(query.registration)}` : ""}`;
+  const user = await getCurrentUser();
+  if (!user) {
+    const values = new URLSearchParams();
+    if (query.registration) values.set("registration",query.registration);
+    if (query.oil) values.set("oil",query.oil);
+    const next = `/services/${slug}/book${values.size ? `?${values}` : ""}`;
     redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   const service = await getActiveService(slug);
   if (!service || service.slug !== "oil-change") notFound();
+  const supabase = await createClient();
+  const { data: savedCars } = await supabase.from("garage_vehicles").select("id,make,model,registration").eq("customer_id", user.id).order("created_at", { ascending: false });
 
   return (
-    <main className="bg-[#F7F4EF] py-10">
+    <main className="bg-[#F7F4EF] py-5 sm:py-8">
       <div className="mx-auto max-w-4xl px-5 lg:px-8">
-        <p className="text-sm font-bold uppercase tracking-[.12em] text-brand">Shaz mobile oil change</p>
-        <h1 className="mt-2 text-3xl font-bold text-ink">Book {service.name}</h1>
-        <p className="mt-3 max-w-2xl text-[#667085]">First confirm your vehicle, then choose the location and preferred time. We confirm the oil specification before your appointment.</p>
-        <div className="mt-7 rounded-2xl border border-[#E4E7EC] bg-white p-5 shadow-sm sm:p-7"><BookingForm service={service} initialRegistration={query.registration} initialOilId={query.oil} /></div>
+        <Link href="/services" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#526568]"><ArrowLeft size={18}/>Back to services</Link>
+        <div className="mt-3 rounded-3xl border border-[#E4E7E3] bg-white p-5 shadow-sm sm:p-7"><BookingForm service={service} initialRegistration={query.registration} initialOilId={query.oil} customerId={user.id} savedCars={savedCars ?? []} /></div>
       </div>
     </main>
   );

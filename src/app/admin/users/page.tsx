@@ -54,7 +54,7 @@ export default async function Page({
           <div className="border bg-white p-4" key={x.id}>
             <b>{x.full_name || "Unnamed user"}</b>
             <span className="ml-3 capitalize">{x.role}</span>
-            <p className="text-sm text-[#667085]">
+            <p className="text-sm text-[#526568]">
               {x.phone || "No phone"} · Joined{" "}
               {new Date(x.created_at).toLocaleDateString("en-GB")}
             </p>
