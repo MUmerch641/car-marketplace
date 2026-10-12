@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.15"
   }
   public: {
     Tables: {
@@ -49,6 +49,94 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_payment_quotes: {
+        Row: {
+          booking_id: string
+          created_at: string
+          currency: string
+          labour_amount_minor: number
+          parts_amount_minor: number
+          payment_mode: string
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          currency?: string
+          labour_amount_minor: number
+          parts_amount_minor: number
+          payment_mode?: string
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          currency?: string
+          labour_amount_minor?: number
+          parts_amount_minor?: number
+          payment_mode?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_payment_quotes_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "service_bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_payments: {
+        Row: {
+          amount_minor: number
+          booking_id: string
+          created_at: string
+          currency: string
+          id: string
+          paid_at: string | null
+          phase: string
+          refunded_amount_minor: number
+          status: string
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_minor: number
+          booking_id: string
+          created_at?: string
+          currency: string
+          id?: string
+          paid_at?: string | null
+          phase: string
+          refunded_amount_minor?: number
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_minor?: number
+          booking_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          paid_at?: string | null
+          phase?: string
+          refunded_amount_minor?: number
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "booking_payment_quotes"
+            referencedColumns: ["booking_id"]
           },
         ]
       }
@@ -1056,6 +1144,7 @@ export type Database = {
           engine_capacity_cc: number | null
           fuel_type: Database["public"]["Enums"]["fuel_type"] | null
           id: string
+          level_surface_access: boolean | null
           notes: string | null
           oil_fitment_status: string
           oil_price: number | null
@@ -1065,7 +1154,6 @@ export type Database = {
           on_the_way_at: string | null
           parking_access_notes: string | null
           parking_location: string | null
-          level_surface_access: boolean | null
           postcode: string
           preferred_date: string
           preferred_time: string
@@ -1092,6 +1180,7 @@ export type Database = {
           engine_capacity_cc?: number | null
           fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
           id?: string
+          level_surface_access?: boolean | null
           notes?: string | null
           oil_fitment_status?: string
           oil_price?: number | null
@@ -1101,7 +1190,6 @@ export type Database = {
           on_the_way_at?: string | null
           parking_access_notes?: string | null
           parking_location?: string | null
-          level_surface_access?: boolean | null
           postcode: string
           preferred_date: string
           preferred_time: string
@@ -1128,6 +1216,7 @@ export type Database = {
           engine_capacity_cc?: number | null
           fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
           id?: string
+          level_surface_access?: boolean | null
           notes?: string | null
           oil_fitment_status?: string
           oil_price?: number | null
@@ -1137,7 +1226,6 @@ export type Database = {
           on_the_way_at?: string | null
           parking_access_notes?: string | null
           parking_location?: string | null
-          level_surface_access?: boolean | null
           postcode?: string
           preferred_date?: string
           preferred_time?: string
@@ -1290,6 +1378,86 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      shaz_push_configuration: {
+        Row: {
+          id: boolean
+          vapid_public_key: string | null
+          website_url: string
+        }
+        Insert: {
+          id?: boolean
+          vapid_public_key?: string | null
+          website_url?: string
+        }
+        Update: {
+          id?: boolean
+          vapid_public_key?: string | null
+          website_url?: string
+        }
+        Relationships: []
+      }
+      shaz_push_deliveries: {
+        Row: {
+          attempts: number
+          claim_id: string | null
+          created_at: string
+          error_code: string | null
+          event_id: string
+          id: string
+          lease_until: string | null
+          next_attempt_at: string
+          provider: string
+          receipt_checked_at: string | null
+          receipt_status: string | null
+          sent_at: string | null
+          status: string
+          subscription_id: string
+          ticket_id: string | null
+        }
+        Insert: {
+          attempts?: number
+          claim_id?: string | null
+          created_at?: string
+          error_code?: string | null
+          event_id: string
+          id?: string
+          lease_until?: string | null
+          next_attempt_at?: string
+          provider: string
+          receipt_checked_at?: string | null
+          receipt_status?: string | null
+          sent_at?: string | null
+          status?: string
+          subscription_id: string
+          ticket_id?: string | null
+        }
+        Update: {
+          attempts?: number
+          claim_id?: string | null
+          created_at?: string
+          error_code?: string | null
+          event_id?: string
+          id?: string
+          lease_until?: string | null
+          next_attempt_at?: string
+          provider?: string
+          receipt_checked_at?: string | null
+          receipt_status?: string | null
+          sent_at?: string | null
+          status?: string
+          subscription_id?: string
+          ticket_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shaz_push_deliveries_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "push_notification_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       supplier_orders: {
         Row: {
@@ -1486,6 +1654,50 @@ export type Database = {
           },
         ]
       }
+      web_push_subscriptions: {
+        Row: {
+          auth_key: string
+          created_at: string
+          endpoint: string
+          id: string
+          is_active: boolean
+          last_seen_at: string
+          p256dh: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auth_key: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          is_active?: boolean
+          last_seen_at?: string
+          p256dh: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auth_key?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          is_active?: boolean
+          last_seen_at?: string
+          p256dh?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1564,6 +1776,10 @@ export type Database = {
       cancel_service_booking_as_admin: {
         Args: { p_booking_id: string; p_reason?: string }
         Returns: undefined
+      }
+      claim_shaz_push_deliveries: {
+        Args: { p_limit?: number }
+        Returns: Json[]
       }
       confirm_service_booking: {
         Args: { p_booking_id: string }
@@ -1680,6 +1896,7 @@ export type Database = {
           seller_inspection_status: Database["public"]["Enums"]["verification_request_status"]
         }[]
       }
+      get_shaz_push_configuration: { Args: never; Returns: Json }
       mark_car_sold: { Args: { p_car_id: string }; Returns: undefined }
       moderate_car: {
         Args: {
@@ -1695,6 +1912,10 @@ export type Database = {
       }
       register_push_token: {
         Args: { p_device_id?: string; p_platform: string; p_token: string }
+        Returns: string
+      }
+      register_web_push_subscription: {
+        Args: { p_auth: string; p_endpoint: string; p_p256dh: string }
         Returns: string
       }
       reveal_seller_contact: {
@@ -1740,6 +1961,47 @@ export type Database = {
         Args: { p_make_inspector: boolean; p_user_id: string }
         Returns: undefined
       }
+      shaz_confirm_booking_quote: {
+        Args: {
+          p_booking_id: string
+          p_labour_amount_minor: number
+          p_parts_amount_minor: number
+        }
+        Returns: undefined
+      }
+      shaz_reserve_booking_payment: {
+        Args: { p_booking_id: string; p_customer_id: string; p_phase: string }
+        Returns: {
+          amount_minor: number
+          booking_id: string
+          created_at: string
+          currency: string
+          id: string
+          paid_at: string | null
+          phase: string
+          refunded_amount_minor: number
+          status: string
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "booking_payments"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      shaz_sync_booking_payment: {
+        Args: {
+          p_amount: number
+          p_currency: string
+          p_intent_id: string
+          p_payment_id: string
+          p_refunded: number
+          p_status: string
+        }
+        Returns: undefined
+      }
       start_verification_inspection: {
         Args: { p_id: string }
         Returns: undefined
@@ -1750,6 +2012,10 @@ export type Database = {
         Returns: undefined
       }
       unregister_push_token: { Args: { p_token: string }; Returns: undefined }
+      unregister_web_push_subscription: {
+        Args: { p_subscription_id: string }
+        Returns: undefined
+      }
       update_active_car_listing: {
         Args: {
           p_car_id: string

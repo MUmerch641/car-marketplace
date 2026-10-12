@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ArrowLeft, LogOut, UserRound } from "lucide-react";
+import { ArrowLeft, LogOut, UserRound, Bell } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { logoutAction } from "@/app/auth/actions";
 import { requireRole } from "@/lib/auth/server";
+import { WebPushBootstrap } from "@/components/notifications/web-push-bootstrap";
 export default async function InspectorLayout({
   children,
 }: {
@@ -12,6 +13,7 @@ export default async function InspectorLayout({
   const name = profile.full_name || user.email?.split("@")[0] || "Inspector";
   return (
     <div className="min-h-screen bg-sand text-ink">
+      <WebPushBootstrap userId={user.id} />
       <header className="sticky top-0 z-30 border-b border-[#E4E7E3] bg-sand/95 backdrop-blur-lg">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-3 px-5 lg:px-8">
           <Link
@@ -25,6 +27,14 @@ export default async function InspectorLayout({
             </span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
+            <Link
+              href="/notifications"
+              aria-label="Notification settings"
+              className="grid h-11 w-11 place-items-center rounded-xl"
+            >
+              <Bell size={20} />
+            </Link>
+
             <Link
               href="/inspector/profile"
               className="flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-semibold"

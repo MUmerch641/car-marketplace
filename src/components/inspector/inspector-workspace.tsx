@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import {
   Calendar,
@@ -72,6 +73,9 @@ export function InspectorWorkspace({
   jobs,
   workerName,
 }: InspectorWorkspaceProps) {
+  const params = useSearchParams();
+  const requestedJob = params.get("job");
+  const openedJob = useRef<string | null>(null);
   const [activeTab, setActiveTab] = useState<
     "today" | "jobs" | "map" | "history"
   >("today");
@@ -96,6 +100,22 @@ export function InspectorWorkspace({
       previous?.focus();
     };
   }, [selectedJob?.id]);
+
+  useEffect(() => {
+    if (requestedJob && openedJob.current !== requestedJob) {
+      const job = jobs.find((job) => job.id === requestedJob);
+      if (job) {
+        openedJob.current = requestedJob;
+        setActiveTab("jobs");
+        setSelectedJob(job);
+      }
+    }
+  }, [requestedJob, jobs]);
+  useEffect(() => {
+    setSelectedJob((current) =>
+      current ? (jobs.find((job) => job.id === current.id) ?? null) : null,
+    );
+  }, [jobs]);
 
   // Date check helpers
   const todayJobs = jobs.filter((j) => j.isToday && !j.isCompleted);

@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, ChevronDown, UserRound } from "lucide-react";
+import { Menu, X, ChevronDown, UserRound, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { logoutAction } from "@/app/auth/actions";
+import { WebPushBootstrap } from "@/components/notifications/web-push-bootstrap";
 const links = [
   { href: "/services", label: "Service my car" },
   { href: "/verification", label: "Inspect a car" },
@@ -15,7 +16,7 @@ const links = [
 export function NavbarClient({
   profile,
 }: {
-  profile: { role: string } | null;
+  profile: { id: string; role: string } | null;
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -53,6 +54,7 @@ export function NavbarClient({
   }, []);
   return (
     <header className="sticky top-0 z-50 border-b border-[#E4E7E3] bg-sand/95 text-ink backdrop-blur-lg">
+      <WebPushBootstrap userId={profile?.id ?? null} />
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-3 px-5 lg:px-8">
         <Link href="/" onClick={close} aria-label="Shaz home">
           <Logo variant="light" />
@@ -73,6 +75,16 @@ export function NavbarClient({
           ))}
         </nav>
         <div className="flex items-center gap-3">
+          {profile && (
+            <Link
+              href="/notifications"
+              aria-label="Notification settings"
+              className="grid h-11 w-11 place-items-center rounded-xl hover:bg-white"
+            >
+              <Bell size={20} />
+            </Link>
+          )}
+
           {profile ? (
             <div ref={account} className="relative hidden sm:block">
               <button

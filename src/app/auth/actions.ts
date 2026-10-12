@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
@@ -86,6 +86,13 @@ export async function loginAction(_: AuthFormState, formData: FormData): Promise
 
 export async function logoutAction() {
   const supabase = await createClient();
+  const jar = await cookies();
+  const subscriptionId = jar.get("shaz-push-subscription")?.value;
+  if (subscriptionId)
+    await supabase.rpc("unregister_web_push_subscription", {
+      p_subscription_id: subscriptionId,
+    });
+  jar.delete("shaz-push-subscription");
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
   redirect("/");

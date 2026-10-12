@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     "How Shaz collects, uses, stores, and shares information in the Shaz app and website.",
 };
 
-const updated = "7 October 2026";
+const updated = "12 October 2026";
 
 function PolicySection({
   title,
@@ -81,7 +81,7 @@ export default function PrivacyPolicyPage() {
                 "Service and inspection details such as the service you request, vehicle information, your service address and postcode, preferred appointment date and time, notes, inspection requests, and reports.",
                 "Marketplace information such as vehicle descriptions, specifications, price, mileage, location, photographs, and seller contact details you choose to provide.",
                 "Payment records such as the amount, booking reference, payment status, refund status, and Stripe transaction identifiers. Stripe processes card details in its payment flow; Shaz receives the information needed to confirm and manage the payment.",
-                "If you allow app notifications, a push token and basic device details such as platform are stored so we can send service and account notifications to that device.",
+                "If you allow notifications, we store a mobile push token or browser subscription endpoint and encryption keys, your account identifier and platform so we can send booking, payment, inspection and job updates. Delivery records help us retry failed sends and stop using expired subscriptions.",
                 "Information you send to customer support and limited technical information needed to keep accounts and services secure and working.",
               ]}
             />
@@ -92,6 +92,20 @@ export default function PrivacyPolicyPage() {
             </p>
           </PolicySection>
 
+          <PolicySection title="Notification choices">
+            <p>
+              Notifications are optional. Enable or disable them separately in
+              the Shaz mobile account or website notification settings on each
+              device. You can also change permission in your phone or browser
+              settings. Turning them off does not stop you booking services or
+              checking updates inside Shaz.
+            </p>
+            <p>
+              Notification delivery logs are kept for up to 90 days. Inactive
+              push subscriptions are removed after 90 days. Push providers may
+              retain delivery information under their own policies.
+            </p>
+          </PolicySection>
           <PolicySection title="How we use information">
             <PolicyList
               items={[
@@ -118,7 +132,7 @@ export default function PrivacyPolicyPage() {
                 "Supabase, which provides account authentication, database, file storage, and backend services for the app and website.",
                 "Stripe, which processes payments. Stripe handles card details in its payment flow; Shaz stores payment references and status needed to manage bookings.",
                 "The UK vehicle-data provider accessed through RapidAPI. When you request a lookup, your vehicle registration is sent to that provider so it can return vehicle details.",
-                "Expo and, where applicable, Apple and Google, which route push notifications to devices that have allowed notifications.",
+                "Expo, Apple, Google and your browser push provider (such as Mozilla or Microsoft), which route notifications to devices and browsers where you have enabled them.",
                 "Resend, which may deliver booking or marketplace emails sent through the website.",
                 "Shaz staff, assigned service providers, inspectors, and other users, where needed to deliver a service or where you choose to publish a listing or reveal seller contact details.",
               ]}
@@ -167,12 +181,11 @@ export default function PrivacyPolicyPage() {
           <PolicySection title="Your choices and rights">
             <p>
               You can update some account, vehicle, and listing details in the
-              app or website. You can turn off push notifications in your
-              device settings. Depending on where you live and the law that
-              applies, you may also have rights to access, correct, delete, or
-              receive a copy of your information, restrict or object to some
-              processing, and withdraw consent where processing is based on
-              consent.
+              app or website. You can turn off push notifications in your device
+              settings. Depending on where you live and the law that applies,
+              you may also have rights to access, correct, delete, or receive a
+              copy of your information, restrict or object to some processing,
+              and withdraw consent where processing is based on consent.
             </p>
             <p>
               Contact us at{" "}
